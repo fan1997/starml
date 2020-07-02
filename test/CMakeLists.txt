@@ -1,24 +1,21 @@
-function(starml_register_exe name srcs test)
-    add_executable(${name} ${srcs})
-    target_link_libraries(${name} ${ARGN})
-    if("${test}" STREQUAL "test")
-        add_test(NAME ${name} COMMAND $<TARGET_FILE:${name}>)
-    endif()
-endfunction()
-
-list(APPEND starml_test_srcs 
-  
+# Get all the test files
+SET(TEST_SOURCES 
+  test_matrix.cpp
 )
 
-# Build a exe for each test files
-foreach(test_src ${starml_test_srcs})
-  get_filename_component(test_name ${test_src} NAME_WE)
-  starml_register_exe(${test_name} "${test_src}" "test" "starml" "starml::gmock")
-endforeach()
-
-# Build a exe including all test files 
-set(starml_BUILD_TEST_MAIN ON)
-if(${starml_BUILD_TEST_MAIN})
-  add_executable(main main.cpp ${starml_test_srcs})
-  target_link_libraries(main "starml" "starml::gmock")
+# Build an executable file for all test files
+set(BUILD_TEST_MAIN ON)
+if (${BUILD_TEST_MAIN})
+  add_executable(main main.cpp ${TEST_SOURCES})
+  target_link_libraries(main gtest)
+  target_link_libraries(main starml)
 endif()
+
+# Build separated executable files for each test files
+foreach(test_file ${TEST_SOURCES})
+  # Get name of the source testing file to be the name of executable files
+  get_filename_component(test_name ${test_file} NAME_WE)
+  add_executable(${test_name} main.cpp ${test_file})
+  target_link_libraries(${test_name} gtest)
+  target_link_libraries(${test_name} starml)
+endforeach()
