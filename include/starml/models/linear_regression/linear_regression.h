@@ -1,5 +1,5 @@
 #pragma once
-#include "starml/basic/Matrix.h"
+#include "starml/basic/matrix.h"
 
 namespace starml {
 namespace regression {

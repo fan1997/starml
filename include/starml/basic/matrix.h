@@ -5,6 +5,7 @@ namespace starml {
 
 class Matrix {
  public:
+  Matrix(){};
   Matrix(int row, int col, DeviceType device_type);
   float* data() const { return storage_->data(); }
 
@@ -12,4 +13,5 @@ class Matrix {
   Storage* storage_;
   int dims[2];
 };
+
 }  // namespace starml

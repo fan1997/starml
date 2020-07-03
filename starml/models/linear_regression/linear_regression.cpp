@@ -2,13 +2,16 @@
 #include <iostream>
 
 namespace starml {
+namespace regression{
 
 regression::LinearRegression::LinearRegression(const starml::Matrix& train_data,
                                         const starml::Matrix& label,
                                         const double lambda) {
   std::cout << "LinearRegression Model has been created with train_data" << "\n";
   this->lambda = lambda;
+  printf("train_data:%f",train_data.data()[0]);
   this->train(train_data, label);
+
 }
 
 regression::LinearRegression::LinearRegression(double lambda) {
@@ -47,5 +50,5 @@ void regression::LinearRegression::predict(const starml::Matrix& predict_data,
   std::cout << "Predict LinearRegression Model" << "\n";
 }
 
-
+} // namespace regression
 } // namespace starml

@@ -43,11 +43,14 @@ target_include_directories(starml
   PUBLIC
     ${PROJECT_SOURCE_DIR}/include
 )
+# include_directories(${PROJECT_SOURCE_DIR}/include)
+
+
 
 if(STARML_USE_CUDA)
-  set_target_properties(starml PROPERTIES 
-    CUDA_SEPERABLE_COMPILATION ON 
-    INTERFACE_POSITION_INDEPENDENT_CODE ON 
+  set_target_properties(starml PROPERTIES
+    CUDA_SEPERABLE_COMPILATION ON
+    INTERFACE_POSITION_INDEPENDENT_CODE ON
   )
 endif()
 
