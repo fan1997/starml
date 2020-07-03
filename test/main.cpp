@@ -15,8 +15,6 @@ int main(int argc, char **argv) {
       data[i * 3 + j] = i + 1 ;
     }
   }
-  print_matrix(a);
-
   LinearRegression model;
   LinearRegression model1(5.0);
 
