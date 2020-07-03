@@ -24,7 +24,10 @@ set_property(TARGET starml::cudart PROPERTY INTERFACE_INCLUDE_DIRECTORIES ${CUDA
 
 # cublas
 add_library(starml::cublas INTERFACE IMPORTED)
-set_property(TARGET starml::cublas PROPERTY INTERFACE_LINK_LIBRARIES ${CUDA_CUBLAS_LIBRARIES})
+message(${CUDA_CUBLAS_LIBRARIES})
+set_property(TARGET starml::cublas PROPERTY INTERFACE_LINK_LIBRARIES
+    "${CUDA_TOOLKIT_ROOT_DIR}/lib64/libcublas_static.a")
+# set_property(TARGET starml::cublas PROPERTY INTERFACE_LINK_LIBRARIES ${CUDA_CUBLAS_LIBRARIES})
 set_property(TARGET starml::cublas PROPERTY INTERFACE_INCLUDE_DIRECTORIES ${CUDA_INCLUDE_DIRS})
 
 # thrust is a Head-only library

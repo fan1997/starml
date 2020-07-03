@@ -1,13 +1,14 @@
 cmake_minimum_required(VERSION 3.11 FATAL_ERROR)
 project(starml VERSION 0.0.1 LANGUAGES CXX)
 
-option(STARML_BUILD_SHARED_LIBS "Compiled as a shared library" OFF)
+option(STARML_BUILD_SHARED_LIBS "Compiled as a shared library" ON)
 option(STARML_ENABLE_TESTING "Build with testing enabled" ON)
-option(STARML_USE_CUDA "Build with CUDA supported" ON)
+option(STARML_USE_CUDA "Build with CUDA supported" OFF)
 
 # Show the detail of compile messages
 set(CMAKE_VERBOSE_MAKEFILE OFF)
 set(CMAKE_COLOR_MAKEFILE   ON)
+include(cmake/public/Utils.cmake)
 
 if(NOT DEFINED CMAKE_CXX_STANDARD)
   set(CMAKE_CXX_STANDARD 11)
@@ -25,9 +26,13 @@ set(CMAKE_RUNTIME_OUTPUT_DIRECTORY ${PROJECT_BINARY_DIR}/${CMAKE_INSTALL_BINDIR}
 
 # Find all the files under `starml/`
 file(GLOB_RECURSE starml_srcs "starml/*.cpp" "starml/*.cu")
+if(NOT STARML_USE_CUDA)
+  file(GLOB_RECURSE cuda_srcs "starml/*_cuda.cpp" "starml/*.cu")
+  exclude(starml_srcs "${starml_srcs}" ${cuda_srcs})
+endif()
 
 # Create library target with all the source codes.
-if(BUILD_SHARED_LIBS)
+if(STARML_BUILD_SHARED_LIBS)
   add_library(starml SHARED ${starml_srcs})
 else()
   add_library(starml STATIC ${starml_srcs})
@@ -38,12 +43,21 @@ target_include_directories(starml
     ${PROJECT_SOURCE_DIR}/include
 )
 
+if(STARML_USE_CUDA)
+  set_target_properties(starml PROPERTIES 
+    CUDA_SEPERABLE_COMPILATION ON 
+    INTERFACE_POSITION_INDEPENDENT_CODE ON 
+  )
+endif()
+
 # Add dependency library link
 set(starml_link_libraries)
 if(STARML_USE_CUDA)
   include(cmake/public/CUDA.cmake)
   list(APPEND starml_link_libraries starml::cudart starml::cublas starml::thrust)
 endif()
+
+target_link_libraries(starml PUBLIC ${starml_link_libraries})
 
 # Add testing
 if(STARML_ENABLE_TESTING)
