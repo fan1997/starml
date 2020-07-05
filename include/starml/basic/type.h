@@ -7,7 +7,7 @@
 #include <unordered_map>
 
 namespace starml {
-enum class DataTypeKind : size_t { Int = 0, Float = 1, Double = 2 };
+enum class DataTypeKind : int { Int = 0, Float = 1, Double = 2 };
 
 constexpr DataTypeKind kInt = DataTypeKind::Int;
 constexpr DataTypeKind kFloat = DataTypeKind::Float;
@@ -44,7 +44,7 @@ class DataType {
  private:
   DataTypeKind type_;
   static std::unordered_map<std::string, DataTypeKind> type_lists;
-  static std::unordered_map<std::string, size_t> type_sizes;
+  static std::unordered_map<int, size_t> type_sizes;
 };
 
 }  // namespace starml
