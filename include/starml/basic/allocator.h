@@ -2,11 +2,13 @@
 #include <cstddef>
 #include <unordered_map>
 #include <mutex>
+#include <memory>
 #include "starml/basic/device.h"
-#include "starml/basic/data_ptr.h"
-#include <iostream>
 
 namespace starml {
+using DeleterFnPtr = void (*)(void*);
+typedef std::shared_ptr<void> DataPtr; 
+
 class Allocator {
  public:
   virtual ~Allocator() = default;

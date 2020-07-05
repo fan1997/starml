@@ -1,10 +1,11 @@
 #include "starml/basic/matrix.h"
-#include "starml/basic/allocator.h"
 
 namespace starml {
   Matrix::Matrix(int row, int col, DeviceType device_type) {
-    size_t num_bytes = row * col * sizeof(float);
-    this->storage_ = new Storage(num_bytes, device_type, get_allocator(device_type));
+    this->size_ = row * col * sizeof(float);
+    this->allocator_ = get_allocator(device_type);
+    this->device_ = Device(device_type);
+    this->data_ptr_ = allocator_->allocate(size_);
     this->dims[0] = row;
     this->dims[1] = col;
   }

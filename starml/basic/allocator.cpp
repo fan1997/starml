@@ -10,7 +10,7 @@ void Allocator::deallocate_raw(void* ptr) const {
 DataPtr Allocator::allocate(size_t num_bytes) const {
   void* raw_ptr = allocate_raw(num_bytes);
   auto deleter = raw_deleter();
-  return {raw_ptr, raw_ptr, deleter};
+  return {raw_ptr, deleter};
 }
 
 AllocatorRegistry::AllocatorRegistry() {}
