@@ -3,7 +3,7 @@
 using namespace starml;
 
 Matrix test() {
-  Matrix a(50, 5, kCPU, kInt);
+  Matrix a(3, 5, kCPU, kInt);
   int *data = a.data<int>();
   for (int i = 0; i < 3; i++) {
     for (int j = 0; j < 5; j++) {

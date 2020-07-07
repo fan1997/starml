@@ -3,7 +3,6 @@
 #include "starml/basic/dispatch.h"
 namespace starml {
 int Matrix::print_limited[2] = {20, 20};
-// int Matrix::print_limited[1] = 20;
 
 Matrix::Matrix() : allocator_(NULL), data_ptr_(NULL) {}
 Matrix::Matrix(int row, int col, DeviceType device_type, DataTypeKind data_type)
