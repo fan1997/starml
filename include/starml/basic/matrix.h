@@ -21,6 +21,8 @@ class Matrix {
   const int *shape() const;
   int rows_num() const;
   int cols_num() const;
+  DataTypeKind data_type() const;
+  static int print_limited[2];
 
  private:
   size_t size_;
@@ -29,5 +31,9 @@ class Matrix {
   Allocator* allocator_;
   DataPtr data_ptr_;
   int dims[2];
+  
 };
+
+std::ostream& operator<<(std::ostream& os, const Matrix& rhs);
+
 }  // namespace starml

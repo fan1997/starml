@@ -31,7 +31,7 @@ class DataType {
   DataType() {}
   DataType(DataTypeKind type);
   size_t size() const;
-  std::string type() const;
+  DataTypeKind type() const;
   template <typename T>
   bool is_valid() const {
     if (type_ == type_lists[type_name<T>()]) {

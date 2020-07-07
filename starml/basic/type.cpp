@@ -1,5 +1,4 @@
 #include "starml/basic/type.h"
-#include <iostream>
 
 namespace starml {
 std::unordered_map<std::string, DataTypeKind> DataType::type_lists{
@@ -15,4 +14,6 @@ size_t DataType::size() const {
 bool DataType::operator==(const DataType &rhs) const {
   return this->type_ == rhs.type_;
 }
+
+DataTypeKind DataType::type() const { return this->type_; }
 }  // namespace starml
