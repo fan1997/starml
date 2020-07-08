@@ -1,4 +1,3 @@
-#include <iostream>
 #include "starml/basic/matrix.h"
 #include "starml/basic/dispatch.h"
 namespace starml {
@@ -22,7 +21,7 @@ std::ostream& operator<<(std::ostream& os, const Matrix& rhs) {
   int num_of_rows = std::min(rhs.rows_num(), Matrix::print_limited[0]);
   int num_of_cols = std::min(rhs.cols_num(), Matrix::print_limited[1]);
   os << "Matrix "
-     << "(" << rhs.rows_num() << ", " << rhs.cols_num << ")\n";
+     << "(" << rhs.rows_num() << ", " << rhs.cols_num() << ")\n";
   STARML_DISPATCH_TYPES(rhs.data_type(), "matrix printer", [&] {
     const scalar_t* data = rhs.data<scalar_t>();
     for (int i = 0; i < num_of_rows; i++) {
@@ -32,5 +31,9 @@ std::ostream& operator<<(std::ostream& os, const Matrix& rhs) {
       os << '\n';
     }
   });
+  return os;
+}
+void Matrix::print(std::ostream& os) const{
+  os << *this;
 }
 }  // namespace starml

@@ -1,5 +1,6 @@
 #include "gtest/gtest.h"
 #include "starml/basic/matrix.h"
+#include <iostream>
 using namespace starml;
 
 Matrix test() {
@@ -23,6 +24,6 @@ int main(int argc, char **argv) {
   }
   Matrix b = test();
   a = b;
-  std::cout << a;
+  a.print();
   return RUN_ALL_TESTS();
 }

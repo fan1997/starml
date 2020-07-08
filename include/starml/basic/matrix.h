@@ -1,10 +1,10 @@
 #pragma once
+#include <iostream>
 #include "starml/basic/allocator.h"
 #include "starml/basic/device.h"
 #include "starml/basic/type.h"
 
 namespace starml {
-
 class Matrix {
  public:
   Matrix();
@@ -22,6 +22,7 @@ class Matrix {
   int rows_num() const;
   int cols_num() const;
   DataTypeKind data_type() const;
+  void print(std::ostream& os = std::cout) const;
   static int print_limited[2];
 
  private:
@@ -31,9 +32,7 @@ class Matrix {
   Allocator* allocator_;
   DataPtr data_ptr_;
   int dims[2];
-  
 };
-
 std::ostream& operator<<(std::ostream& os, const Matrix& rhs);
 
 }  // namespace starml
