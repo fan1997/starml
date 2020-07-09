@@ -15,14 +15,17 @@ Matrix::Matrix(int row, int col, DeviceType device_type, DataTypeKind data_type)
 const int* Matrix::shape() const { return this->dims; }
 int Matrix::rows_num() const { return this->dims[0]; }
 int Matrix::cols_num() const { return this->dims[1]; }
-DataTypeKind Matrix::data_type() const { return this->dtype_.type(); }
+DataType Matrix::data_type() const { return this->dtype_; }
+void Matrix::print(std::ostream& os) const { os << *this; }
+Device Matrix::device_type() const { return this->device_; }
 
 std::ostream& operator<<(std::ostream& os, const Matrix& rhs) {
   int num_of_rows = std::min(rhs.rows_num(), Matrix::print_limited[0]);
   int num_of_cols = std::min(rhs.cols_num(), Matrix::print_limited[1]);
   os << "Matrix "
      << "(" << rhs.rows_num() << ", " << rhs.cols_num() << ")\n";
-  STARML_DISPATCH_TYPES(rhs.data_type(), "matrix printer", [&] {
+  auto data_type = rhs.data_type().type(); 
+  STARML_DISPATCH_TYPES(data_type, "matrix printer", [&] {
     const scalar_t* data = rhs.data<scalar_t>();
     for (int i = 0; i < num_of_rows; i++) {
       for (int j = 0; j < num_of_cols; j++) {
@@ -33,7 +36,5 @@ std::ostream& operator<<(std::ostream& os, const Matrix& rhs) {
   });
   return os;
 }
-void Matrix::print(std::ostream& os) const{
-  os << *this;
-}
+
 }  // namespace starml

@@ -1,5 +1,6 @@
 #pragma once
 #include <iostream>
+#include <type_traits>
 #include "starml/basic/allocator.h"
 #include "starml/basic/device.h"
 #include "starml/basic/type.h"
@@ -21,7 +22,8 @@ class Matrix {
   const int *shape() const;
   int rows_num() const;
   int cols_num() const;
-  DataTypeKind data_type() const;
+  DataType data_type() const;
+  Device device_type() const;
   void print(std::ostream& os = std::cout) const;
   static int print_limited[2];
 
@@ -34,5 +36,10 @@ class Matrix {
   int dims[2];
 };
 std::ostream& operator<<(std::ostream& os, const Matrix& rhs);
+template <class T>
+struct is_matrix
+    : std::integral_constant<
+          bool, std::is_same<Matrix, typename std::remove_cv<T>::type>::value> {
+};
 
 }  // namespace starml

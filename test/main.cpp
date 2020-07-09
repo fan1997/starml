@@ -1,14 +1,15 @@
 #include "gtest/gtest.h"
 #include "starml/basic/matrix.h"
+#include "starml/operators/binary_ops.h"
 #include <iostream>
 using namespace starml;
 
 Matrix test() {
-  Matrix a(3, 5, kCPU, kInt);
+  Matrix a(2, 3, kCPU, kInt);
   int *data = a.data<int>();
-  for (int i = 0; i < 3; i++) {
-    for (int j = 0; j < 5; j++) {
-      data[i * 5 + j] = 1;
+  for (int i = 0; i < 2; i++) {
+    for (int j = 0; j < 3; j++) {
+      data[i * 3 + j] = 1;
     }
   }
   return a;
@@ -23,7 +24,7 @@ int main(int argc, char **argv) {
     }
   }
   Matrix b = test();
-  a = b;
-  a.print();
+  Matrix result = add(a, b);
+  result.print();
   return RUN_ALL_TESTS();
 }
