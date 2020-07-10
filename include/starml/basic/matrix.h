@@ -24,8 +24,11 @@ class Matrix {
   int cols_num() const;
   DataType data_type() const;
   Device device_type() const;
+  void* raw_data() const;
+  const void* raw_mutable_data() const;
   void print(std::ostream& os = std::cout) const;
   static int print_limited[2];
+  Matrix to(DeviceType device_type) const;
 
  private:
   size_t size_;
@@ -36,10 +39,4 @@ class Matrix {
   int dims[2];
 };
 std::ostream& operator<<(std::ostream& os, const Matrix& rhs);
-template <class T>
-struct is_matrix
-    : std::integral_constant<
-          bool, std::is_same<Matrix, typename std::remove_cv<T>::type>::value> {
-};
-
 }  // namespace starml

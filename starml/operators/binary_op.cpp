@@ -7,7 +7,7 @@ namespace starml {
     Matrix result =
         Matrix(matrix1.rows_num(), matrix1.cols_num(),
                matrix1.device_type().type(), matrix1.data_type().type());
-    add_dispatcher(matrix1.device_type(), matrix1, matrix2, result);
+    add_dispatcher(matrix1, matrix2, result);
     return result;
   }
 }

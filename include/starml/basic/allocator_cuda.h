@@ -10,7 +10,6 @@ class CUDAAllocator : public Allocator {
   DeleterFnPtr raw_deleter() const override;
   static void delete_fn(void *ptr);
 };
-static CUDAAllocator g_cuda_allocator;
 Allocator* cuda_allocator();
 
 }  // namespace starml

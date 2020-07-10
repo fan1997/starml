@@ -1,6 +1,7 @@
 #pragma once
 #include <mutex>
 #include <unordered_map>
+#include <typeinfo>
 #include "starml/basic/type.h"
 #include "starml/basic/matrix.h"
 
@@ -13,9 +14,9 @@ template <typename TReturn, typename... TArgs>
 class Dispatcher<TReturn(*)(TArgs...)> {
  public:
   using FnPtr = TReturn (*)(TArgs...);
-  template <typename Device, typename... TArgTypes>
-  TReturn operator()(Device device, TArgTypes&&... args) {
-    int key = static_cast<int>(device.type());
+  template <typename... TArgTypes>
+  TReturn operator()(TArgTypes&&... args) {
+    int key = dispatch_key(args...);
     FnPtr kernel = kernel_table_[key];
     return (*kernel)(std::forward<TArgTypes>(args)...);
   }
@@ -24,6 +25,18 @@ class Dispatcher<TReturn(*)(TArgs...)> {
     kernel_table_[static_cast<int>(device_type)] = kernel;
   }
  protected:
+  template <typename T>
+  int dispatch_key(const T& arg) {
+    return static_cast<int>(arg.device_type().type());
+  }
+
+  template <typename THead, typename... TTail>
+  int dispatch_key(const THead& head, const TTail&... tail) {
+    if(typeid(head) == typeid(Matrix)) {
+      return static_cast<int>(head.device_type().type());
+    }
+    return dispatch_key(tail...);
+  }
   std::mutex mu_;
   std::unordered_map<int, FnPtr> kernel_table_;
 };
