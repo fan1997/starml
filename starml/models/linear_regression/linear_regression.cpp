@@ -9,7 +9,7 @@ regression::LinearRegression::LinearRegression(const starml::Matrix& train_data,
                                         const double lambda) {
   std::cout << "LinearRegression Model has been created with train_data" << "\n";
   this->lambda = lambda;
-  printf("train_data:%f",train_data.data()[0]);
+  printf("train_data:%f", train_data.data<float>()[0]);
   this->train(train_data, label);
 
 }

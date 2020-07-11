@@ -28,8 +28,8 @@ class DataLoader {
    int get_num_instances() const {return this->num_instances_;}
    int get_num_features() const {return this->num_features_;}
    long int get_total_size() const {return this->total_size_;}
-   const Matrix get_data() const;  // 返回引用(可能需要智能指针) 
-   const Matrix get_label() const; //
+   Matrix get_data() const;  // 返回引用(可能需要智能指针)
+   Matrix get_label() const; //
    // const Matrix get_csr_data() const; // 稀疏
 
  protected:

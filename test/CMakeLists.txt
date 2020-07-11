@@ -1,6 +1,7 @@
 # Get all the test files
-SET(TEST_SOURCES 
+SET(TEST_SOURCES
   test_matrix.cpp
+  test_dataloader.cpp
 )
 
 # Build an executable file for all test files

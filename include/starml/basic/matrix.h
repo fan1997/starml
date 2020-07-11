@@ -7,15 +7,6 @@ namespace starml {
 
 class Matrix {
  public:
-<<<<<<< HEAD
-  Matrix(){};
-  // ~Matrix(){delete storage_;}
-  Matrix(int row, int col, DeviceType device_type);
-  float* data() const { return storage_->data(); }
-
- private:
-  Storage* storage_;   //类指针需要显示析构？？
-=======
   Matrix();
   Matrix(int row, int col, DeviceType device_type, DataTypeKind data_type);
   template <typename T>
@@ -37,7 +28,6 @@ class Matrix {
   DataType dtype_;
   Allocator* allocator_;
   DataPtr data_ptr_;
->>>>>>> master
   int dims[2];
 };
 

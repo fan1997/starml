@@ -35,31 +35,30 @@ namespace starml {
     std::cout << "grouping class..." << '\n';
   }
 
-  const Matrix DataLoader::get_data() const{
+  Matrix DataLoader::get_data() const{
     std::cout << "getting data ..." << '\n';
     int m = this->num_instances_;
     int n = this->num_features_;
-    Matrix data(m, n, kCPU);
-    memset(data.data(), 0.0, m * n * sizeof(float));
+    Matrix data(m, n, kCPU, kFloat);
+    memset(data.data<float>(), 0.0, m * n * sizeof(float));
 #pragma parallel for
     for (size_t i = 0; i < m; i++) {
       for (size_t j = 0; j < this->instances_[i].size(); j++) {
         int col_id = this->instances_[i][j].index - 1;
         float v = this->instances_[i][j].value;
-        data.data()[i * n + col_id] = v;
+        data.data<float>()[i * n + col_id] = v;
       }
     }
     return data;
   }
 
-  const Matrix DataLoader::get_label() const{
+  Matrix DataLoader::get_label() const{
     std::cout << "getting label ..." << '\n';
-    Matrix label(this->num_instances_, 1, kCPU);
+    Matrix label(this->num_instances_, 1, kCPU, kFloat);
     for (size_t i = 0; i < this->num_instances_; i++) {
-      label.data()[i] = this->label_[i];
+      label.data<float>()[i] = this->label_[i];
     }
     return label;
   }
-
 
 } // namespace starml
