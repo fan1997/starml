@@ -2,12 +2,13 @@
 #include "starml/basic/matrix.h"
 #include "starml/models/linear_regression/linear_regression.h"
 #include "starml/dataloader/dataloader.h"
+#include "gtest/gtest.h"
 
 
 using namespace starml::regression;
 using namespace starml;
 
-int main(){
+TEST(ModelAndDataloader, test){
 
    LinearRegression model;
    LinearRegression model1(5.0);
@@ -34,5 +35,4 @@ int main(){
    Matrix data_1 = data_loader.get_data();
    label_1.print();
    data_1.print();
-   return 0;
 }
