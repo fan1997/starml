@@ -41,7 +41,7 @@ namespace starml {
     int n = this->num_features_;
     Matrix data(m, n, kCPU, kFloat);
     memset(data.data<float>(), 0.0, m * n * sizeof(float));
-#pragma parallel for
+#pragma omp parallel for
     for (size_t i = 0; i < m; i++) {
       for (size_t j = 0; j < this->instances_[i].size(); j++) {
         int col_id = this->instances_[i][j].index - 1;
