@@ -3,7 +3,7 @@ project(starml VERSION 0.0.1 LANGUAGES CXX)
 
 option(STARML_BUILD_SHARED_LIBS "Compiled as a shared library" ON)
 option(STARML_ENABLE_TESTING "Build with testing enabled" ON)
-option(STARML_USE_CUDA "Build with CUDA supported" ON)
+option(STARML_USE_CUDA "Build with CUDA supported" OFF)
 
 # Show the detail of compile messages
 set(CMAKE_VERBOSE_MAKEFILE OFF)

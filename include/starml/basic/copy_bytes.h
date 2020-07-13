@@ -1,7 +1,7 @@
 #pragma once
 #include <cstddef>
 #include "starml/basic/device.h"
-#include "starml/basic/macros.h"
+#include "starml/utils/macros.h"
 
 namespace starml {
 using CopyBytesFunction = void (*)(size_t nbytes, const void* src,
