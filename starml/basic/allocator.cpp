@@ -1,5 +1,6 @@
 #include "starml/basic/allocator.h"
 #include "starml/basic/device.h"
+#include "starml/utils/loguru.h"
 
 namespace starml {
 void Allocator::deallocate_raw(void* ptr) const {
@@ -27,7 +28,9 @@ void AllocatorRegistry::set_allocator(DeviceType device_type,
 }
 
 Allocator* AllocatorRegistry::allocator(DeviceType device_type) {
-  return allocators_[static_cast<int>(device_type)];
+  Allocator* allocator = allocators_[static_cast<int>(device_type)]; 
+  STARML_CHECK_NOTNULL(allocator) << "Allocator for " << device_type << " is not set.";
+  return allocator;
 }
 
 AllocatorRegister::AllocatorRegister(DeviceType device_type,
