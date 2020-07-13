@@ -1,7 +1,6 @@
 #include <iostream>
 #include "starml/basic/matrix.h"
 #include "starml/modelevaluator/metrics/metrics.h"
-#include "starml/dataloader/dataloader.h"
 #include "gtest/gtest.h"
 
 
