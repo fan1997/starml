@@ -19,8 +19,8 @@ TEST(EVAL, test){
   float score = metric1.mean_squared_error(y, y_pred);
   std::cout << "score: " << score << '\n';
 
-  Matrix y_cuda = y.to(kCUDA);
-  Matrix y_pred_cuda = y_pred.to(kCUDA);
-  float score_cuda = metric1.mean_squared_error(y_cuda, y_pred_cuda);
-  std::cout << "score_cuda: " << score_cuda << '\n';
+  // Matrix y_cuda = y.to(kCUDA);
+  // Matrix y_pred_cuda = y_pred.to(kCUDA);
+  // float score_cuda = metric1.mean_squared_error(y_cuda, y_pred_cuda);
+  // std::cout << "score_cuda: " << score_cuda << '\n';
 }
