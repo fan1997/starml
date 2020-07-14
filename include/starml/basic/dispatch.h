@@ -45,27 +45,27 @@ template<typename Obj, typename FnPtr>
 class DispatcherRegister {
  public:
   DispatcherRegister(DeviceType device_type, FnPtr kernel) {
-    Obj::singleton()->set_dispatcher(device_type, kernel);
+    Obj::singleton().set_dispatcher(device_type, kernel);
   }
 };
 
-#define STARML_DECLARE_DISPATCHER(dispatcher, kernel_fn_type)       \
-  class dispatcher##_t : public Dispatcher<kernel_fn_type> {    \
-   public:                                                      \
-    static dispatcher##_t* singleton() {                        \
-      static dispatcher##_t* dispatcher = new dispatcher##_t(); \
-      return dispatcher;                                        \
-    }                                                           \
-                                                                \
-   private:                                                     \
-    dispatcher##_t() {}                                         \
-    dispatcher##_t(const dispatcher##_t&) = delete;             \
-    dispatcher##_t& operator=(dispatcher##_t const&) = delete;  \
-  };                                                            \
+#define STARML_DECLARE_DISPATCHER(dispatcher, kernel_fn_type)  \
+  class dispatcher##_t : public Dispatcher<kernel_fn_type> {   \
+   public:                                                     \
+    static dispatcher##_t& singleton() {                       \
+      static dispatcher##_t dispatcher;                        \
+      return dispatcher;                                       \
+    }                                                          \
+                                                               \
+   private:                                                    \
+    dispatcher##_t() {}                                        \
+    dispatcher##_t(const dispatcher##_t&) = delete;            \
+    dispatcher##_t& operator=(dispatcher##_t const&) = delete; \
+  };                                                           \
   extern dispatcher##_t& dispatcher
 
 #define STARML_DEFINE_DISPATCHER(dispatcher) \
-  dispatcher##_t& dispatcher = *(dispatcher##_t::singleton())
+  dispatcher##_t& dispatcher = dispatcher##_t::singleton()
 
 #define STARML_REGISTER_KERNEL(dispatcher, device_type, fn) \
   static DispatcherRegister<dispatcher##_t, decltype(fn)> \
