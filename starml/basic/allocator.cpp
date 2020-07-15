@@ -26,6 +26,8 @@ AllocatorRegistry& AllocatorRegistry::singleton() {
 void AllocatorRegistry::set_allocator(DeviceType device_type,
                                       Allocator* allocator) {
   std::lock_guard<std::mutex> guard(mu_);
+  STARML_CHECK_NE(device_type, DeviceType::UNCERTAIN)
+      << "The device type is uncertain";
   allocators_[static_cast<int>(device_type)] = allocator;
 }
 

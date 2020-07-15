@@ -5,8 +5,7 @@ namespace starml {
 
   Matrix add(const Matrix& matrix1, const Matrix& matrix2) {
     Matrix result =
-        Matrix(matrix1.rows_num(), matrix1.cols_num(),
-               matrix1.device_type().type(), matrix1.data_type().type());
+        Matrix(matrix1.dims(), matrix1.device(), matrix1.data_type());
     add_dispatcher(matrix1, matrix2, result);
     return result;
   }

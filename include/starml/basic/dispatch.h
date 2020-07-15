@@ -3,7 +3,6 @@
 #include <unordered_map>
 #include <typeinfo>
 #include "starml/basic/type.h"
-#include "starml/basic/matrix.h"
 
 namespace starml {
 
@@ -27,13 +26,13 @@ class Dispatcher<TReturn(*)(TArgs...)> {
  protected:
   template <typename T>
   int dispatch_key(const T& arg) {
-    return static_cast<int>(arg.device_type().type());
+    return static_cast<int>(arg.device().type());
   }
 
   template <typename THead, typename... TTail>
   int dispatch_key(const THead& head, const TTail&... tail) {
     if(typeid(head) == typeid(Matrix)) {
-      return static_cast<int>(head.device_type().type());
+      return static_cast<int>(head.device().type());
     }
     return dispatch_key(tail...);
   }
