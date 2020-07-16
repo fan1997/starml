@@ -2,6 +2,7 @@
 #include <iostream>
 
 namespace starml {
+namespace models{
 namespace regression{
 
 regression::LinearRegression::LinearRegression(const starml::Matrix& train_data,
@@ -51,4 +52,5 @@ void regression::LinearRegression::predict(const starml::Matrix& predict_data,
 }
 
 } // namespace regression
+} // models
 } // namespace starml

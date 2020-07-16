@@ -3,6 +3,7 @@
 #include "starml/basic/matrix.h"
 
 namespace starml {
+namespace models {
 namespace regression {
 
 /**
@@ -109,4 +110,5 @@ class LinearRegression
 };
 
 } // namespace regression
+} // models
 } // namespace starml

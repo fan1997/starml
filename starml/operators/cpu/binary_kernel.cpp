@@ -11,12 +11,27 @@ void add_impl(const Matrix& matrix1, const Matrix& matrix2, Matrix& result) {
     auto data2 = matrix2.data<scalar_t>();
     auto res_data = result.data<scalar_t>();
     for (int i = 0; i < size; i++) {
-      res_data[i] = data1[i] + data2[1];
+      res_data[i] = data1[i] + data2[i];
+    }
+  });
+}
+
+void sub_impl(const Matrix& matrix1, const Matrix& matrix2, Matrix& result) {
+  // std::cout << "In add_impl " << std::endl;
+  auto data_type = matrix1.data_type().type();
+  int size = matrix1.rows_num() * matrix1.cols_num();
+  STARML_DISPATCH_TYPES(data_type, "SUB", [&]() {
+    auto data1 = matrix1.data<scalar_t>();
+    auto data2 = matrix2.data<scalar_t>();
+    auto res_data = result.data<scalar_t>();
+    for (int i = 0; i < size; i++) {
+      res_data[i] = data1[i] - data2[i];
     }
   });
 }
 }  // namespace
 
 STARML_REGISTER_KERNEL(add_dispatcher, kCPU, &add_impl);
+STARML_REGISTER_KERNEL(sub_dispatcher, kCPU, &sub_impl);
 
 }  // namespace starml

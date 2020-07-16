@@ -4,6 +4,9 @@ SET(TEST_SOURCES
   test_dataloader.cpp
   test_metrics.cpp
   test_scaler.cpp
+  test_transpose.cpp
+  test_matmul.cpp
+  test_binary.cpp
 )
 
 # Build an executable file for all test files

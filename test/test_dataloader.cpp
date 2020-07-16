@@ -5,7 +5,7 @@
 #include "gtest/gtest.h"
 
 
-using namespace starml::regression;
+using namespace starml::models::regression;
 using namespace starml;
 
 TEST(ModelAndDataloader, test){
