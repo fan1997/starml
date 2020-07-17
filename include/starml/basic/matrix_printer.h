@@ -43,7 +43,7 @@ template <typename T>
 void MatrixPrinter::print(const Matrix& matrix) {
   std::stringstream values_stream;
   int total_count = std::min(matrix.size(), limit_);
-  Matrix host_matrix = matrix.device().is_cpu() ? matrix : matrix.to(kCUDA);
+  Matrix host_matrix = matrix.device().is_cpu() ? matrix : matrix.to(kCPU);
   const T* data = host_matrix.data<T>();
   values_stream << "\n\t"
                 << "data: ";
@@ -61,7 +61,7 @@ template <typename T>
 void MatrixPrinter::print_matrix(const Matrix& matrix, int n_row_limited,
                                  int n_col_limited) {
   std::stringstream values_stream;
-  Matrix host_matrix = matrix.device().is_cpu() ? matrix : matrix.to(kCUDA);
+  Matrix host_matrix = matrix.device().is_cpu() ? matrix : matrix.to(kCPU);
 
   auto n_row = std::min(matrix.dim(0), n_row_limited);
   auto n_col = std::min(matrix.dim(1), n_col_limited);

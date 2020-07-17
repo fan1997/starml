@@ -28,7 +28,7 @@ int main(int argc, char **argv) {
   Matrix a_cuda = a.to(kCUDA);
   Matrix b_cuda = b.to(kCUDA);
   Matrix result_cuda = add(a_cuda, b_cuda);
-  Matrix t = result_cuda.to(kCPU);
-  t.print();
+  // Matrix t = result_cuda.to(kCPU);
+  result_cuda.print();
   return RUN_ALL_TESTS();
 }
