@@ -16,6 +16,6 @@ using matmul_op_kernel_fn = void (*)(const Matrix& matrix1,
                                      const Matrix& matrix2, Matrix& result);
 STARML_DECLARE_DISPATCHER(matmul_dispatcher, matmul_op_kernel_fn);
 
-Matrix matmul(const Matrix& matrix1, const Matrix& matrix2, MatmulOption option_1, MatmulOption option_2);
+Matrix matmul(const Matrix& matrix1, const Matrix& matrix2, MatmulOption option_1 = kNoTrans, MatmulOption option_2 = kNoTrans);
 
 }

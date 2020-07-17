@@ -7,6 +7,8 @@ SET(TEST_SOURCES
   test_transpose.cpp
   test_matmul.cpp
   test_binary.cpp
+  test_concat.cpp
+  test_lr.cpp
 )
 
 # Build an executable file for all test files

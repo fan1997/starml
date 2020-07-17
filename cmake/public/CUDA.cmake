@@ -33,6 +33,18 @@ else()
 endif()
 set_property(TARGET starml::cublas PROPERTY INTERFACE_INCLUDE_DIRECTORIES ${CUDA_INCLUDE_DIRS})
 
+# cusolver
+add_library(starml::cusolver INTERFACE IMPORTED)
+message(${CUDA_cusolver_LIBRARY})
+if(STARML_BUILD_SHARED_LIBS)
+    set_property(TARGET starml::cusolver PROPERTY INTERFACE_LINK_LIBRARIES ${CUDA_cusolver_LIBRARY})
+else()
+    set_property(TARGET starml::cusolver PROPERTY INTERFACE_LINK_LIBRARIES
+    "${CUDA_TOOLKIT_ROOT_DIR}/lib64/libcusolver_static.a")
+endif()
+set_property(TARGET starml::cusolver PROPERTY INTERFACE_INCLUDE_DIRECTORIES ${CUDA_INCLUDE_DIRS})
+
+
 # thrust is a Head-only library
 add_library(starml::thrust INTERFACE IMPORTED)
 set_property(TARGET starml::thrust PROPERTY INTERFACE_INCLUDE_DIRECTORIES ${CUDA_INCLUDE_DIRS})

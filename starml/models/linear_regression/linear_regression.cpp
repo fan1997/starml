@@ -1,4 +1,6 @@
 #include "starml/models/linear_regression/linear_regression.h"
+#include "starml/operators/transpose.h"
+#include "starml/operators/matmul.h"
 #include <iostream>
 
 namespace starml {
@@ -31,10 +33,22 @@ double regression::LinearRegression::train(const starml::Matrix& train_data,
                                            const starml::Matrix& label) {
   std::cout << "Training LinearRegression Model" << "\n";
   /**
-   * for loop
-   * calc w_grad = grad(w)
-   * grad_decent : w = w - lr * w_grad
+   * (XT*X + lambda * i) W = XT*Y
+   * add AX = B -> X solver in cpu(EIGEN) && cuda (CUSOLVER)
+   * 1.XT = TRANSPOSE(X)
+   * 2.XTX = matmul(XT, X)
+   * 3.XTY = matmul(XT, Y)
+   * 4.W = linearsolver
    */
+   starml::Matrix train_data_t = transpose(train_data);
+   starml::Matrix xtx = matmul(train_data_t, train_data);
+   starml::Matrix xty = matmul(train_data_t, label);
+   // xtx.to(kCPU).print();
+   // xty.to(kCPU).print();
+   xtx.print();
+   xty.print();
+   //ignore lambda first
+   // this -> weights = lu_solve(xtx, xty);
 }
 
 double regression::LinearRegression::train(const starml::Matrix& train_data,
