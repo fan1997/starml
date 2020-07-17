@@ -2,11 +2,10 @@
 #include "gtest/gtest.h"
 #include "starml/basic/matrix.h"
 #include "starml/operators/binary_ops.h"
-#include <iostream>
 using namespace starml;
 
 Matrix test() {
-  Matrix a(2, 3, kCPU, kInt);
+  Matrix a({2, 3}, Device(kCPU), DataType(kInt));
   int *data = a.data<int>();
   for (int i = 0; i < 2; i++) {
     for (int j = 0; j < 3; j++) {

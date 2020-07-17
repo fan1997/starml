@@ -3,7 +3,6 @@
 #include <unordered_map>
 #include <typeinfo>
 #include "starml/basic/type.h"
-#include "starml/basic/matrix.h"
 
 namespace starml {
 
@@ -27,16 +26,29 @@ class Dispatcher<TReturn(*)(TArgs...)> {
  protected:
   template <typename T>
   int dispatch_key(const T& arg) {
-    return static_cast<int>(arg.device_type().type());
+    int key = matrix_type_id(arg);
+    STARML_CHECK_NE(key, -1)
+        << "Register kernel should have at least one matrix";
+    return key;
   }
 
   template <typename THead, typename... TTail>
   int dispatch_key(const THead& head, const TTail&... tail) {
-    if(typeid(head) == typeid(Matrix)) {
-      return static_cast<int>(head.device_type().type());
+    if (typeid(head) == typeid(Matrix)) {
+      return matrix_type_id(head);
     }
     return dispatch_key(tail...);
   }
+
+  int matrix_type_id(const Matrix& matrix) {
+    return static_cast<int>(matrix.device().type());
+  }
+
+  template <typename T>
+  int matrix_type_id(const T& non_matrix) {
+    return -1;
+  }
+
   std::mutex mu_;
   std::unordered_map<int, FnPtr> kernel_table_;
 };
@@ -45,27 +57,27 @@ template<typename Obj, typename FnPtr>
 class DispatcherRegister {
  public:
   DispatcherRegister(DeviceType device_type, FnPtr kernel) {
-    Obj::singleton()->set_dispatcher(device_type, kernel);
+    Obj::singleton().set_dispatcher(device_type, kernel);
   }
 };
 
-#define STARML_DECLARE_DISPATCHER(dispatcher, kernel_fn_type)       \
-  class dispatcher##_t : public Dispatcher<kernel_fn_type> {    \
-   public:                                                      \
-    static dispatcher##_t* singleton() {                        \
-      static dispatcher##_t* dispatcher = new dispatcher##_t(); \
-      return dispatcher;                                        \
-    }                                                           \
-                                                                \
-   private:                                                     \
-    dispatcher##_t() {}                                         \
-    dispatcher##_t(const dispatcher##_t&) = delete;             \
-    dispatcher##_t& operator=(dispatcher##_t const&) = delete;  \
-  };                                                            \
+#define STARML_DECLARE_DISPATCHER(dispatcher, kernel_fn_type)  \
+  class dispatcher##_t : public Dispatcher<kernel_fn_type> {   \
+   public:                                                     \
+    static dispatcher##_t& singleton() {                       \
+      static dispatcher##_t dispatcher;                        \
+      return dispatcher;                                       \
+    }                                                          \
+                                                               \
+   private:                                                    \
+    dispatcher##_t() {}                                        \
+    dispatcher##_t(const dispatcher##_t&) = delete;            \
+    dispatcher##_t& operator=(dispatcher##_t const&) = delete; \
+  };                                                           \
   extern dispatcher##_t& dispatcher
 
 #define STARML_DEFINE_DISPATCHER(dispatcher) \
-  dispatcher##_t& dispatcher = *(dispatcher##_t::singleton())
+  dispatcher##_t& dispatcher = dispatcher##_t::singleton()
 
 #define STARML_REGISTER_KERNEL(dispatcher, device_type, fn) \
   static DispatcherRegister<dispatcher##_t, decltype(fn)> \

@@ -19,12 +19,25 @@ std::ostream& operator<<(std::ostream& os, DeviceType type) {
   return os;
 }
 
-Device::Device(DeviceType type) { this->type_ = type; }
+Device::Device(DeviceType type, int index) : type_(type), index_(index) {
+  STARML_CHECK(index_ >= 0)
+      << "Device index must be non-negative, got " << index_;
+  STARML_CHECK(!is_cpu() || index_ == 0)
+      << "CPU device index must be zero, got " << index_;
+}
 
-DeviceType Device::type() { return this->type_; }
+DeviceIndex Device::index() const { return this->index_; }
+void Device::set_index(DeviceIndex new_index) { this->index_ = new_index; }
+
+DeviceType Device::type() const { return this->type_; }
+void Device::set_type(DeviceType new_type) { this->type_ = new_type; }
+
+bool Device::is_cuda() const { return this->type_ == DeviceType::CUDA; }
+bool Device::is_cpu() const { return this->type_ == DeviceType::CPU; }
 
 bool Device::operator==(const Device& rhs) {
-  return this->type_ == rhs.type_;
+  return (this->type_ == rhs.type_) && (this->index_ == rhs.index_);
 }
+bool Device::operator!=(const Device& rhs) { return !((*this) == rhs); }
 
 }  // namespace starml
