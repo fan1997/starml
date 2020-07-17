@@ -1,7 +1,6 @@
 #include "gtest/gtest.h"
 #include "starml/basic/matrix.h"
 #include "starml/operators/binary_ops.h"
-#include "starml/basic/matrix_printer.h"
 using namespace starml;
 
 Matrix test() {
@@ -23,14 +22,13 @@ int main(int argc, char **argv) {
       data[i * 3 + j] = 3;
     }
   }
-  MatrixPrinter mp;
   Matrix b = test();
   Matrix result = add(a, b);
-  mp.print(result);
+  result.print();
   Matrix a_cuda = a.to(kCUDA);
   Matrix b_cuda = b.to(kCUDA);
   Matrix result_cuda = add(a_cuda, b_cuda);
   Matrix t = result_cuda.to(kCPU);
-  mp.print(t);
+  t.print();
   return RUN_ALL_TESTS();
 }

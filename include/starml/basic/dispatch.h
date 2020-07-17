@@ -26,16 +26,29 @@ class Dispatcher<TReturn(*)(TArgs...)> {
  protected:
   template <typename T>
   int dispatch_key(const T& arg) {
-    return static_cast<int>(arg.device().type());
+    int key = matrix_type_id(arg);
+    STARML_CHECK_NE(key, -1)
+        << "Register kernel should have at least one matrix";
+    return key;
   }
 
   template <typename THead, typename... TTail>
   int dispatch_key(const THead& head, const TTail&... tail) {
-    if(typeid(head) == typeid(Matrix)) {
-      return static_cast<int>(head.device().type());
+    if (typeid(head) == typeid(Matrix)) {
+      return matrix_type_id(head);
     }
     return dispatch_key(tail...);
   }
+
+  int matrix_type_id(const Matrix& matrix) {
+    return static_cast<int>(matrix.device().type());
+  }
+
+  template <typename T>
+  int matrix_type_id(const T& non_matrix) {
+    return -1;
+  }
+
   std::mutex mu_;
   std::unordered_map<int, FnPtr> kernel_table_;
 };

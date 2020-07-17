@@ -10,7 +10,7 @@ void *CUDAAllocator::allocate_raw(size_t num_bytes) const {
 
 DeleterFnPtr CUDAAllocator::raw_deleter() const { return &delete_fn; }
 
-void CUDAAllocator::delete_fn(void *ptr) { cudaFree(ptr); }
+void CUDAAllocator::delete_fn(void *ptr) { STARML_CUDA_CHECK(cudaFree(ptr)); }
 
 Allocator* cuda_allocator() {
   static Allocator* allocator = 

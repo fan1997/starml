@@ -17,8 +17,7 @@ constexpr int k_limit_default = 180;
 // Note: Copy constructor/assignment is not supported here due to the unique_ptr
 class MatrixPrinter {
  public:
-  MatrixPrinter(const std::string& matrix_name = "",
-                const std::string& file_name = "", int limit = k_limit_default);
+  MatrixPrinter(const std::string& file_name = "", int limit = k_limit_default);
   // Deconstructor is needed to close the file manually
   ~MatrixPrinter();
 
@@ -38,7 +37,6 @@ class MatrixPrinter {
   bool to_file_;
   int limit_;
   std::unique_ptr<std::ofstream> log_file_;
-  std::string matrix_name_;
 };
 
 template <typename T>

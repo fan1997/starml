@@ -12,8 +12,8 @@ using Shape = std::vector<int>;
 class Matrix {
  public:
   Matrix();
-  Matrix(Shape shape, Device device, DataType data_type);
-  Matrix(Shape shape, DataType data_type, Device device);
+  Matrix(const Shape& shape, const Device& device, const DataType& data_type);
+  Matrix(const Shape& shape, const DataType& data_type, const Device& device);
   ~Matrix() = default;
   Matrix(const Matrix& rhs) = default;
   Matrix& operator=(const Matrix& rhs) = default;
@@ -22,14 +22,14 @@ class Matrix {
   const Shape& dims() const;
   int dim(int index) const;
   int ndims() const;
-  const Device& mutable_device() const;
-  Device device() const;
+  const Device& device() const;
   const DataType& data_type() const;
 
   void* raw_data() const;
   const void* raw_mutable_data() const;
 
   Matrix to(DeviceType new_device_type) const;
+  void print(std::string file_name = "") const;
 
   // Previous judgement is needed to check whether the template datatype
   // is valid.

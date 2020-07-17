@@ -3,13 +3,10 @@
 #include "starml/basic/dispatch.h"
 
 namespace starml {
-MatrixPrinter::MatrixPrinter(const std::string& matrix_name,
-                             const std::string& file_name, int limit)
-    : to_file_(!file_name.empty()),
-      limit_(limit ? limit : k_limit_default),
-      matrix_name_(matrix_name) {
+MatrixPrinter::MatrixPrinter(const std::string& file_name, int limit)
+    : to_file_(!file_name.empty()), limit_(limit ? limit : k_limit_default) {
   if (to_file_) {
-    // initialize the unique_ptr, delete the output file with the 
+    // initialize the unique_ptr, delete the output file with the
     // same name and create a new one.
     log_file_.reset(new std::ofstream(
         file_name, std::ofstream::out | std::ofstream::trunc));
@@ -38,7 +35,7 @@ void MatrixPrinter::print(const Matrix& matrix) {
 
 std::string MatrixPrinter::meta_string(const Matrix& matrix) {
   std::stringstream meta_stream;
-  meta_stream << "Matrix " << matrix_name_ << " of type "
+  meta_stream << "Matrix "  << " of type "
               << matrix.data_type().type() << " on "
               << matrix.device().type() << ":\n\tdims: ";
   auto dims = matrix.dims();
