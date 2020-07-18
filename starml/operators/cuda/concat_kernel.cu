@@ -23,8 +23,6 @@ __global__ void concat_kernel_v2(T* data_1, T* data_2, T* res_data, int size, in
 }
 
 void concat_impl(const Matrix& matrix1, const Matrix& matrix2, Matrix& result, int axis) {
-// void concat_impl(const Matrix& matrix1, const Matrix& matrix2, Matrix& result) {
-  // int axis = 1; // temp
   auto m1_rows_num =  matrix1.dim(0);
   auto m1_cols_num =  matrix1.dim(1);
   auto m2_rows_num =  matrix2.dim(0);
@@ -41,6 +39,7 @@ void concat_impl(const Matrix& matrix1, const Matrix& matrix2, Matrix& result, i
     dim3 dimBlock(256, 1, 1);
     axis == 1 ? concat_kernel_v1<scalar_t><<<dimGrid, dimBlock>>>(data_1, data_2, res_data, size, w1, w2) :
     concat_kernel_v2<scalar_t><<<dimGrid, dimBlock>>>(data_1, data_2, res_data, size, w1, w2, m2_cols_num);
+    cudaDeviceSynchronize();
   });
 }
 }  // namespace

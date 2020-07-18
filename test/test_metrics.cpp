@@ -16,6 +16,8 @@ TEST(EVAL, test){
       y.data<float>()[i] = 1.0;
       y_pred.data<float>()[i] = 3.0;
   }
+  // Matrix y_pred_wrong({label_size + 1, 1}, kCPU, kFloat);
+  // float score_wrong = metric1.mean_squared_error(y, y_pred_wrong);
   float score = metric1.mean_squared_error(y, y_pred);
   std::cout << "score: " << score << '\n';
 

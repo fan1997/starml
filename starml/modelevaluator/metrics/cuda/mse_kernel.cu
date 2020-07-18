@@ -29,6 +29,7 @@ float mse_impl(const Matrix& y, const Matrix& y_pred) {
     dim3 dimGrid(ceil(sizes / 256.0), 1, 1);
     dim3 dimBlock(256, 1, 1);
     mse_kernel<scalar_t><<<dimGrid, dimBlock>>>(y_ptr, y_pred_ptr, sizes, m_diff_ptr);
+    cudaDeviceSynchronize();
     score = thrust::reduce(thrust::cuda::par, m_diff_ptr, m_diff_ptr + sizes, (float) 0, thrust::plus<float>());
   });
   return score / sizes;

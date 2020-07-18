@@ -9,8 +9,11 @@ namespace starml {
     auto m2_rows_num =  matrix2.dim(0);
     auto m2_cols_num =  matrix2.dim(1);
     //check
-    //check(axis == 0 || axis == 1)
-    // check(axis == 0 ?  m1_cols_num == m2_cols_num : m1_rows_num == m2_rows_num)
+    STARML_CHECK((axis == 0 || axis == 1)) << "axis should be 0 (Vertical) or 1(Horizontal)";
+    if(axis == 0)
+       STARML_CHECK((m1_cols_num == m2_cols_num)) << "cols_num should be the same when concat with axis = 0";
+    else
+       STARML_CHECK((m1_rows_num == m2_rows_num)) << "rows_num should be the same when concat  with axis = 1";
     auto res_rows_num = axis == 0 ? m1_rows_num + m2_rows_num : m1_rows_num;
     auto res_cols_num = axis == 0 ? m1_cols_num : m1_cols_num + m2_cols_num;
     Matrix result =

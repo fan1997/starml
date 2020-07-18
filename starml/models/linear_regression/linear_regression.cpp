@@ -31,6 +31,7 @@ regression::LinearRegression::LinearRegression(const starml::Matrix& train_data,
 double regression::LinearRegression::train(const starml::Matrix& train_data,
                                            const starml::Matrix& label) {
   std::cout << "Training LinearRegression Model" << "\n";
+  STARML_CHECK_EQ(train_data.dim(0), label.dim(0)) << "train_data and label should have same rows";
   /**
    * (XT*X + lambda * i) W = XT*Y
    * add AX = B -> X solver in cpu(EIGEN) && cuda (CUSOLVER)
@@ -62,6 +63,7 @@ double regression::LinearRegression::train(const starml::Matrix& train_data,
 void regression::LinearRegression::predict(const starml::Matrix& predict_data,
                                            starml::Matrix& predict_result) const {
   std::cout << "Predict LinearRegression Model" << "\n";
+  STARML_CHECK_EQ(predict_data.dim(1), this->parameters.dim(0)) << "The predict_data's features num should be the same as model weights ";
 }
 
 } // namespace regression
