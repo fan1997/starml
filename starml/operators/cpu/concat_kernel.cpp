@@ -3,12 +3,21 @@
 namespace starml {
 namespace {
 template <typename T>
-void concat_impl_kernel(T* data_1, T* data_2, T* res_data, int& size, int& w1, int& w2){
+void concat_impl_kernel_v1(T* data_1, T* data_2, T* res_data, int& size, int& w1, int& w2){
 #pragma omp parallel for
   for (int pos = 0; pos < size; pos ++) {
     int n = pos / (w1 + w2);
     int m = pos % (w1 + w2);
     res_data[pos] = m >= w1 ? data_2[n * w2 + m - w1] : data_1[n * w1 + m];
+  }
+}
+template <typename T>
+void concat_impl_kernel_v2(T* data_1, T* data_2, T* res_data, int& size, int& w1, int& w2, int& cols_num){
+#pragma omp parallel for
+  for (int pos = 0; pos < size; pos ++) {
+    int n = pos % cols_num;
+    int m = pos / cols_num;
+    res_data[pos] = m >= w1 ? data_2[(m - w1) * cols_num + n] : data_1[m * cols_num + n];
   }
 }
 void concat_impl(const Matrix& matrix1, const Matrix& matrix2, Matrix& result, int axis) {
@@ -27,7 +36,8 @@ void concat_impl(const Matrix& matrix1, const Matrix& matrix2, Matrix& result, i
     auto data_1 = matrix1.data<scalar_t>();
     auto data_2 = matrix2.data<scalar_t>();
     auto res_data = result.data<scalar_t>();
-    concat_impl_kernel(data_1, data_2, res_data, size, w1, w2);
+    axis == 1 ? concat_impl_kernel_v1(data_1, data_2, res_data, size, w1, w2) :
+    concat_impl_kernel_v2(data_1, data_2, res_data, size, w1, w2, m2_cols_num);
   });
 }
 }  // namespace

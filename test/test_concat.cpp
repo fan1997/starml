@@ -16,7 +16,9 @@ TEST(CONCAT, test){
   }
   origin_data.print();
   Matrix origin_data_concat = concat(origin_data, origin_data, 1);
+  Matrix origin_data_concat1 = concat(origin_data, origin_data);
   origin_data_concat.print();
+  origin_data_concat1.print();
   Matrix origin_data_cuda = origin_data.to(kCUDA);
   Matrix origin_data_concat_cuda =  concat(origin_data_cuda, origin_data_cuda, 1);
   origin_data_concat_cuda.print();

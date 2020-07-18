@@ -28,32 +28,44 @@ TEST(SCALER, test){
   trans_data.print();
   Matrix trans_trans_data = scaler.inverse_transform(trans_data);
   trans_trans_data.print();
-  Eigen::Matrix2d a;
-  a << 1, 2, 3, 4;
-  std::cout << "eigen a " << '\n';
-  std::cout << a << '\n';
+//GPU
+  Matrix origin_data_cuda = origin_data.to(kCUDA);
+  scaler.fit(origin_data_cuda);
+  Matrix mean_data_cuda = scaler.get_mean();
+  Matrix std_data_cuda = scaler.get_std();
+  mean_data_cuda.print();
+  std_data_cuda.print();
+  Matrix trans_data_cuda = scaler.transform(origin_data_cuda);
+  trans_data_cuda.print();
+  Matrix trans_trans_data_cuda = scaler.inverse_transform(trans_data_cuda);
+  trans_trans_data_cuda.print();
 
-  std::vector<float> d0 = {2,3,4,5};
-  std::vector<float> d1 = {1,2,};
-  std::vector<float> result = {0,0};
-  Eigen::Map<const Eigen::Matrix<float, Eigen::Dynamic, Eigen::Dynamic, Eigen::ColMajor>> d_0(d0.data(), 2, 2);
-  Eigen::Map<const Eigen::Matrix<float, Eigen::Dynamic, Eigen::Dynamic, Eigen::RowMajor>>
-            d_1(d1.data(), 2, 1);
-  std::cout << d_0 << '\n';
-  std::cout << d_1 << '\n';
-  // Eigen::Map<Eigen::Matrix<float, Eigen::Dynamic, Eigen::Dynamic, Eigen::RowMajor>> retMat(result.data(), 2, 2);
-  // retMat = d_0 * d_1;
+  // Eigen::Matrix2d a;
+  // a << 1, 2, 3, 4;
+  // std::cout << "eigen a " << '\n';
+  // std::cout << a << '\n';
+  //
+  // std::vector<float> d0 = {2,3,4,5};
+  // std::vector<float> d1 = {1,2,};
+  // std::vector<float> result = {0,0};
+  // Eigen::Map<const Eigen::Matrix<float, Eigen::Dynamic, Eigen::Dynamic, Eigen::ColMajor>> d_0(d0.data(), 2, 2);
+  // Eigen::Map<const Eigen::Matrix<float, Eigen::Dynamic, Eigen::Dynamic, Eigen::RowMajor>>
+  //           d_1(d1.data(), 2, 1);
+  // std::cout << d_0 << '\n';
+  // std::cout << d_1 << '\n';
+  // // Eigen::Map<Eigen::Matrix<float, Eigen::Dynamic, Eigen::Dynamic, Eigen::RowMajor>> retMat(result.data(), 2, 2);
+  // // retMat = d_0 * d_1;
+  // // std::cout << retMat << '\n';
+  // // for (size_t i = 0; i < 4; i++) {
+  // //     std::cout << result.data()[i] << '\n';
+  // // }
+  // Eigen::Matrix<float, Eigen::Dynamic, Eigen::Dynamic, Eigen::RowMajor> retMat = d_0 * d_1;
   // std::cout << retMat << '\n';
-  // for (size_t i = 0; i < 4; i++) {
-  //     std::cout << result.data()[i] << '\n';
+  // Eigen::Map<Eigen::Matrix<float, Eigen::Dynamic, Eigen::Dynamic, Eigen::RowMajor> >(result.data(),
+  //                                                                                        retMat.rows(),
+  //                                                                                        retMat.cols()) = retMat;
+  // for (size_t i = 0; i < 2; i++) {
+  //   std::cout << result.data()[i] << '\n';
   // }
-  Eigen::Matrix<float, Eigen::Dynamic, Eigen::Dynamic, Eigen::RowMajor> retMat = d_0 * d_1;
-  std::cout << retMat << '\n';
-  Eigen::Map<Eigen::Matrix<float, Eigen::Dynamic, Eigen::Dynamic, Eigen::RowMajor> >(result.data(),
-                                                                                         retMat.rows(),
-                                                                                         retMat.cols()) = retMat;
-  for (size_t i = 0; i < 2; i++) {
-    std::cout << result.data()[i] << '\n';
-  }
 
 }
