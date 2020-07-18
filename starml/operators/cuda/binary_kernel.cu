@@ -21,6 +21,7 @@ void add_impl(const Matrix& matrix1, const Matrix& matrix2, Matrix& result) {
     dim3 dimGrid(ceil(nums / 256.0), 1, 1);
     dim3 dimBlock(256, 1, 1);
     add_kernel<scalar_t><<<dimGrid, dimBlock>>>(data1, data2, nums, res_data);
+    cudaDeviceSynchronize();
   });
 }
 

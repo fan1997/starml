@@ -1,6 +1,5 @@
+#include <string.h>
 #include "starml/basic/matrix.h"
-
-#include "starml/basic/copy_bytes.h"
 #include "starml/basic/dispatch.h"
 #include "starml/basic/matrix_printer.h"
 #include "starml/operators/factories.h"
@@ -38,11 +37,15 @@ const DataType& Matrix::data_type() const { return this->dtype_; }
 void* Matrix::raw_data() const { return this->data_ptr_.get(); }
 const void* Matrix::raw_mutable_data() const { return this->data_ptr_.get(); }
 
-Matrix Matrix::to(DeviceType new_device_type) const {
-  Matrix res = empty(dims(), Device(new_device_type), dtype_);
-  copy_bytes(size_ * dtype_.size(), raw_mutable_data(), device().type(),
-             res.raw_data(), res.device().type());
-  return res;
+Matrix Matrix::to(Device new_device) const {
+  if (new_device.type() == device_.type() || new_device.type() == kCPU) {
+    return *this;
+  }
+  else {
+    Matrix res = empty(dims(), new_device, dtype_);
+    memcpy(res.raw_data(), raw_data(), size() * dtype_.size());
+    return res;
+  }
 }
 
 void Matrix::print(std::string file_name) const {

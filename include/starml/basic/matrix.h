@@ -28,7 +28,7 @@ class Matrix {
   void* raw_data() const;
   const void* raw_mutable_data() const;
 
-  Matrix to(DeviceType new_device_type) const;
+  Matrix to(Device new_device) const;
   void print(std::string file_name = "") const;
 
   // Previous judgement is needed to check whether the template datatype
