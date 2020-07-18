@@ -39,7 +39,7 @@ namespace starml {
     std::cout << "getting data ..." << '\n';
     int m = this->num_instances_;
     int n = this->num_features_;
-    Matrix data(m, n, kCPU, kFloat);
+    Matrix data({m, n}, kCPU, kFloat);
     memset(data.data<float>(), 0.0, m * n * sizeof(float));
 #pragma omp parallel for
     for (size_t i = 0; i < m; i++) {
@@ -54,7 +54,7 @@ namespace starml {
 
   Matrix DataLoader::get_label() const{
     std::cout << "getting label ..." << '\n';
-    Matrix label(this->num_instances_, 1, kCPU, kFloat);
+    Matrix label({this->num_instances_, 1}, kCPU, kFloat);
     for (size_t i = 0; i < this->num_instances_; i++) {
       label.data<float>()[i] = this->label_[i];
     }

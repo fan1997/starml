@@ -7,9 +7,9 @@ namespace {
 void matmul_impl(const Matrix& matrix1, const Matrix& matrix2, Matrix& result) {
   // std::cout << "In add_impl " << std::endl;
   auto data_type = matrix1.data_type().type();
-  int m = matrix1.rows_num();
-  int k = matrix1.cols_num();
-  int n = matrix2.cols_num();
+  int m = matrix1.dim(0);
+  int k = matrix1.dim(1);
+  int n = matrix2.dim(1);
   STARML_DISPATCH_FLOATING_TYPES(data_type, "MATMUL", [&]() {
     auto data1 = matrix1.data<scalar_t>();
     auto data2 = matrix2.data<scalar_t>();

@@ -13,17 +13,17 @@ __global__ void concat_kernel(T* data_1, T* data_2, T* res_data, int size, int w
   }
 }
 
-// void concat_impl(const Matrix& matrix1, const Matrix& matrix2, Matrix& result, int axis) {
-void concat_impl(const Matrix& matrix1, const Matrix& matrix2, Matrix& result) {
-  int axis = 1; // temp
-  auto m1_rows_num =  matrix1.rows_num();
-  auto m1_cols_num =  matrix1.cols_num();
-  auto m2_rows_num =  matrix2.rows_num();
-  auto m2_cols_num =  matrix2.cols_num();
+void concat_impl(const Matrix& matrix1, const Matrix& matrix2, Matrix& result, int axis) {
+// void concat_impl(const Matrix& matrix1, const Matrix& matrix2, Matrix& result) {
+  // int axis = 1; // temp
+  auto m1_rows_num =  matrix1.dim(0);
+  auto m1_cols_num =  matrix1.dim(1);
+  auto m2_rows_num =  matrix2.dim(0);
+  auto m2_cols_num =  matrix2.dim(1);
   auto w1 = axis == 0 ? m1_rows_num : m1_cols_num;
   auto w2 = axis == 0 ? m2_rows_num : m2_cols_num;
   auto data_type = result.data_type().type();
-  auto size = result.rows_num() * result.cols_num();
+  auto size = result.size();
   STARML_DISPATCH_TYPES(data_type, "CONCAT", [&]() {
     scalar_t *data_1 = matrix1.data<scalar_t>();
     scalar_t *data_2 = matrix2.data<scalar_t>();

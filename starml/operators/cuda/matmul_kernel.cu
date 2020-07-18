@@ -1,6 +1,6 @@
 #include "starml/operators/matmul.h"
 #include "starml/basic/common_cuda.h"
-
+#include <iostream>
 namespace starml {
 namespace {
 
@@ -9,10 +9,10 @@ void matmul_impl(const Matrix& matrix1, const Matrix& matrix2,  Matrix& result) 
   cublasCreate(&handle);
   cublasSetPointerMode(handle, CUBLAS_POINTER_MODE_HOST);
   auto data_type = matrix1.data_type().type();
-  const int n_rows_mat1 = matrix1.rows_num();
-  const int n_cols_mat1 = matrix1.cols_num();
-  const int n_rows_mat2 = matrix2.rows_num();
-  const int n_cols_mat2 = matrix2.cols_num();
+  const int n_rows_mat1 = matrix1.dim(0);
+  const int n_cols_mat1 = matrix1.dim(1);
+  const int n_rows_mat2 = matrix2.dim(0);
+  const int n_cols_mat2 = matrix2.dim(1);
   const int m = n_cols_mat2;
   const int k = n_rows_mat2;
   const int n = n_rows_mat1;

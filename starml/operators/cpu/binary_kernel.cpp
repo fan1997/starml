@@ -19,7 +19,7 @@ void add_impl(const Matrix& matrix1, const Matrix& matrix2, Matrix& result) {
 void sub_impl(const Matrix& matrix1, const Matrix& matrix2, Matrix& result) {
   // std::cout << "In add_impl " << std::endl;
   auto data_type = matrix1.data_type().type();
-  int size = matrix1.rows_num() * matrix1.cols_num();
+  int size = matrix1.size();
   STARML_DISPATCH_TYPES(data_type, "SUB", [&]() {
     auto data1 = matrix1.data<scalar_t>();
     auto data2 = matrix2.data<scalar_t>();

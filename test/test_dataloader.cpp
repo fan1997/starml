@@ -9,17 +9,6 @@ using namespace starml::models::regression;
 using namespace starml;
 
 TEST(ModelAndDataloader, test){
-
-   LinearRegression model;
-   LinearRegression model1(5.0);
-   starml::Matrix train_data(2, 3, kCPU, kFloat);
-   starml::Matrix label(2, 3, kCPU, kFloat);
-   LinearRegression model2(train_data, label, 6.0);
-   model.train(train_data, label);
-   std::cout << "model lambda: " << model.get_lambda() << '\n';
-   std::cout << "model1 lambda: " << model1.get_lambda() << '\n';
-   std::cout << "model2 lambda: " << model2.get_lambda() << '\n';
-
    // DataLoader data_loader("./example", kLIBSVM);
    DataLoader data_loader("/gpfs/share/home/1901213502/dataset/dataset-all/a1a", kLIBSVM);
    // DataLoader data_loader;

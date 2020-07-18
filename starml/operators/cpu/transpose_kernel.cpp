@@ -8,8 +8,8 @@ namespace {
 void trans_impl(const Matrix& matrix1, Matrix& result) {
   // std::cout << "In trans_impl " << std::endl;
   auto data_type = matrix1.data_type().type();
-  int rows_num = matrix1.rows_num();
-  int cols_num = matrix1.cols_num();
+  int rows_num = matrix1.dim(0);
+  int cols_num = matrix1.dim(1);
 
   STARML_DISPATCH_TYPES(data_type, "TRANSPOSE", [&]() {
     auto data1 = matrix1.data<scalar_t>();

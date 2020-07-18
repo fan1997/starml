@@ -10,8 +10,8 @@ using namespace starml;
 TEST(EVAL, test){
   metrics metric1;
   int label_size =  1000;
-  Matrix y(label_size, 1, kCPU, kFloat);
-  Matrix y_pred(label_size, 1, kCPU, kFloat);
+  Matrix y({label_size, 1}, kCPU, kFloat);
+  Matrix y_pred({label_size, 1}, kCPU, kFloat);
   for (int i = 0; i < label_size; i++) {
       y.data<float>()[i] = 1.0;
       y_pred.data<float>()[i] = 3.0;

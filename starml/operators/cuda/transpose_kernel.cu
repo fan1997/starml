@@ -1,13 +1,13 @@
 #include "starml/operators/transpose.h"
 #include "starml/basic/common_cuda.h"
-
+#include <iostream>
 namespace starml {
 namespace {
 
 void trans_impl(const Matrix& matrix1, Matrix& result) {
   auto data_type = matrix1.data_type().type();
-  int rows_num = matrix1.rows_num();
-  int cols_num = matrix1.cols_num();
+  int rows_num = matrix1.dim(0);
+  int cols_num = matrix1.dim(1);
   cublasHandle_t handle;
   cublasCreate(&handle);
   cublasSetPointerMode(handle, CUBLAS_POINTER_MODE_HOST);

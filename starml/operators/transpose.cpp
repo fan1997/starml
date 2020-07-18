@@ -4,10 +4,11 @@ namespace starml {
   STARML_DEFINE_DISPATCHER(transpose_dispatcher);
 
   Matrix transpose(const Matrix& matrix1) {
+    auto m1_rows_num =  matrix1.dim(0);
+    auto m1_cols_num =  matrix1.dim(1);
     Matrix result =
-        Matrix(matrix1.cols_num(), matrix1.rows_num(),
-               matrix1.device_type().type(), matrix1.data_type().type());
-    transpose_dispatcher(matrix1, result);
+        Matrix({m1_cols_num, m1_rows_num}, matrix1.device(), matrix1.data_type());
+        transpose_dispatcher(matrix1, result);
     return result;
   }
 }

@@ -34,7 +34,7 @@ __global__ void sub_kernel(const T* a, const T* b, int nums, T* res) {
 
 void sub_impl(const Matrix& matrix1, const Matrix& matrix2, Matrix& result) {
   auto data_type = matrix1.data_type().type();
-  int nums = matrix1.rows_num() * matrix1.cols_num();
+  int nums = matrix1.size();
   STARML_DISPATCH_TYPES(data_type, "SUB", [&]() {
     scalar_t *data1 = matrix1.data<scalar_t>();
     scalar_t *data2 = matrix2.data<scalar_t>();

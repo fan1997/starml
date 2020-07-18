@@ -16,7 +16,7 @@ void mse_impl_kernel(T* data1_ptr, T* data2_ptr, int size, float& sum, float& sc
 }
 float mse_impl(const Matrix& y, const Matrix& y_pred) {
   auto data_type = y.data_type().type();
-  int size = y.rows_num() * y.cols_num();
+  int size = y.size();
   STARML_DISPATCH_TYPES(data_type, "MSE", [&]() {
     auto data1_ptr = y.data<scalar_t>();
     auto data2_ptr = y_pred.data<scalar_t>();

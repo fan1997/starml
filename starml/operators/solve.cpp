@@ -6,8 +6,8 @@ namespace starml {
   Matrix lu_solve(const Matrix& matrix1, const Matrix& matrix2) {
     //check matrix1 square
     Matrix result =
-        Matrix(matrix1.cols_num(), matrix1.rows_num(),
-               matrix1.device_type().type(), matrix1.data_type().type());
+        Matrix({matrix1.dim(0), matrix1.dim(1)},
+               matrix1.device(), matrix1.data_type());
     lu_solve_dispatcher(matrix1, matrix2, result);
     return result;
   }

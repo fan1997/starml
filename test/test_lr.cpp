@@ -12,8 +12,8 @@ TEST(LINEARREG, test){
    LinearRegression model;
    int m = 3;
    int n = 2;
-   starml::Matrix train_data(m, n, kCPU, kFloat);
-   starml::Matrix label(m, 1, kCPU, kFloat);
+   starml::Matrix train_data({m, n}, kCPU, kFloat);
+   starml::Matrix label({m, 1}, kCPU, kFloat);
    for (size_t i = 0; i < m; i++) {
        label.data<float>()[i] = 1.0;
        for (size_t j = 0; j < n; j++) {

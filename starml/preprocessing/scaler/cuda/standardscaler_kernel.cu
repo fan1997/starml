@@ -30,10 +30,10 @@ __global__ void fit_kernel(T* data_ptr, T* mean_ptr, T* std_ptr, int rows_num, i
 
 void fit_impl(const Matrix& origin_data, Matrix& mean_data,
               Matrix& std_data) {
-  std::cout << "cuda fit..." << '\n';
+  // std::cout << "cuda fit..." << '\n';
   auto data_type = origin_data.data_type().type();
-  auto rows_num =  origin_data.rows_num();
-  auto cols_num =  origin_data.cols_num();
+  auto rows_num =  origin_data.dim(0);
+  auto cols_num =  origin_data.dim(1);
 
   STARML_DISPATCH_FLOATING_TYPES(data_type, "FIT", [&]() {
     auto data_ptr = origin_data.data<scalar_t>();
@@ -62,10 +62,10 @@ __global__ void trans_kernel(T* data_ptr, T* mean_ptr, T* std_ptr, T* res_ptr, i
 
 void trans_impl(const Matrix& origin_data, Matrix& result,
                 const Matrix& mean_data, const Matrix& std_data) {
-  std::cout << "cuda trans..." << '\n';
+  // std::cout << "cuda trans..." << '\n';
   auto data_type = origin_data.data_type().type();
-  auto rows_num =  origin_data.rows_num();
-  auto cols_num =  origin_data.cols_num();
+  auto rows_num =  origin_data.dim(0);
+  auto cols_num =  origin_data.dim(1);
 
   STARML_DISPATCH_TYPES(data_type, "TRANS", [&]() {
     auto data_ptr = origin_data.data<scalar_t>();
@@ -94,10 +94,10 @@ __global__ void invtrans_kernel(T* data_ptr, T* mean_ptr, T* std_ptr, T* res_ptr
 
 void invtrans_impl(const Matrix& transformed_data, Matrix& result,
                 const Matrix& mean_data, const Matrix& std_data) {
-  std::cout << "cuda inv trans..." << '\n';
+  // std::cout << "cuda inv trans..." << '\n';
   auto data_type = transformed_data.data_type().type();
-  auto rows_num =  transformed_data.rows_num();
-  auto cols_num =  transformed_data.cols_num();
+  auto rows_num =  transformed_data.dim(0);
+  auto cols_num =  transformed_data.dim(1);
 
   STARML_DISPATCH_TYPES(data_type, "INVTRANS", [&]() {
     auto data_ptr = transformed_data.data<scalar_t>();
