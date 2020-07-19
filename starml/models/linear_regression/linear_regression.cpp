@@ -43,13 +43,8 @@ float regression::LinearRegression::train(const starml::Matrix& train_data,
    * 4.W = linearsolver
    */
    starml::Matrix train_data_t = transpose(train_data);
-   // train_data_t.print();
    starml::Matrix xtx = matmul(train_data_t, train_data);
    starml::Matrix xty = matmul(train_data_t, label);
-   // xtx.to(kCPU).print();
-   // xty.to(kCPU).print();
-   // xtx.print();
-   // xty.print();
    this -> parameters = lu_solve(add_scalar(xtx, this -> lambda), xty);
 }
 

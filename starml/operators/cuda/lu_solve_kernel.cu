@@ -14,8 +14,8 @@ void lu_solve_impl(const Matrix& matrix1, const Matrix& matrix2,  Matrix& result
   STARML_CHECK_EQ(n_rows_mat1, n_cols_mat1) << "lu_solve matrix1 should be square";
   STARML_CHECK_EQ(n_rows_mat1, n_rows_mat2) << "lu_solve matrix1 and matrix2 should have same rows";
   STARML_CHECK_EQ(n_cols_mat2, 1) << "lu_solve matrix2 should have only one column";
+  // need deep copy on cuda
   Matrix matrix1_t = matrix1.to(kCPU).to(kCUDA);
-  // Matrix matrix2_t = matrix2.to(kCPU).to(kCUDA);
   result = matrix2.to(kCPU).to(kCUDA);
   Matrix matrix2_t = result;  // cause cusolver is inplace, directly change A & b
 //cusolver
