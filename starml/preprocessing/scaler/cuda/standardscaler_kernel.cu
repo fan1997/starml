@@ -42,6 +42,7 @@ void fit_impl(const Matrix& origin_data, Matrix& mean_data,
     dim3 dimGrid(ceil(cols_num / 256.0), 1, 1);
     dim3 dimBlock(256, 1, 1);
     fit_kernel<scalar_t><<<dimGrid, dimBlock>>>(data_ptr, mean_ptr, std_ptr, rows_num, cols_num);
+    cudaDeviceSynchronize();
   });
 }
 
@@ -75,6 +76,7 @@ void trans_impl(const Matrix& origin_data, Matrix& result,
     dim3 dimGrid(ceil(rows_num / 256.0), 1, 1);
     dim3 dimBlock(256, 1, 1);
     trans_kernel<scalar_t><<<dimGrid, dimBlock>>>(data_ptr,  mean_ptr, std_ptr,  res_ptr, rows_num, cols_num);
+    cudaDeviceSynchronize();
   });
 }
 
@@ -107,6 +109,7 @@ void invtrans_impl(const Matrix& transformed_data, Matrix& result,
     dim3 dimGrid(ceil(rows_num / 256.0), 1, 1);
     dim3 dimBlock(256, 1, 1);
     invtrans_kernel<scalar_t><<<dimGrid, dimBlock>>>(data_ptr,  mean_ptr, std_ptr,  res_ptr, rows_num, cols_num);
+    cudaDeviceSynchronize();
   });
 }
 

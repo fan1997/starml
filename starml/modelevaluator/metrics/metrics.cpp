@@ -23,6 +23,8 @@ float metrics::r2_score(const starml::Matrix& y, const starml::Matrix& y_pred){
   starml::preprocessing::scaler::StandardScaler scaler;
   scaler.fit(y);
   Matrix std = scaler.get_std();
+  std = std.to(kCPU);
+  std.print();
   auto data_type = std.data_type().type();
   STARML_DISPATCH_TYPES(data_type, "R2SCORE", [&]() {
       score = 1.0 - mse/(std.data<scalar_t>()[0] * std.data<scalar_t>()[0]);

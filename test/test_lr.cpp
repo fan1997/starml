@@ -130,19 +130,21 @@ TEST(LINEARREG, test){
  // GPU
    Matrix train_data_cuda = train_data.to(kCUDA);
    Matrix label_cuda = label.to(kCUDA);
- // // train
- //   model.train(train_data_cuda, label_cuda);
- // // predict
- //   Matrix pred_label_cuda = model.predict(train_data_cuda);
- // // print
- //   std::cout << "    ..... cuda pred_label ...." << '\n';
- //   pred_label_cuda.print();
- //   std::cout << '\n';
- //   weights = model.get_parameters();
- //   std::cout << "    .....cuda lr model weights ...." << '\n';
- //   weights.print(); //[2,0]
- //   std::cout << '\n';
- // // evaluate
- //   err = metric1.mean_squared_error(label_cuda, pred_label_cuda);
- //   std::cout << "cuda lr error: " << err << '\n';
+ // train
+   model.train(train_data_cuda, label_cuda);
+ // predict
+   Matrix pred_label_cuda = model.predict(train_data_cuda);
+ // print
+   std::cout << "    ..... cuda pred_label ...." << '\n';
+   pred_label_cuda.print();
+   std::cout << '\n';
+   weights = model.get_parameters();
+   std::cout << "    .....cuda lr model weights ...." << '\n';
+   weights.print(); //[2,0]
+   std::cout << '\n';
+ // evaluate
+   err = metric1.mean_squared_error(label_cuda, pred_label_cuda);
+   std::cout << "cuda lr error: " << err << '\n';
+   r2score = metric1.r2_score(label_cuda, pred_label_cuda);
+   std::cout << "cuda lr r2 score: " << r2score << '\n';
 }
