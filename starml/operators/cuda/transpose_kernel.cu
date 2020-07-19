@@ -9,19 +9,20 @@ void trans_impl(const Matrix& matrix1, Matrix& result) {
   int rows_num = matrix1.dim(0);
   int cols_num = matrix1.dim(1);
   cublasHandle_t handle;
-  cublasCreate(&handle);
-  cublasSetPointerMode(handle, CUBLAS_POINTER_MODE_HOST);
+  STARML_CUBLAS_CHECK(cublasCreate(&handle));
+  STARML_CUBLAS_CHECK(cublasSetPointerMode(handle, CUBLAS_POINTER_MODE_HOST));
   switch (data_type) {
       case kInt:
-
+        STARML_LOG(ERROR) << "(Temporary: )Unknown transpose type(only support float and double): " << static_cast<int>(data_type);
       case kFloat:{
         using scalar_t = float;
         const scalar_t *data1 = matrix1.data<scalar_t>();
         scalar_t *res_data = result.data<scalar_t>();
         scalar_t alpha = 1.;
         scalar_t beta  = 0.;
-        cublasSgeam(handle, CUBLAS_OP_T, CUBLAS_OP_T, rows_num, cols_num, &alpha, data1,
-                    cols_num, &beta, data1, cols_num, res_data, rows_num);
+        STARML_CUBLAS_CHECK(cublasSgeam(handle, CUBLAS_OP_T, CUBLAS_OP_T, rows_num, cols_num, &alpha, data1,
+                    cols_num, &beta, data1, cols_num, res_data, rows_num));
+        cudaDeviceSynchronize();
         break;
       }
       case kDouble:{
@@ -30,13 +31,13 @@ void trans_impl(const Matrix& matrix1, Matrix& result) {
         scalar_t *res_data = result.data<scalar_t>();
         scalar_t alpha = 1.;
         scalar_t beta  = 0.;
-        cublasDgeam(handle, CUBLAS_OP_T, CUBLAS_OP_T, rows_num, cols_num, &alpha, data1,
-                    cols_num, &beta, data1, cols_num, res_data, rows_num);
+        STARML_CUBLAS_CHECK(cublasDgeam(handle, CUBLAS_OP_T, CUBLAS_OP_T, rows_num, cols_num, &alpha, data1,
+                    cols_num, &beta, data1, cols_num, res_data, rows_num));
+        cudaDeviceSynchronize();
         break;
       }
       default:
-         std::cout << "This function doesn't handle types other than "
-                     "float, double";
+        STARML_LOG(ERROR) << "Unknown transpose type(only support float and double): " << static_cast<int>(data_type);
   }
 
 }

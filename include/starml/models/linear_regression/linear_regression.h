@@ -23,7 +23,7 @@ class LinearRegression
    */
   LinearRegression(const starml::Matrix& train_data,
                    const starml::Matrix& label,
-                   const double lambda = 0.0);
+                   const float lambda = 0.0);
 
   /**
    * Creates the model with weighted learning.
@@ -37,7 +37,7 @@ class LinearRegression
   LinearRegression(const starml::Matrix& train_data,
                    const starml::Matrix& label,
                    const starml::Matrix& weights,
-                   const double lambda = 0.0);
+                   const float lambda = 0.0);
 
 
   /**
@@ -45,7 +45,7 @@ class LinearRegression
    * called (or make sure the model parameters are set) before calling
    * Predict()!
    */
-  LinearRegression(double lambda = 0.0);
+  LinearRegression(float lambda = 0.0);
   /**
    * Train the LinearRegression model on the given data. Careful! This will
    * completely ignore and overwrite the existing model. This particular
@@ -58,7 +58,7 @@ class LinearRegression
    * @param intercept Whether or not to fit an intercept term.
    * @return The least squares error after training.
    */
-  double train(const starml::Matrix& train_data,
+  float train(const starml::Matrix& train_data,
                const starml::Matrix& label);
 
   /**
@@ -74,7 +74,7 @@ class LinearRegression
    * @param intercept Whether or not to fit an intercept term.
    * @return The least squares error after training.
    */
-  double train(const starml::Matrix& train_data,
+  float train(const starml::Matrix& train_data,
                const starml::Matrix& label,
                const starml::Matrix& weights);
 
@@ -84,17 +84,17 @@ class LinearRegression
    * @param predict_data the data points to calculate with.
    * @param predictions y, will contain calculated values on completion.
    */
-  void predict(const starml::Matrix& predict_data, starml::Matrix& predict_result) const;
-
+  Matrix& predict(const starml::Matrix& predict_data, starml::Matrix& predict_result) const;
+  Matrix predict(const starml::Matrix& predict_data) const;
   //! Return the parameters (the b vector).
   const starml::Matrix& get_parameters() const { return parameters; }
   //! Modify the parameters (the b vector).
   starml::Matrix& get_parameters() { return parameters; }
 
   //! Return the Tikhonov regularization parameter for ridge regression.
-  double get_lambda() const { return lambda; }
+  float get_lambda() const { return lambda; }
   //! Modify the Tikhonov regularization parameter for ridge regression.
-  double& get_lambda() { return lambda; }
+  float& get_lambda() { return lambda; }
 
  private:
   /**
@@ -106,7 +106,7 @@ class LinearRegression
    * The Tikhonov regularization parameter for ridge regression (0 for linear
    * regression).
    */
-  double lambda;
+  float lambda;
 };
 
 } // namespace regression

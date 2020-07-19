@@ -9,6 +9,7 @@ SET(TEST_SOURCES
   test_binary.cpp
   test_concat.cpp
   test_lr.cpp
+  test_solve.cpp
 )
 
 # Build an executable file for all test files

@@ -22,7 +22,7 @@ std::ostream& operator<<(std::ostream& os, DataTypeKind type) {
 }
 
 std::unordered_map<std::string, DataTypeKind> DataType::type_lists{
-    {"int", kInt}, {"float", kFloat}, {"Double", kDouble}};
+    {"int", kInt}, {"float", kFloat}, {"double", kDouble}};
 std::unordered_map<int, size_t> DataType::type_sizes{
     {0, sizeof(int)}, {1, sizeof(float)}, {2, sizeof(double)}};
 

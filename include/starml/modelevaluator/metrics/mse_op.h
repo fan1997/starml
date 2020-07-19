@@ -10,7 +10,7 @@ using mse_kernel_fn = float (*)(const Matrix& y,
                                const Matrix& y_pred);
 STARML_DECLARE_DISPATCHER(mse_dispatcher, mse_kernel_fn);
 
-float mse_score(const Matrix& y, const Matrix& y_pred);
+float mse_error(const Matrix& y, const Matrix& y_pred);
 
 } // namespace starml
 } // namespace modelevaluator

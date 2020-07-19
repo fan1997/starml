@@ -9,8 +9,9 @@ namespace metrics{
 class metrics {
 
 public:
-    metrics(){};
+    metrics() = default;
     float mean_squared_error(const starml::Matrix& y, const starml::Matrix& y_pred);
+    float r2_score(const starml::Matrix& y, const starml::Matrix& y_pred);
 };
 
 } // namespace starml
