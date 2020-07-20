@@ -30,7 +30,17 @@ float metrics::r2_score(const starml::Matrix& y, const starml::Matrix& y_pred){
       score = 1.0 - mse/(std.data<scalar_t>()[0] * std.data<scalar_t>()[0]);
   });
   return score;
+}
 
+float metrics::accuracy_score(const starml::Matrix& y, const starml::Matrix& y_pred, bool normalize){
+  // thrust count
+  // omp count
+  std::cout << "calc accuracy_score..." << '\n';
+  STARML_CHECK_EQ(y.size(), y_pred.size()) << "y and y_pred should have same size";
+  float score = 0.0;
+  score = acc_score(y, y_pred);
+  score = normalize == true ? score/y.size() : score;
+  return score;
 }
 
 } // namespace starml
