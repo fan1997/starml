@@ -1,26 +1,33 @@
 #pragma once
 #include <cxxabi.h>
-
 #include <cstddef>
-#include <memory>
 #include <ostream>
 #include <string>
 #include <typeinfo>
+#include <mutex>
 #include <unordered_map>
+#include <memory>
+#include <iostream>
 
 namespace starml {
 // Supported data type, uncertain represents the data type is not sepecific.
 // Matrix with UNCERTAIN data type may cause an error in further use.
 enum class DataTypeKind : int {
   UNCERTAIN = -1,
-  Int = 0,
-  Float = 1,
-  Double = 2
+  Int8 = 0,
+  Int16 = 1,
+  Int32 = 2,
+  Int64 = 3,
+  Float = 4,
+  Double = 5
 };
 // The constexpr specifier declares that it is possible to evaluate
 // the value of the variable at compile time. Since the value of enum
 // will be known during compiling time
-constexpr DataTypeKind kInt = DataTypeKind::Int;
+constexpr DataTypeKind kInt8 = DataTypeKind::Int8;
+constexpr DataTypeKind kInt16 = DataTypeKind::Int16;
+constexpr DataTypeKind kInt32 = DataTypeKind::Int32;
+constexpr DataTypeKind kInt64 = DataTypeKind::Int64;
 constexpr DataTypeKind kFloat = DataTypeKind::Float;
 constexpr DataTypeKind kDouble = DataTypeKind::Double;
 
@@ -42,25 +49,26 @@ class DataType {
   size_t size() const;
   // Return the specific DataTypeKind
   DataTypeKind type() const;
+  // Using RTTI to get the string name of data type
+  std::string name() const;
+  bool operator==(const DataType& rhs) const;
+  bool operator!=(const DataType& rhs) const;
+
   // Template judgement whether the given data type is consistent with
   // the type object contains.
   template <typename T>
   bool is_valid() const {
-    if (type_ == type_lists[type_name<T>()]) {
+    if (name() == type_name<T>()) {
       return true;
     }
     return false;
   }
-  bool operator==(const DataType& rhs) const;
-  bool operator!=(const DataType& rhs) const;
 
  private:
   // RTTI convert the input data type to string
   template <typename T>
   static std::string type_name();
   DataTypeKind type_;
-  // Hash table, given the relation between data type string and DataTypeKind
-  static std::unordered_map<std::string, DataTypeKind> type_lists;
   // Hash table, given the relation between DataTypeKind and corresponding byte
   // size.
   static std::unordered_map<int, size_t> type_sizes;
@@ -78,5 +86,6 @@ std::string DataType::type_name() {
     return name;
   }
 }
+
 
 }  // namespace starml

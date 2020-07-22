@@ -1,11 +1,12 @@
 #pragma once
-// #include <iostream>
 #include <vector>
 
 #include "starml/basic/allocator.h"
 #include "starml/basic/device.h"
 #include "starml/basic/type.h"
+#include "starml/basic/scalar.h"
 #include "starml/utils/loguru.h"
+// #include "starml/basic/dispatch.h"
 
 namespace starml {
 using Shape = std::vector<int>;
@@ -25,16 +26,18 @@ class Matrix {
   const Device& device() const;
   const DataType& data_type() const;
 
-  void* raw_data() const;
-  const void* raw_mutable_data() const;
+  const void* raw_data() const;
+  void* raw_mutable_data() const;
 
   Matrix to(Device new_device) const;
   void print(std::string file_name = "") const;
 
-  // Previous judgement is needed to check whether the template datatype
-  // is valid.
+  // The rules to judge whether the input data type is valid:
+  // 1. int can not convert to float or double, vice versa 
+  // 2. data can be casted when the bytes of the input data type 
+  // is equal to the bytes of data_ptr_
   template <typename T>
-  T* data() const {
+  const T* data() const {
     STARML_CHECK(dtype_.is_valid<T>())
         << "Input template data type is not valid since the data type for "
            "matrix is "
@@ -42,7 +45,7 @@ class Matrix {
     return static_cast<T*>(data_ptr_.get());
   }
   template <typename T>
-  const T* mutable_data() const {
+  T* mutable_data() const {
     STARML_CHECK(dtype_.is_valid<T>())
         << "Input template data type is not valid since the data type for "
            "matrix is "

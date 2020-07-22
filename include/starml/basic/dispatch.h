@@ -1,8 +1,8 @@
 #pragma once
 #include <mutex>
-#include <unordered_map>
 #include <typeinfo>
-#include "starml/basic/type.h"
+#include <unordered_map>
+#include "starml/basic/matrix.h"
 
 namespace starml {
 
@@ -10,7 +10,7 @@ template <typename TFnPtr>
 class Dispatcher;
 
 template <typename TReturn, typename... TArgs>
-class Dispatcher<TReturn(*)(TArgs...)> {
+class Dispatcher<TReturn (*)(TArgs...)> {
  public:
   using FnPtr = TReturn (*)(TArgs...);
   template <typename... TArgTypes>
@@ -23,6 +23,7 @@ class Dispatcher<TReturn(*)(TArgs...)> {
     std::lock_guard<std::mutex> guard(mu_);
     kernel_table_[static_cast<int>(device_type)] = kernel;
   }
+
  protected:
   template <typename T>
   int dispatch_key(const T& arg) {
@@ -53,7 +54,7 @@ class Dispatcher<TReturn(*)(TArgs...)> {
   std::unordered_map<int, FnPtr> kernel_table_;
 };
 
-template<typename Obj, typename FnPtr>
+template <typename Obj, typename FnPtr>
 class DispatcherRegister {
  public:
   DispatcherRegister(DeviceType device_type, FnPtr kernel) {
@@ -79,9 +80,10 @@ class DispatcherRegister {
 #define STARML_DEFINE_DISPATCHER(dispatcher) \
   dispatcher##_t& dispatcher = dispatcher##_t::singleton()
 
-#define STARML_REGISTER_KERNEL(dispatcher, device_type, fn) \
-  static DispatcherRegister<dispatcher##_t, decltype(fn)> \
-    register##dispatcher(device_type, fn)
+#define STARML_REGISTER_KERNEL(dispatcher, device_type, fn)                 \
+  static DispatcherRegister<dispatcher##_t,                                 \
+                            decltype(fn)> register##dispatcher(device_type, \
+                                                               fn)
 
 #define STARML_PRIVATE_CASE_TYPE(enum_type, type, ...) \
   case enum_type: {                                    \
@@ -89,14 +91,28 @@ class DispatcherRegister {
     return __VA_ARGS__();                              \
   }
 
+#define STARML_DISPATCH_FLOATING_TYPES(SCALAR_TYPE, NAME, ...) \
+  [&] {                                                        \
+    switch (SCALAR_TYPE) {                                     \
+      STARML_PRIVATE_CASE_TYPE(kDouble, double, __VA_ARGS__)   \
+      STARML_PRIVATE_CASE_TYPE(kFloat, float, __VA_ARGS__)     \
+      default:                                                 \
+        break;                                                 \
+    }                                                          \
+  }()
+
 #define STARML_DISPATCH_TYPES(SCALAR_TYPE, NAME, ...)        \
   [&] {                                                      \
     switch (SCALAR_TYPE) {                                   \
-      STARML_PRIVATE_CASE_TYPE(kInt, int, __VA_ARGS__)       \
+      STARML_PRIVATE_CASE_TYPE(kInt8, int8_t, __VA_ARGS__)   \
+      STARML_PRIVATE_CASE_TYPE(kInt16, int16_t, __VA_ARGS__) \
+      STARML_PRIVATE_CASE_TYPE(kInt32, int32_t, __VA_ARGS__) \
+      STARML_PRIVATE_CASE_TYPE(kInt64, int64_t, __VA_ARGS__) \
       STARML_PRIVATE_CASE_TYPE(kDouble, double, __VA_ARGS__) \
       STARML_PRIVATE_CASE_TYPE(kFloat, float, __VA_ARGS__)   \
       default:                                               \
         break;                                               \
     }                                                        \
   }()
+
 }  // namespace starml

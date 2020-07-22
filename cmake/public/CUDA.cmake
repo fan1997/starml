@@ -37,6 +37,7 @@ set_property(TARGET starml::thrust PROPERTY INTERFACE_INCLUDE_DIRECTORIES ${CUDA
 list(APPEND CUDA_NVCC_FLAGS "-Wno-deprecated-gpu-targets")
 list(APPEND CUDA_NVCC_FLAGS "-Wno-deprecated-declarations")
 list(APPEND CUDA_NVCC_FLAGS "-std=c++11")
+list(APPEND CUDA_NVCC_FLAGS "--expt-extended-lambda")
 # Allow Relocatable Device Code
 list(APPEND CUDA_NVCC_FLAGS "-rdc=true")
 STRING(REPLACE ";" " " CUDA_NVCC_FLAGS "${CUDA_NVCC_FLAGS}")

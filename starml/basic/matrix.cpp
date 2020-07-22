@@ -34,16 +34,16 @@ int Matrix::ndims() const { return this->shape_.size(); }
 const Device& Matrix::device() const { return this->device_; }
 const DataType& Matrix::data_type() const { return this->dtype_; }
 
-void* Matrix::raw_data() const { return this->data_ptr_.get(); }
-const void* Matrix::raw_mutable_data() const { return this->data_ptr_.get(); }
+const void* Matrix::raw_data() const { return this->data_ptr_.get(); }
+void* Matrix::raw_mutable_data() const { return this->data_ptr_.get(); }
 
 Matrix Matrix::to(Device new_device) const {
-  if (new_device.type() == device_.type() || new_device.type() == kCPU) {
+  if (new_device == device_) {
     return *this;
   }
   else {
     Matrix res = empty(dims(), new_device, dtype_);
-    memcpy(res.raw_data(), raw_data(), size() * dtype_.size());
+    memcpy(res.raw_mutable_data(), raw_data(), size() * dtype_.size());
     return res;
   }
 }
