@@ -1,7 +1,9 @@
 #include "starml/basic/type.h"
+
 #include <stdint.h>
-#include "starml/utils/loguru.h"
+
 #include "starml/basic/dispatch.h"
+#include "starml/utils/loguru.h"
 
 namespace starml {
 std::string to_string(DataTypeKind d, bool lower_case) {
@@ -30,8 +32,8 @@ std::ostream& operator<<(std::ostream& os, DataTypeKind type) {
 }
 
 std::unordered_map<int, size_t> DataType::type_sizes{
-    {0, sizeof(int8_t)}, {1, sizeof(int16_t)}, {2, sizeof(int32_t)},
-    {3, sizeof(int64_t)}, {4, sizeof(float)},  {5, sizeof(double)}};
+    {0, sizeof(int8_t)},  {1, sizeof(int16_t)}, {2, sizeof(int32_t)},
+    {3, sizeof(int64_t)}, {4, sizeof(float)},   {5, sizeof(double)}};
 
 DataType::DataType(DataTypeKind type) : type_(type) {}
 
@@ -48,7 +50,8 @@ DataTypeKind DataType::type() const {
 
 std::string DataType::name() const {
   std::string result = "";
-  STARML_DISPATCH_TYPES(type_, "test", [&]() { result = type_name<scalar_t>(); });
+  STARML_DISPATCH_TYPES(type_, "test",
+                        [&]() { result = type_name<scalar_t>(); });
   return result;
 }
 
@@ -57,6 +60,14 @@ bool DataType::operator==(const DataType& rhs) const {
 }
 bool DataType::operator!=(const DataType& rhs) const {
   return !((*this) == rhs);
+}
+
+bool DataType::is_int() const {
+  if (this->type_ == kInt8 || this->type_ == kInt16 || this->type_ == kInt32 ||
+      this->type_ == kInt64) {
+    return true;
+  }
+  return false;
 }
 
 }  // namespace starml

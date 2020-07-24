@@ -1,13 +1,16 @@
+#include <iostream>
+
+#include "index_helper.h"
 #include "starml/operators/binary_ops.h"
 #include "starml/operators/expression.h"
-#include "index_helper.h"
 
 namespace starml {
 namespace {
 
-template <typename TScalarType, typename TOp>
-void eval_binary(const TScalarType* data1, const TScalarType* data2,
-                 TScalarType* result_data, const Expression& expr, int start,
+template <typename TScalarType1, typename TScalarType2, typename TResultType,
+          typename TOp>
+void eval_binary(const TScalarType1* data1, const TScalarType2* data2,
+                 TResultType* result_data, const Expression& expr, int start,
                  int end, TOp op) {
   IndexHelper data1_index_helper = IndexHelper(expr.dims(0), expr.strides(0));
   IndexHelper data2_index_helper = IndexHelper(expr.dims(1), expr.strides(1));
@@ -21,55 +24,99 @@ void eval_binary(const TScalarType* data1, const TScalarType* data2,
   }
 }
 
-void add_impl(const Matrix& matrix1, const Matrix& matrix2, Matrix& result) {
-  auto data_type = matrix1.data_type().type();
+void add_impl(const Matrix& matrix1, const Matrix& matrix2, Matrix& result,
+              bool blocking) {
+  auto dtype1 = matrix1.data_type().type();
+  auto dtype2 = matrix2.data_type().type();
+  auto result_dtype = result.data_type().type();
   Expression expr = Expression(matrix1, matrix2, result);
-  STARML_DISPATCH_TYPES(data_type, "CPU_ADD", [&]() {
+  STARML_DISPATCH_TYPES(dtype1, "ADD_CPU", [&]() {
     auto data1 = matrix1.data<scalar_t>();
-    auto data2 = matrix2.data<scalar_t>();
-    auto result_data = result.mutable_data<scalar_t>();
-    eval_binary<scalar_t>(
-        data1, data2, result_data, expr, 0, result.size(),
-        [=](scalar_t a, scalar_t b) -> scalar_t { return a + b; });
+    using scalar_type1 = scalar_t;
+    STARML_DISPATCH_TYPES(dtype2, "ADD_CPU", [&]() {
+      auto data2 = matrix2.data<scalar_t>();
+      using scalar_type2 = scalar_t;
+      STARML_DISPATCH_TYPES(result_dtype, "ADD_CPU", [&]() {
+        auto result_data = result.mutable_data<scalar_t>();
+        using result_scalar_type = scalar_t;
+        eval_binary(data1, data2, result_data, expr, 0, result.size(),
+                    [=](scalar_type1 a, scalar_type2 b) -> result_scalar_type {
+                      return a + b;
+                    });
+      });
+    });
   });
 }
 
-void sub_impl(const Matrix& matrix1, const Matrix& matrix2, Matrix& result) {
-  auto data_type = matrix1.data_type().type();
+void sub_impl(const Matrix& matrix1, const Matrix& matrix2, Matrix& result,
+              bool blocking) {
+  auto dtype1 = matrix1.data_type().type();
+  auto dtype2 = matrix2.data_type().type();
+  auto result_dtype = result.data_type().type();
   Expression expr = Expression(matrix1, matrix2, result);
-  STARML_DISPATCH_TYPES(data_type, "CPU_ADD", [&]() {
+  STARML_DISPATCH_TYPES(dtype1, "SUB_CPU", [&]() {
     auto data1 = matrix1.data<scalar_t>();
-    auto data2 = matrix2.data<scalar_t>();
-    auto result_data = result.mutable_data<scalar_t>();
-    eval_binary<scalar_t>(
-        data1, data2, result_data, expr, 0, result.size(),
-        [=](scalar_t a, scalar_t b) -> scalar_t { return a - b; });
+    using scalar_type1 = scalar_t;
+    STARML_DISPATCH_TYPES(dtype2, "SUB_CPU", [&]() {
+      auto data2 = matrix2.data<scalar_t>();
+      using scalar_type2 = scalar_t;
+      STARML_DISPATCH_TYPES(result_dtype, "SUB_CPU", [&]() {
+        auto result_data = result.mutable_data<scalar_t>();
+        using result_scalar_type = scalar_t;
+        eval_binary(data1, data2, result_data, expr, 0, result.size(),
+                    [=](scalar_type1 a, scalar_type2 b) -> result_scalar_type {
+                      return a - b;
+                    });
+      });
+    });
   });
 }
 
-void mul_impl(const Matrix& matrix1, const Matrix& matrix2, Matrix& result) {
-  auto data_type = matrix1.data_type().type();
+void mul_impl(const Matrix& matrix1, const Matrix& matrix2, Matrix& result,
+              bool blocking) {
+  auto dtype1 = matrix1.data_type().type();
+  auto dtype2 = matrix2.data_type().type();
+  auto result_dtype = result.data_type().type();
   Expression expr = Expression(matrix1, matrix2, result);
-  STARML_DISPATCH_TYPES(data_type, "CPU_ADD", [&]() {
+  STARML_DISPATCH_TYPES(dtype1, "MUL_CPU", [&]() {
     auto data1 = matrix1.data<scalar_t>();
-    auto data2 = matrix2.data<scalar_t>();
-    auto result_data = result.mutable_data<scalar_t>();
-    eval_binary<scalar_t>(
-        data1, data2, result_data, expr, 0, result.size(),
-        [=](scalar_t a, scalar_t b) -> scalar_t { return a * b; });
+    using scalar_type1 = scalar_t;
+    STARML_DISPATCH_TYPES(dtype2, "MUL_CPU", [&]() {
+      auto data2 = matrix2.data<scalar_t>();
+      using scalar_type2 = scalar_t;
+      STARML_DISPATCH_TYPES(result_dtype, "MUL_CPU", [&]() {
+        auto result_data = result.mutable_data<scalar_t>();
+        using result_scalar_type = scalar_t;
+        eval_binary(data1, data2, result_data, expr, 0, result.size(),
+                    [=](scalar_type1 a, scalar_type2 b) -> result_scalar_type {
+                      return a * b;
+                    });
+      });
+    });
   });
 }
 
-void div_impl(const Matrix& matrix1, const Matrix& matrix2, Matrix& result) {
-  auto data_type = matrix1.data_type().type();
+void div_impl(const Matrix& matrix1, const Matrix& matrix2, Matrix& result,
+              bool blocking) {
+  auto dtype1 = matrix1.data_type().type();
+  auto dtype2 = matrix2.data_type().type();
+  auto result_dtype = result.data_type().type();
   Expression expr = Expression(matrix1, matrix2, result);
-  STARML_DISPATCH_TYPES(data_type, "CPU_ADD", [&]() {
+  STARML_DISPATCH_TYPES(dtype1, "DIV_CPU", [&]() {
     auto data1 = matrix1.data<scalar_t>();
-    auto data2 = matrix2.data<scalar_t>();
-    auto result_data = result.mutable_data<scalar_t>();
-    eval_binary<scalar_t>(
-        data1, data2, result_data, expr, 0, result.size(),
-        [=](scalar_t a, scalar_t b) -> scalar_t { return a / b; });
+    using scalar_type1 = scalar_t;
+    STARML_DISPATCH_TYPES(dtype2, "DIV_CPU", [&]() {
+      auto data2 = matrix2.data<scalar_t>();
+      using scalar_type2 = scalar_t;
+      STARML_DISPATCH_TYPES(result_dtype, "DIV_CPU", [&]() {
+        auto result_data = result.mutable_data<scalar_t>();
+        using result_scalar_type = scalar_t;
+        eval_binary(data1, data2, result_data, expr, 0, result.size(),
+                    [=](scalar_type1 a, scalar_type2 b) -> result_scalar_type {
+                      return a / b;
+                    });
+      });
+    });
   });
 }
 

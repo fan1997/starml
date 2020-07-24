@@ -2,6 +2,7 @@
 #include <mutex>
 #include <typeinfo>
 #include <unordered_map>
+
 #include "starml/basic/matrix.h"
 
 namespace starml {
@@ -101,18 +102,19 @@ class DispatcherRegister {
     }                                                          \
   }()
 
-#define STARML_DISPATCH_TYPES(SCALAR_TYPE, NAME, ...)        \
-  [&] {                                                      \
-    switch (SCALAR_TYPE) {                                   \
-      STARML_PRIVATE_CASE_TYPE(kInt8, int8_t, __VA_ARGS__)   \
-      STARML_PRIVATE_CASE_TYPE(kInt16, int16_t, __VA_ARGS__) \
-      STARML_PRIVATE_CASE_TYPE(kInt32, int32_t, __VA_ARGS__) \
-      STARML_PRIVATE_CASE_TYPE(kInt64, int64_t, __VA_ARGS__) \
-      STARML_PRIVATE_CASE_TYPE(kDouble, double, __VA_ARGS__) \
-      STARML_PRIVATE_CASE_TYPE(kFloat, float, __VA_ARGS__)   \
-      default:                                               \
-        break;                                               \
-    }                                                        \
+#define STARML_DISPATCH_TYPES(SCALAR_TYPE, NAME, ...)                         \
+  [&] {                                                                       \
+    switch (SCALAR_TYPE) {                                                    \
+      STARML_PRIVATE_CASE_TYPE(kInt8, int8_t, __VA_ARGS__)                    \
+      STARML_PRIVATE_CASE_TYPE(kInt16, int16_t, __VA_ARGS__)                  \
+      STARML_PRIVATE_CASE_TYPE(kInt32, int32_t, __VA_ARGS__)                  \
+      STARML_PRIVATE_CASE_TYPE(kInt64, int64_t, __VA_ARGS__)                  \
+      STARML_PRIVATE_CASE_TYPE(kDouble, double, __VA_ARGS__)                  \
+      STARML_PRIVATE_CASE_TYPE(kFloat, float, __VA_ARGS__)                    \
+      default:                                                                \
+        STARML_LOG(ERROR) << #NAME << " not implemented for '" << SCALAR_TYPE \
+                          << "'";                                             \
+    }                                                                         \
   }()
 
 }  // namespace starml

@@ -6,10 +6,10 @@
 #include "starml/basic/type.h"
 #include "starml/basic/scalar.h"
 #include "starml/utils/loguru.h"
-// #include "starml/basic/dispatch.h"
 
 namespace starml {
 using Shape = std::vector<int>;
+
 class Matrix {
  public:
   Matrix();
@@ -19,23 +19,33 @@ class Matrix {
   Matrix(const Matrix& rhs) = default;
   Matrix& operator=(const Matrix& rhs) = default;
 
+  // Get total number of elements in the matrix
   int size() const;
+  // Get the shape of matrix
   const Shape& dims() const;
-  int dim(int index) const;
+  // Get the number of element in a specific axis
+  int dim(int axis) const;
+  // Get the number of dimension of matrix
   int ndims() const;
+  // Get the device message
   const Device& device() const;
+  // Get the data type message
   const DataType& data_type() const;
 
+  // Get the raw data pointer (void *)
   const void* raw_data() const;
   void* raw_mutable_data() const;
 
+  // Transfer the matrix to specific device
   Matrix to(Device new_device) const;
+  // Print the matrix for debug usage
   void print(std::string file_name = "") const;
 
   // The rules to judge whether the input data type is valid:
   // 1. int can not convert to float or double, vice versa 
   // 2. data can be casted when the bytes of the input data type 
-  // is equal to the bytes of data_ptr_
+  // is equal to the bytes of data_ptr_ (The rule is mainly for int, short, long 
+  // , since the bytes of int may be variance on different system)
   template <typename T>
   const T* data() const {
     STARML_CHECK(dtype_.is_valid<T>())

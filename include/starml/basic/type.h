@@ -54,6 +54,8 @@ class DataType {
   bool operator==(const DataType& rhs) const;
   bool operator!=(const DataType& rhs) const;
 
+  bool is_int() const;
+
   // Template judgement whether the given data type is consistent with
   // the type object contains.
   template <typename T>

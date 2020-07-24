@@ -28,7 +28,7 @@ Matrix::Matrix(const Shape& shape, const DataType& data_type,
 }
 
 int Matrix::size() const { return this->size_; }
-int Matrix::dim(int index) const { return (dims())[index]; }
+int Matrix::dim(int axis) const { return (dims())[axis]; }
 const Shape& Matrix::dims() const { return this->shape_; }
 int Matrix::ndims() const { return this->shape_.size(); }
 const Device& Matrix::device() const { return this->device_; }
