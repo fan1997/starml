@@ -1,4 +1,5 @@
 #include "starml/operators/concat.h"
+#include <omp.h>
 
 namespace starml {
 namespace {

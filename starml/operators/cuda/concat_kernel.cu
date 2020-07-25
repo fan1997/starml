@@ -15,7 +15,7 @@ __global__ void concat_kernel_v1(T* data_1, T* data_2, T* res_data, int size, in
 template <typename T>
 __global__ void concat_kernel_v2(T* data_1, T* data_2, T* res_data, int size, int w1, int w2, int cols_num){
   int pos = blockDim.x * blockIdx.x + threadIdx.x;
-  if (pos < size) {
+  if (pos < size) {        //replace with STARML_CUDA_1D_KERNEL_LOOP
     int n = pos % cols_num;
     int m = pos / cols_num;
     res_data[pos] = m >= w1 ? data_2[(m - w1) * cols_num + n] : data_1[m * cols_num + n];

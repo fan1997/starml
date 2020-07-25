@@ -5,8 +5,6 @@ namespace starml {
 using binary_op_kernel_fn = void (*)(const Matrix& matrix1,
                                      const Matrix& matrix2, Matrix& result);
 STARML_DECLARE_DISPATCHER(add_dispatcher, binary_op_kernel_fn);
-using binary_op_kernel_fn = void (*)(const Matrix& matrix1,
-                                     const Matrix& matrix2, Matrix& result);
 STARML_DECLARE_DISPATCHER(sub_dispatcher, binary_op_kernel_fn);
 Matrix add(const Matrix& matrix1, const Matrix& matrix2);
 Matrix sub(const Matrix& matrix1, const Matrix& matrix2);

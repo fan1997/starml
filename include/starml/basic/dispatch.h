@@ -106,7 +106,8 @@ class DispatcherRegister {
       STARML_PRIVATE_CASE_TYPE(kDouble, double, __VA_ARGS__) \
       STARML_PRIVATE_CASE_TYPE(kFloat, float, __VA_ARGS__)   \
       default:                                               \
-        break;                                               \
+        STARML_LOG(ERROR) << #NAME << " not implemented for '"                \
+                        << to_string(SCALAR_TYPE, true) << "'";                   \
     }                                                        \
   }()
 }  // namespace starml

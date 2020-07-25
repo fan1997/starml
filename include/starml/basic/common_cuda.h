@@ -28,4 +28,8 @@ const char* cusparseGetErrorString(cusparseStatus_t error);
 const char* curandGetErrorString(curandStatus_t error);
 const char* cusolverGetErrorString(cusolverStatus_t error);
 
+#define STARML_CUDA_1D_KERNEL_LOOP(i, n)                            \
+  for (size_t i = blockIdx.x * blockDim.x + threadIdx.x; i < (n); \
+       i += blockDim.x * gridDim.x)
+
 }  // namespace starml

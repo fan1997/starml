@@ -10,6 +10,9 @@ SET(TEST_SOURCES
   test_concat.cpp
   test_lr.cpp
   test_solve.cpp
+  test_unary.cpp
+  test_optim.cpp
+  test_logistic.cpp
 )
 
 # Build an executable file for all test files

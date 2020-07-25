@@ -12,6 +12,7 @@ void matmul_impl(const Matrix& matrix1, const Matrix& matrix2,  Matrix& result) 
   // cublasSetPointerMode(handle, CUBLAS_POINTER_MODE_HOST);
   STARML_CUBLAS_CHECK(cublasCreate(&handle));
   STARML_CUBLAS_CHECK(cublasSetPointerMode(handle, CUBLAS_POINTER_MODE_HOST));
+  // stream =
   //
   auto data_type = matrix1.data_type().type();
   const int n_rows_mat1 = matrix1.dim(0);
