@@ -14,8 +14,8 @@ TEST(EVAL, test){
   Matrix y({label_size, 1}, kCPU, kFloat);
   Matrix y_pred({label_size, 1}, kCPU, kFloat);
   for (int i = 0; i < label_size; i++) {
-      y.data<float>()[i] = 1.0;
-      y_pred.data<float>()[i] = 3.0;
+      y.mutable_data<float>()[i] = 1.0;
+      y_pred.mutable_data<float>()[i] = 3.0;
   }
   float mse_err = metric1.mean_squared_error(y, y_pred);
   std::cout << "mse_err: " << mse_err << '\n';
@@ -28,8 +28,8 @@ TEST(EVAL, test){
 
 
   for (int i = 0; i < label_size; i++) {
-      y.data<float>()[i] = 1.0;
-      y_pred.data<float>()[i] = i >= label_size / 2 ? 0.0 : 1.0;
+      y.mutable_data<float>()[i] = 1.0;
+      y_pred.mutable_data<float>()[i] = i >= label_size / 2 ? 0.0 : 1.0;
   }
   float acc_score = metric1.accuracy_score(y, y_pred, false);
   std::cout << "acc_score: " << acc_score << '\n';

@@ -11,7 +11,7 @@ TEST(BINARY, test){
     Matrix origin_data({m, n}, kCPU, kFloat);
     for (int i = 0; i < m; i++) {
         for (int j = 0; j < n; j++) {
-            origin_data.data<float>()[i * n + j] = i + 1;
+            origin_data.mutable_data<float>()[i * n + j] = i + 1;
         }
     }
     origin_data.print();

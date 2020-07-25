@@ -26,30 +26,30 @@ void lu_solve_impl(const Matrix& matrix1, const Matrix& matrix2,  Matrix& result
   const int ldb = m;
 // d_ipiv(P)(m*1) -> P*A = L*U
 // d_info (1*1)
-  Matrix dipiv = Matrix(matrix2.dims(), matrix2.device(), kInt); // [m, 1], int
-  Matrix dinfo = Matrix({1,1}, matrix2.device(), kInt); // [1, 1], int
-  int* d_Ipiv = dipiv.data<int>();
-  int* d_info = dinfo.data<int>();
+  Matrix dipiv = Matrix(matrix2.dims(), matrix2.device(), kInt32); // [m, 1], int
+  Matrix dinfo = Matrix({1,1}, matrix2.device(), kInt32); // [1, 1], int
+  int* d_Ipiv = dipiv.mutable_data<int>();
+  int* d_info = dinfo.mutable_data<int>();
   int  lwork = 0;
   switch (data_type) {
       case kDouble:{
         using scalar_t = double;
-        scalar_t *d_A = matrix1_t.data<scalar_t>();
-        scalar_t *d_B = matrix2_t.data<scalar_t>();
+        scalar_t *d_A = matrix1_t.mutable_data<scalar_t>();
+        scalar_t *d_B = matrix2_t.mutable_data<scalar_t>();
         STARML_CUSOLVER_CHECK(cusolverDnDgetrf_bufferSize(cusolverH, m, m, d_A, lda, &lwork));
         Matrix dwork = Matrix({lwork,1}, matrix2.device(), kDouble); // [lwork , 1], int
-        scalar_t* d_work = dwork.data<scalar_t>();
+        scalar_t* d_work = dwork.mutable_data<scalar_t>();
         STARML_CUSOLVER_CHECK(cusolverDnDgetrf(cusolverH, m, m, d_A, lda, d_work, d_Ipiv, d_info));
         STARML_CUSOLVER_CHECK(cusolverDnDgetrs(cusolverH, CUBLAS_OP_N, m, 1, d_A, lda, d_Ipiv, d_B, ldb, d_info));
         break;
       }
       case kFloat:{
         using scalar_t = float;
-        scalar_t *d_A = matrix1_t.data<scalar_t>();
-        scalar_t *d_B = matrix2_t.data<scalar_t>();
+        scalar_t *d_A = matrix1_t.mutable_data<scalar_t>();
+        scalar_t *d_B = matrix2_t.mutable_data<scalar_t>();
         STARML_CUSOLVER_CHECK(cusolverDnSgetrf_bufferSize(cusolverH, m, m, d_A, lda, &lwork));
         Matrix dwork = Matrix({lwork,1}, matrix2.device(), kFloat); // [lwork , 1], int
-        scalar_t* d_work = dwork.data<scalar_t>();
+        scalar_t* d_work = dwork.mutable_data<scalar_t>();
         STARML_CUSOLVER_CHECK(cusolverDnSgetrf(cusolverH, m, m, d_A, lda, d_work, d_Ipiv, d_info));
         STARML_CUSOLVER_CHECK(cusolverDnSgetrs(cusolverH, CUBLAS_OP_N, m, 1, d_A, lda, d_Ipiv, d_B, ldb, d_info));
         break;

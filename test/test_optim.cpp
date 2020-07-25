@@ -13,8 +13,8 @@ TEST(OPTIM, test){
   Matrix grad({m, n}, kCPU, kFloat);
   for (int i = 0; i < m; i++) {
       for (int j = 0; j < n; j++) {
-          origin_data.data<float>()[i * n + j] = 4;
-          grad.data<float>()[i * n + j] = 1;
+          origin_data.mutable_data<float>()[i * n + j] = 4;
+          grad.mutable_data<float>()[i * n + j] = 1;
       }
   }
   origin_data.print();

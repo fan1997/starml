@@ -13,7 +13,7 @@ void trans_impl(const Matrix& matrix1, Matrix& result) {
 
   STARML_DISPATCH_TYPES(data_type, "TRANSPOSE", [&]() {
     auto data1 = matrix1.data<scalar_t>();
-    auto res_data = result.data<scalar_t>();
+    auto res_data = result.mutable_data<scalar_t>();
     Eigen::Map<const Eigen::Matrix<scalar_t, Eigen::Dynamic, Eigen::Dynamic, Eigen::RowMajor>> d1(data1, rows_num, cols_num);
     Eigen::Matrix<scalar_t, Eigen::Dynamic, Eigen::Dynamic, Eigen::RowMajor> trans_d = d1.transpose();
     Eigen::Map<Eigen::Matrix<scalar_t, Eigen::Dynamic, Eigen::Dynamic, Eigen::RowMajor> >(res_data,

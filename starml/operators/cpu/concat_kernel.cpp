@@ -4,7 +4,7 @@
 namespace starml {
 namespace {
 template <typename T>
-void concat_impl_kernel_v1(T* data_1, T* data_2, T* res_data, int& size, int& w1, int& w2){
+void concat_impl_kernel_v1(const T* data_1, const T* data_2, T* res_data, int& size, int& w1, int& w2){
 #pragma omp parallel for
   for (int pos = 0; pos < size; pos ++) {
     int n = pos / (w1 + w2);
@@ -13,7 +13,7 @@ void concat_impl_kernel_v1(T* data_1, T* data_2, T* res_data, int& size, int& w1
   }
 }
 template <typename T>
-void concat_impl_kernel_v2(T* data_1, T* data_2, T* res_data, int& size, int& w1, int& w2, int& cols_num){
+void concat_impl_kernel_v2(const T* data_1, const T* data_2, T* res_data, int& size, int& w1, int& w2, int& cols_num){
 #pragma omp parallel for
   for (int pos = 0; pos < size; pos ++) {
     int n = pos % cols_num;
@@ -36,7 +36,7 @@ void concat_impl(const Matrix& matrix1, const Matrix& matrix2, Matrix& result, i
   STARML_DISPATCH_TYPES(data_type, "CONCAT", [&]() {
     auto data_1 = matrix1.data<scalar_t>();
     auto data_2 = matrix2.data<scalar_t>();
-    auto res_data = result.data<scalar_t>();
+    auto res_data = result.mutable_data<scalar_t>();
     axis == 1 ? concat_impl_kernel_v1(data_1, data_2, res_data, size, w1, w2) :
     concat_impl_kernel_v2(data_1, data_2, res_data, size, w1, w2, m2_cols_num);
   });

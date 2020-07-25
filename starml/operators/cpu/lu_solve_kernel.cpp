@@ -14,7 +14,7 @@ void lu_solve_impl(const Matrix& matrix1, const Matrix& matrix2, Matrix& result)
   STARML_DISPATCH_FLOATING_TYPES(data_type, "LUSOLVE", [&]() {
     auto data_1 = matrix1.data<scalar_t>();
     auto data_2 = matrix2.data<scalar_t>();
-    auto res_data = result.data<scalar_t>();
+    auto res_data = result.mutable_data<scalar_t>();
     // EIGEN (AX = b) A -1
     // check
     Eigen::Map<const Eigen::Matrix<scalar_t, Eigen::Dynamic, Eigen::Dynamic, Eigen::RowMajor>> d_1(data_1, m1_rows_num, m1_cols_num);

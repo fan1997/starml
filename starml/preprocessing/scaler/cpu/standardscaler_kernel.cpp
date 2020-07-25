@@ -8,7 +8,7 @@ namespace scaler {
 
 namespace {
 template <typename T>
-void fit_impl_kernel(T* data_ptr, T* mean_ptr, T* std_ptr, int rows_num, int cols_num){
+void fit_impl_kernel(const T* data_ptr, T* mean_ptr, T* std_ptr, int rows_num, int cols_num){
 #pragma omp parallel for
   for (int i = 0; i < cols_num; i++) {
       mean_ptr[i] = 0;
@@ -38,8 +38,8 @@ void fit_impl(const Matrix& origin_data, Matrix& mean_data,
 
   STARML_DISPATCH_TYPES(data_type, "FIT", [&]() {
     auto data_ptr = origin_data.data<scalar_t>();
-    auto mean_ptr = mean_data.data<scalar_t>();
-    auto std_ptr = std_data.data<scalar_t>();
+    auto mean_ptr = mean_data.mutable_data<scalar_t>();
+    auto std_ptr = std_data.mutable_data<scalar_t>();
     fit_impl_kernel(data_ptr, mean_ptr, std_ptr, rows_num, cols_num);
   });
 }
@@ -48,7 +48,7 @@ STARML_REGISTER_KERNEL(stsfit_dispatcher, kCPU, &fit_impl);
 
 namespace {
 template <typename T>
-void trans_impl_kernel(T* data_ptr, T* mean_ptr, T* std_ptr, T* res_ptr, int rows_num, int cols_num){
+void trans_impl_kernel(const T* data_ptr, const T* mean_ptr, const T* std_ptr, T* res_ptr, int rows_num, int cols_num){
 #pragma omp parallel for
     for (int i = 0; i < rows_num; i++) {
         for (int j = 0; j < cols_num; j++) {
@@ -66,7 +66,7 @@ void trans_impl(const Matrix& origin_data, Matrix& result,
     auto data_ptr = origin_data.data<scalar_t>();
     auto mean_ptr = mean_data.data<scalar_t>();
     auto std_ptr = std_data.data<scalar_t>();
-    auto res_ptr = result.data<scalar_t>();
+    auto res_ptr = result.mutable_data<scalar_t>();
     trans_impl_kernel(data_ptr,  mean_ptr, std_ptr,  res_ptr, rows_num, cols_num);
   });
 }
@@ -76,7 +76,7 @@ STARML_REGISTER_KERNEL(ststrans_dispatcher, kCPU, &trans_impl);
 // inv trans
 namespace {
 template <typename T>
-void invtrans_impl_kernel(T* data_ptr, T* mean_ptr, T* std_ptr, T* res_ptr, int rows_num, int cols_num){
+void invtrans_impl_kernel(const T* data_ptr, const T* mean_ptr, const T* std_ptr, T* res_ptr, int rows_num, int cols_num){
 #pragma omp parallel for
     for (int i = 0; i < rows_num; i++) {
         for (int j = 0; j < cols_num; j++) {
@@ -94,7 +94,7 @@ void invtrans_impl(const Matrix& transformed_data, Matrix& result,
     auto data_ptr = transformed_data.data<scalar_t>();
     auto mean_ptr = mean_data.data<scalar_t>();
     auto std_ptr = std_data.data<scalar_t>();
-    auto res_ptr = result.data<scalar_t>();
+    auto res_ptr = result.mutable_data<scalar_t>();
     invtrans_impl_kernel(data_ptr, mean_ptr, std_ptr, res_ptr, rows_num, cols_num);
   });
 }

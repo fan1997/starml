@@ -40,13 +40,13 @@ namespace starml {
     int m = this->num_instances_;
     int n = this->num_features_;
     Matrix data({m, n}, kCPU, kFloat);
-    memset(data.data<float>(), 0.0, m * n * sizeof(float));
+    memset(data.mutable_data<float>(), 0.0, m * n * sizeof(float));
 #pragma omp parallel for
     for (size_t i = 0; i < m; i++) {
       for (size_t j = 0; j < this->instances_[i].size(); j++) {
         int col_id = this->instances_[i][j].index - 1;
         float v = this->instances_[i][j].value;
-        data.data<float>()[i * n + col_id] = v;
+        data.mutable_data<float>()[i * n + col_id] = v;
       }
     }
     return data;
@@ -56,7 +56,7 @@ namespace starml {
     std::cout << "getting label ..." << '\n';
     Matrix label({this->num_instances_, 1}, kCPU, kFloat);
     for (size_t i = 0; i < this->num_instances_; i++) {
-      label.data<float>()[i] = this->label_[i];
+      label.mutable_data<float>()[i] = this->label_[i];
     }
     return label;
   }

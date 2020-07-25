@@ -13,14 +13,14 @@ TEST(MATMUL, test){
   Matrix origin_data({m, k}, kCPU, kFloat);
   for (int i = 0; i < m; i++) {
       for (int j = 0; j < k; j++) {
-          origin_data.data<float>()[i * k + j] = i + 1;
+          origin_data.mutable_data<float>()[i * k + j] = i + 1;
       }
   }
   origin_data.print();
   Matrix origin_data1({k, n}, kCPU, kFloat);
   for (int i = 0; i < k; i++) {
       for (int j = 0; j < n; j++) {
-          origin_data1.data<float>()[i * n + j] = i;
+          origin_data1.mutable_data<float>()[i * n + j] = i;
       }
   }
   origin_data.print();

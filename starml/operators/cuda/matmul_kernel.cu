@@ -30,7 +30,7 @@ void matmul_impl(const Matrix& matrix1, const Matrix& matrix2,  Matrix& result) 
         using scalar_t = float;
         const scalar_t *data1 = matrix2.data<scalar_t>();
         const scalar_t *data2 = matrix1.data<scalar_t>();
-        scalar_t *res_data = result.data<scalar_t>();
+        scalar_t *res_data = result.mutable_data<scalar_t>();
         scalar_t alpha = 1.;
         scalar_t beta  = 0.;
         STARML_CUBLAS_CHECK(cublasSgemm(handle, CUBLAS_OP_N, CUBLAS_OP_N, m, n, k, &alpha, data1, lda, data2, ldb,
@@ -42,7 +42,7 @@ void matmul_impl(const Matrix& matrix1, const Matrix& matrix2,  Matrix& result) 
         using scalar_t = double;
         const scalar_t *data1 = matrix2.data<scalar_t>();
         const scalar_t *data2 = matrix1.data<scalar_t>();
-        scalar_t *res_data = result.data<scalar_t>();
+        scalar_t *res_data = result.mutable_data<scalar_t>();
         scalar_t alpha = 1.;
         scalar_t beta  = 0.;
         STARML_CUBLAS_CHECK(cublasDgemm(handle, CUBLAS_OP_N, CUBLAS_OP_N, m, n, k, &alpha, data1, lda, data2, ldb,

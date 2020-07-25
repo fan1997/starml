@@ -4,7 +4,7 @@
 namespace starml {
 namespace {
 template <typename T>
-__global__ void concat_kernel_v1(T* data_1, T* data_2, T* res_data, int size, int w1, int w2) {
+__global__ void concat_kernel_v1(const T* data_1, const T* data_2, T* res_data, int size, int w1, int w2) {
   int pos = blockDim.x * blockIdx.x + threadIdx.x;
   if (pos < size) {
       int n = pos / (w1 + w2);
@@ -13,7 +13,7 @@ __global__ void concat_kernel_v1(T* data_1, T* data_2, T* res_data, int size, in
   }
 }
 template <typename T>
-__global__ void concat_kernel_v2(T* data_1, T* data_2, T* res_data, int size, int w1, int w2, int cols_num){
+__global__ void concat_kernel_v2(const T* data_1, const T* data_2, T* res_data, int size, int w1, int w2, int cols_num){
   int pos = blockDim.x * blockIdx.x + threadIdx.x;
   if (pos < size) {        //replace with STARML_CUDA_1D_KERNEL_LOOP
     int n = pos % cols_num;
@@ -32,9 +32,9 @@ void concat_impl(const Matrix& matrix1, const Matrix& matrix2, Matrix& result, i
   auto data_type = result.data_type().type();
   auto size = result.size();
   STARML_DISPATCH_TYPES(data_type, "CONCAT", [&]() {
-    scalar_t *data_1 = matrix1.data<scalar_t>();
-    scalar_t *data_2 = matrix2.data<scalar_t>();
-    scalar_t *res_data = result.data<scalar_t>();
+    auto data_1 = matrix1.data<scalar_t>();
+    auto data_2 = matrix2.data<scalar_t>();
+    auto res_data = result.mutable_data<scalar_t>();
     dim3 dimGrid(ceil(size / 256.0), 1, 1);
     dim3 dimBlock(256, 1, 1);
     axis == 1 ? concat_kernel_v1<scalar_t><<<dimGrid, dimBlock>>>(data_1, data_2, res_data, size, w1, w2) :

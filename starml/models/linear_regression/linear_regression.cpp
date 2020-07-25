@@ -1,8 +1,8 @@
 #include "starml/models/linear_regression/linear_regression.h"
 #include "starml/operators/transpose.h"
-#include "starml/operators/add_scalar.h"
 #include "starml/operators/solve.h"
 #include "starml/operators/matmul.h"
+#include "starml/operators/binary_ops.h"
 #include <iostream>
 
 namespace starml {
@@ -45,7 +45,7 @@ float regression::LinearRegression::train(const starml::Matrix& train_data,
    starml::Matrix train_data_t = transpose(train_data);
    starml::Matrix xtx = matmul(train_data_t, train_data);
    starml::Matrix xty = matmul(train_data_t, label);
-   this -> parameters = lu_solve(add_scalar(xtx, this -> lambda), xty);
+   this -> parameters = lu_solve(add(xtx, this -> lambda), xty);
 }
 
 float regression::LinearRegression::train(const starml::Matrix& train_data,

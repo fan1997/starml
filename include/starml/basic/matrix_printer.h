@@ -72,7 +72,7 @@ void MatrixPrinter::print_matrix(const Matrix& matrix, int n_row_limited,
     for (int j = 0; j < n_col; ++j) {
       values_stream << data[i * n_col + j];
       if (j + 1 != n_col) {
-        values_stream << ","; 
+        values_stream << ",\t"; 
       }
     }
     if (i != n_row - 1) {

@@ -1,65 +1,35 @@
-#include "starml/operators/unary_ops.h"
-#include <omp.h>
 #include <cmath>
+#include "starml/operators/unary_ops.h"
 
 namespace starml {
 namespace {
 
-template <typename T>
-void exp_impl_kernel(T* data_1, T* res_data, int& size){
-#pragma omp parallel for
-  for (int i = 0; i < size; i ++) {
-    res_data[i] = std::exp(data_1[i]);
+template <typename TScalarType, typename TResultType, typename TOp>
+void eval_unary(const TScalarType* data, TResultType* result_data, int start,
+                int end, TOp op) {
+  for (int i = start; i < end; i++) {
+    *(result_data + i) = op(*(data + i));
   }
-}
-void exp_impl(const Matrix& matrix1, Matrix& result) {
-  auto data_type = matrix1.data_type().type();
-  int size = matrix1.size();
-  STARML_DISPATCH_FLOATING_TYPES(data_type, "EXP", [&]() {
-    auto data1 = matrix1.data<scalar_t>();
-    auto res_data = result.data<scalar_t>();
-    exp_impl_kernel(data1, res_data, size);
-  });
 }
 
-template <typename T>
-void sqrt_impl_kernel(T* data_1, T* res_data, int& size){
-#pragma omp parallel for
-  for (int i = 0; i < size; i ++) {
-    res_data[i] = std::sqrt(data_1[i]);
-  }
-}
-void sqrt_impl(const Matrix& matrix1, Matrix& result) {
-  auto data_type = matrix1.data_type().type();
-  int size = matrix1.size();
-  STARML_DISPATCH_FLOATING_TYPES(data_type, "SQRT", [&]() {
-    auto data1 = matrix1.data<scalar_t>();
-    auto res_data = result.data<scalar_t>();
-    sqrt_impl_kernel(data1, res_data, size);
-  });
-}
-
-template <typename T>
-void square_impl_kernel(T* data_1, T* res_data, int& size){
-#pragma omp parallel for
-  for (int i = 0; i < size; i ++) {
-    res_data[i] = data_1[i] * data_1[i];
-  }
-}
-void square_impl(const Matrix& matrix1, Matrix& result) {
-  auto data_type = matrix1.data_type().type();
-  int size = matrix1.size();
-  STARML_DISPATCH_TYPES(data_type, "SQUARE", [&]() {
-    auto data1 = matrix1.data<scalar_t>();
-    auto res_data = result.data<scalar_t>();
-    square_impl_kernel(data1, res_data, size);
+void exp_impl(const Matrix& matrix, Matrix& result, bool blocking) {
+  auto dtype = matrix.data_type().type();
+  auto result_dtype = result.data_type().type();
+  STARML_DISPATCH_TYPES(dtype, "EXP_CPU", [&]() {
+    auto data = matrix.data<scalar_t>();
+    using scalar_type = scalar_t;
+    STARML_DISPATCH_TYPES(result_dtype, "EXP_CPU", [&]() {
+      auto result_data = result.mutable_data<scalar_t>();
+      using result_scalar_type = scalar_t;
+      eval_unary(
+          data, result_data, 0, result.size(),
+          [=](scalar_type a) -> result_scalar_type { return std::exp(a); });
+    });
   });
 }
 
 }  // namespace
 
 STARML_REGISTER_KERNEL(exp_dispatcher, kCPU, &exp_impl);
-STARML_REGISTER_KERNEL(sqrt_dispatcher, kCPU, &sqrt_impl);
-STARML_REGISTER_KERNEL(square_dispatcher, kCPU, &square_impl);
 
 }  // namespace starml

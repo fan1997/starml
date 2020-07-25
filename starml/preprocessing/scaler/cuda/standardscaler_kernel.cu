@@ -9,7 +9,7 @@ namespace scaler {
 // FIT
 namespace {
 template <typename T>
-__global__ void fit_kernel(T* data_ptr, T* mean_ptr, T* std_ptr, int rows_num, int cols_num) {
+__global__ void fit_kernel(const T* data_ptr, T* mean_ptr, T* std_ptr, int rows_num, int cols_num) {
   int i = blockDim.x * blockIdx.x + threadIdx.x;
   if (i < cols_num) {
       mean_ptr[i] = 0;
@@ -37,8 +37,8 @@ void fit_impl(const Matrix& origin_data, Matrix& mean_data,
 
   STARML_DISPATCH_FLOATING_TYPES(data_type, "FIT", [&]() {
     auto data_ptr = origin_data.data<scalar_t>();
-    auto mean_ptr = mean_data.data<scalar_t>();
-    auto std_ptr = std_data.data<scalar_t>();
+    auto mean_ptr = mean_data.mutable_data<scalar_t>();
+    auto std_ptr = std_data.mutable_data<scalar_t>();
     dim3 dimGrid(ceil(cols_num / 256.0), 1, 1);
     dim3 dimBlock(256, 1, 1);
     fit_kernel<scalar_t><<<dimGrid, dimBlock>>>(data_ptr, mean_ptr, std_ptr, rows_num, cols_num);
@@ -52,7 +52,7 @@ STARML_REGISTER_KERNEL(stsfit_dispatcher, kCUDA, &fit_impl);
 // trans
 namespace {
 template <typename T>
-__global__ void trans_kernel(T* data_ptr, T* mean_ptr, T* std_ptr, T* res_ptr, int rows_num, int cols_num) {
+__global__ void trans_kernel(const T* data_ptr, const T* mean_ptr, const T* std_ptr, T* res_ptr, int rows_num, int cols_num) {
   int i = blockDim.x * blockIdx.x + threadIdx.x;
   if (i < rows_num) {
       for (int j = 0; j < cols_num; j++) {
@@ -72,7 +72,7 @@ void trans_impl(const Matrix& origin_data, Matrix& result,
     auto data_ptr = origin_data.data<scalar_t>();
     auto mean_ptr = mean_data.data<scalar_t>();
     auto std_ptr = std_data.data<scalar_t>();
-    auto res_ptr = result.data<scalar_t>();
+    auto res_ptr = result.mutable_data<scalar_t>();
     dim3 dimGrid(ceil(rows_num / 256.0), 1, 1);
     dim3 dimBlock(256, 1, 1);
     trans_kernel<scalar_t><<<dimGrid, dimBlock>>>(data_ptr,  mean_ptr, std_ptr,  res_ptr, rows_num, cols_num);
@@ -85,7 +85,7 @@ STARML_REGISTER_KERNEL(ststrans_dispatcher, kCUDA, &trans_impl);
 
 namespace {
 template <typename T>
-__global__ void invtrans_kernel(T* data_ptr, T* mean_ptr, T* std_ptr, T* res_ptr, int rows_num, int cols_num) {
+__global__ void invtrans_kernel(const T* data_ptr, const T* mean_ptr, const T* std_ptr, T* res_ptr, int rows_num, int cols_num) {
   int i = blockDim.x * blockIdx.x + threadIdx.x;
   if (i < rows_num) {
       for (int j = 0; j < cols_num; j++) {
@@ -105,7 +105,7 @@ void invtrans_impl(const Matrix& transformed_data, Matrix& result,
     auto data_ptr = transformed_data.data<scalar_t>();
     auto mean_ptr = mean_data.data<scalar_t>();
     auto std_ptr = std_data.data<scalar_t>();
-    auto res_ptr = result.data<scalar_t>();
+    auto res_ptr = result.mutable_data<scalar_t>();
     dim3 dimGrid(ceil(rows_num / 256.0), 1, 1);
     dim3 dimBlock(256, 1, 1);
     invtrans_kernel<scalar_t><<<dimGrid, dimBlock>>>(data_ptr,  mean_ptr, std_ptr,  res_ptr, rows_num, cols_num);

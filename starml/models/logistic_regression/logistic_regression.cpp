@@ -2,7 +2,6 @@
 #include "starml/optimizer/optimizer.h"
 #include "starml/optimizer/SGD.h"
 #include "starml/operators/transpose.h"
-#include "starml/operators/add_scalar.h"
 #include "starml/operators/solve.h"
 #include "starml/operators/matmul.h"
 #include <iostream>

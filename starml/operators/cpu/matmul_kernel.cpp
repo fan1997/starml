@@ -13,7 +13,7 @@ void matmul_impl(const Matrix& matrix1, const Matrix& matrix2, Matrix& result) {
   STARML_DISPATCH_FLOATING_TYPES(data_type, "MATMUL", [&]() {
     auto data1 = matrix1.data<scalar_t>();
     auto data2 = matrix2.data<scalar_t>();
-    auto res_data = result.data<scalar_t>();
+    auto res_data = result.mutable_data<scalar_t>();
     Eigen::Map<const Eigen::Matrix<scalar_t, Eigen::Dynamic, Eigen::Dynamic, Eigen::RowMajor>> mat1(data1, m, k);
     Eigen::Map<const Eigen::Matrix<scalar_t, Eigen::Dynamic, Eigen::Dynamic, Eigen::RowMajor>>
               mat2(data2, k, n);

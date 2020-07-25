@@ -29,13 +29,13 @@ TEST(LOGISTIC, test){
    default_random_engine e;
    std::uniform_real_distribution<float> u(0, 1);
    for (size_t i = 0; i < m; i++) {
-       label.data<float>()[i] = 0.0;
-       train_data_cat.data<float>()[i] = 1.0;
+       label.mutable_data<float>()[i] = 0.0;
+       train_data_cat.mutable_data<float>()[i] = 1.0;
        for (size_t j = 0; j < n; j++) {
-           train_data.data<float>()[i * n + j] = u(e);
+           train_data.mutable_data<float>()[i * n + j] = u(e);
        }
        for (size_t j = 0; j < n; j++) {
-           label.data<float>()[i] += (j + 1) * train_data.data<float>()[i * n + j]; // y = 1 * x1 + 2 * x2 + 3 * x3 ....
+           label.mutable_data<float>()[i] += (j + 1) * train_data.data<float>()[i * n + j]; // y = 1 * x1 + 2 * x2 + 3 * x3 ....
        }
    }
    train_data = concat(train_data, train_data_cat, 1);
@@ -57,10 +57,10 @@ TEST(LOGISTIC, test){
    // std::cout << "    ..... pred_label ...." << '\n';
    // pred_label.print();
    // std::cout << '\n';
-   Matrix weights = model.get_parameters();
-   std::cout << "    .....lr model weights ...." << '\n';
-   weights.print(); //[2,0]
-   std::cout << '\n';
+   // Matrix weights = model.get_parameters();
+   // std::cout << "    .....lr model weights ...." << '\n';
+   // weights.print(); //[2,0]
+   // std::cout << '\n';
 
 //evaluate
    // metrics metric1;

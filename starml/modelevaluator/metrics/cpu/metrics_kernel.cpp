@@ -7,7 +7,7 @@ namespace metrics{
 // mse
 namespace {
 template <typename T>
-void mse_impl_kernel(T* data1_ptr, T* data2_ptr, int size, float& sum, float& score){
+void mse_impl_kernel(const T* data1_ptr, const T* data2_ptr, int size, float& sum, float& score){
 #pragma omp parallel for reduction(+:sum)
     for (int i = 0; i < size; i++) {
       auto diff = data1_ptr[i] - data2_ptr[i];
@@ -33,7 +33,7 @@ STARML_REGISTER_KERNEL(mse_dispatcher, kCPU, &mse_impl);
 // acc
 namespace {
 template <typename T>
-void acc_impl_kernel(T* data1_ptr, T* data2_ptr, int size, float& sum){
+void acc_impl_kernel(const T* data1_ptr, const T* data2_ptr, int size, float& sum){
 #pragma omp parallel for reduction(+:sum)
     for (int i = 0; i < size; i++) {
       sum += (data1_ptr[i] == data2_ptr[i]);

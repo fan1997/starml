@@ -24,13 +24,13 @@ TEST(LINEARREG, test){
    default_random_engine e;
    std::uniform_real_distribution<float> u(0, 1);
    for (size_t i = 0; i < m; i++) {
-       label.data<float>()[i] = 0.0;
-       train_data_cat.data<float>()[i] = 1.0;
+       label.mutable_data<float>()[i] = 0.0;
+       train_data_cat.mutable_data<float>()[i] = 1.0;
        for (size_t j = 0; j < n; j++) {
-           train_data.data<float>()[i * n + j] = u(e);
+           train_data.mutable_data<float>()[i * n + j] = u(e);
        }
        for (size_t j = 0; j < n; j++) {
-           label.data<float>()[i] += (j + 1) * train_data.data<float>()[i * n + j]; // y = 1 * x1 + 2 * x2 + 3 * x3 ....
+           label.mutable_data<float>()[i] += (j + 1) * train_data.data<float>()[i * n + j]; // y = 1 * x1 + 2 * x2 + 3 * x3 ....
        }
    }
    train_data = concat(train_data, train_data_cat, 1);
@@ -99,7 +99,7 @@ TEST(LINEARREG, test){
    Matrix train_data = data_loader.get_data();
    Matrix train_data_cat({train_data.dim(0), 1}, kCPU, kFloat);
    for (size_t i = 0; i < train_data_cat.dim(0); i++) {
-       train_data_cat.data<float>()[i] = 1;
+       train_data_cat.mutable_data<float>()[i] = 1;
    }
    train_data = concat(train_data, train_data_cat, 1);
    label.print();
