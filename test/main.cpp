@@ -9,10 +9,13 @@ using namespace starml;
 int main(int argc, char **argv) {
   ::testing::InitGoogleTest(&argc, argv);
   Matrix a = full({3, 1}, Device(kCPU), DataType(kInt32), 3);
-  Matrix b = full({3}, Device(kCPU), DataType(kFloat), 8.3);
-  Matrix result = empty({3, 1}, Device(kCUDA), DataType(kFloat));
-  exp(a.to(kCUDA), result);
-  result.print();
+  Matrix b = full({3}, Device(kCPU), DataType(kInt32), 2);
+  Matrix c = add(a.to(kCUDA), b.to(kCUDA));
+  c.print();
+  // Matrix b = full({3}, Device(kCPU), DataType(kFloat), 8.3);
+  // Matrix result = empty({3, 1}, Device(kCUDA), DataType(kInt32));
+  // exp(a.to(kCUDA), result);
+  // result.print();
   // Matrix a_cuda = a.to(kCUDA);
   // Matrix b_cuda = b.to(kCUDA);
   // Matrix result_cuda = add(a_cuda, b_cuda);

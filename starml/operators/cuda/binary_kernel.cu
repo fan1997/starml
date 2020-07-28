@@ -1,8 +1,7 @@
-#include "starml/operators/binary_ops.h"
-#include "starml/basic/common_cuda.h"
-#include "starml/basic/context_cuda.h"
-#include "starml/operators/expression.h"
 #include "index_helper.cuh"
+#include "starml/basic/common_cuda.h"
+#include "starml/operators/binary_ops.h"
+#include "starml/operators/expression.h"
 
 namespace starml {
 namespace {
@@ -28,7 +27,7 @@ template <typename TScalarType1, typename TScalarType2, typename TResultType,
           typename TOp>
 void eval_binary(const TScalarType1* data1, const TScalarType2* data2,
                  TResultType* result_data, const Expression& expr, int start,
-                 int end, CUDAContext* cuda_ctx, TOp op) {
+                 int end, TOp op) {
   int ndims = expr.dims(0).size();
   IndexHelper data1_index_helper =
       IndexHelper(expr.dims(0).data(), expr.strides(0).data(), ndims);
@@ -38,47 +37,35 @@ void eval_binary(const TScalarType1* data1, const TScalarType2* data2,
       IndexHelper(expr.dims(2).data(), expr.strides(2).data(), ndims);
   dim3 dimGrid(ceil((end - start) / 256.0), 1, 1);
   dim3 dimBlock(256, 1, 1);
-  binary_kernel<<<dimGrid, dimBlock, 0, cuda_ctx->stream()>>>(
-      data1, data2, start, end, op, data1_index_helper, data2_index_helper,
-      result_index_helper, result_data);
+  binary_kernel<<<dimGrid, dimBlock>>>(data1, data2, start, end, op,
+                                       data1_index_helper, data2_index_helper,
+                                       result_index_helper, result_data);
 }
 
-void add_impl(const Matrix& matrix1, const Matrix& matrix2, Matrix& result, bool blocking) {
+void add_impl(const Matrix& matrix1, const Matrix& matrix2, Matrix& result) {
   auto dtype1 = matrix1.data_type().type();
   auto dtype2 = matrix2.data_type().type();
   auto result_dtype = result.data_type().type();
-  auto cuda_ctx = get_cuda_context(matrix1.device());
   Expression expr = Expression(matrix1, matrix2, result);
   STARML_DISPATCH_TYPES(dtype1, "ADD_CUDA", [&]() {
     auto data1 = matrix1.data<scalar_t>();
-    cuda_ctx->prefetch_async(const_cast<scalar_t*>(data1),
-                             sizeof(scalar_t) * matrix1.size(),
-                             cuda_ctx->stream());
     using scalar_type1 = scalar_t;
     STARML_DISPATCH_TYPES(dtype2, "ADD_CUDA", [&]() {
       auto data2 = matrix2.data<scalar_t>();
-      cuda_ctx->prefetch_async(const_cast<scalar_t*>(data2),
-                               sizeof(scalar_t) * matrix2.size(),
-                               cuda_ctx->stream());
       using scalar_type2 = scalar_t;
       STARML_DISPATCH_TYPES(result_dtype, "ADD_CUDA", [&]() {
         auto result_data = result.mutable_data<scalar_t>();
-        cuda_ctx->prefetch_async(result_data, sizeof(scalar_t) * result.size(),
-                                 cuda_ctx->stream());
         using result_scalar_type = scalar_t;
-        eval_binary(data1, data2, result_data, expr, 0, result.size(), cuda_ctx,
+        eval_binary(data1, data2, result_data, expr, 0, result.size(),
                     [=] __device__(scalar_type1 a, scalar_type2 b)
                         -> result_scalar_type { return a + b; });
-        if (blocking) {
-          cuda_ctx->synchronize();
-        }
       });
     });
   });
 }
 
 }  // namespace
-STARML_REGISTER_KERNEL(add_dispatcher, kCUDA, &add_impl);
+STARML_REGISTER_KERNEL(add_dispatcher, &add_impl, kCUDA, kCUDA, kCUDA);
 // STARML_REGISTER_KERNEL(sub_dispatcher, kCUDA, &sub_impl);
 // STARML_REGISTER_KERNEL(mul_dispatcher, kCUDA, &mul_impl);
 // STARML_REGISTER_KERNEL(div_dispatcher, kCUDA, &div_impl);
