@@ -54,11 +54,9 @@ void cast_impl(const Matrix& matrix, Matrix& result, Handle* handle) {
     STARML_DISPATCH_TYPES(dtype, "CUDA_CAST", [&]() {
       auto data = matrix.data<scalar_t>();
       using scalar_type = scalar_t;
-      STARML_DISPATCH_TYPES(result_dtype, "CUDA_CAST", [&]() {
-        eval_unary(
-            data, result_data, 0, result.size(), handle,
-            [=] __device__(scalar_type a) -> result_scalar_type { return a; });
-      });
+      eval_unary(
+          data, result_data, 0, result.size(), handle,
+          [=] __device__(scalar_type a) -> result_scalar_type { return a; });
     });
   });
 }
