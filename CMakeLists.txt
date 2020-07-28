@@ -3,7 +3,13 @@ project(starml VERSION 0.0.1 LANGUAGES CXX)
 
 option(STARML_BUILD_SHARED_LIBS "Compiled as a shared library" ON)
 option(STARML_ENABLE_TESTING "Build with testing enabled" ON)
-option(STARML_USE_CUDA "Build with CUDA supported" ON)
+option(STARML_USE_CUDA "Build with CUDA supported" OFF)
+
+#SET(CMAKE_BUILD_TYPE "Debug")
+SET(CMAKE_BUILD_TYPE "Release")
+SET(CMAKE_CXX_FLAGS_DEBUG "$ENV{CXXFLAGS} -O0 -Wall -g -ggdb")
+SET(CMAKE_CXX_FLAGS_RELEASE "$ENV{CXXFLAGS} -O3 -Wall")
+message(${CMAKE_CXX_FLAGS_RELEASE})
 
 # Show the detail of compile messages
 set(CMAKE_VERBOSE_MAKEFILE OFF)

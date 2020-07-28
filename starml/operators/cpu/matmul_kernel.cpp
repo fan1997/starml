@@ -1,11 +1,11 @@
 #include "starml/operators/matmul.h"
 #include <Eigen/Dense>
 #include <Eigen/Sparse>
+#include <iostream>
 
 namespace starml {
 namespace {
 void matmul_impl(const Matrix& matrix1, const Matrix& matrix2, Matrix& result) {
-  // std::cout << "In add_impl " << std::endl;
   auto data_type = matrix1.data_type().type();
   int m = matrix1.dim(0);
   int k = matrix1.dim(1);

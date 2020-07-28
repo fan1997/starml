@@ -7,15 +7,11 @@ namespace optimizer {
 
 class SGD : public Optimizer{
 public:
-    SGD(){};
+    // SGD(){};
+    SGD(float learning_rate = 0.001) : Optimizer(learning_rate){};
     SGD(Matrix model_param, Matrix model_grad, float learning_rate = 0.001):
         Optimizer(model_param, model_grad, learning_rate) {};
     void step();
-
-private:
-    Matrix parameters;  // maybe should be a std::vector<Matrix> params;
-    Matrix grad;
-    float lr;
 };
 
 using sgd_op_kernel_fn = void (*)(Matrix& parameters, Matrix& grad, float* lr);

@@ -4,7 +4,15 @@
 namespace starml {
 using unary_op_kernel_fn = void (*)(const Matrix& matrix, Matrix& result, bool blocking);
 STARML_DECLARE_DISPATCHER(exp_dispatcher, unary_op_kernel_fn);
+STARML_DECLARE_DISPATCHER(log_dispatcher, unary_op_kernel_fn);
+STARML_DECLARE_DISPATCHER(negtive_dispatcher, unary_op_kernel_fn);
 
 Matrix exp(const Matrix& matrix, bool blocking = true);
 Matrix exp(const Matrix& matrix, Matrix& result, bool blocking = true);
+
+Matrix log(const Matrix& matrix, bool blocking = true);
+Matrix log(const Matrix& matrix, Matrix& result, bool blocking = true);
+
+Matrix negtive(const Matrix& matrix, bool blocking = true);
+Matrix negtive(const Matrix& matrix, Matrix& result, bool blocking = true);
 }

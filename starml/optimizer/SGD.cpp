@@ -10,7 +10,9 @@ void sgd_op(Matrix& parameters, Matrix& grad, float* lr) {
 
 void SGD::step(){
   std::cout << "SGD step..." << '\n';
+  // this->get_parameters().print();
   sgd_op(this->get_parameters(), this->get_grad(), &(this->get_learning_rate()));
+  // this->get_parameters().print();
 }
 
 

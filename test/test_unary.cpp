@@ -19,6 +19,13 @@ TEST(UNARY, test){
 
   Matrix res = exp(origin_data);
   res.print();
+
+  Matrix origin_data1 = log(res);
+  origin_data1.print();
+
+  origin_data1 = negtive(res);
+  origin_data1.print();
+
   // // Matrix origin_data_cuda = origin_data.to(kCUDA);
   // // Matrix res_cuda = exp(origin_data_cuda);
   // // res_cuda.print();

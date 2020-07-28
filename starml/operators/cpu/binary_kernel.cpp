@@ -1,5 +1,5 @@
 #include <iostream>
-
+#include <omp.h>
 #include "index_helper.h"
 #include "starml/operators/binary_ops.h"
 #include "starml/operators/expression.h"
@@ -15,6 +15,7 @@ void eval_binary(const TScalarType1* data1, const TScalarType2* data2,
   IndexHelper data1_index_helper = IndexHelper(expr.dims(0), expr.strides(0));
   IndexHelper data2_index_helper = IndexHelper(expr.dims(1), expr.strides(1));
   IndexHelper result_index_helper = IndexHelper(expr.dims(2), expr.strides(2));
+#pragma omp parallel for
   for (int i = start; i < end; i++) {
     int data1_offset = data1_index_helper.index(i);
     int data2_offset = data2_index_helper.index(i);
