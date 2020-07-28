@@ -57,7 +57,7 @@ void negtive_impl(const Matrix& matrix, Matrix& result) {
       using result_scalar_type = scalar_t;
       eval_unary(
           data, result_data, 0, result.size(),
-          [=](scalar_type a) -> result_scalar_type { return - a; });
+          [=](scalar_type a) -> result_scalar_type { return -a; });
     });
   });
 }

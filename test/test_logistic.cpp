@@ -153,12 +153,12 @@ TEST(LOGISTIC, test){
 
    Matrix pred_label_cpu = pred_label.to(kCPU);
    for (size_t i = 0; i < pred_label_cpu.size(); i++) {
-       pred_label_cpu.mutable_data<float>()[i] = pred_label_cpu.mutable_data<float>()[i] >= 0 ? 1.0 : 0;
+       pred_label_cpu.mutable_data<float>()[i] = pred_label_cpu.mutable_data<float>()[i] >= 0 ? 1.0 : 0.0;
    }
    Matrix label_cpu = label.to(kCPU);
  //evaluate
    metrics metric1;
-   float acc_score = metric1.accuracy_score(label, pred_label);
+   float acc_score = metric1.accuracy_score(label_cpu, pred_label_cpu);
    std::cout << "lr acc_score: " << acc_score << '\n';
 
  //*******************************************************//
