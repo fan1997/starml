@@ -14,7 +14,7 @@ void eval_unary(const TScalarType* data, TResultType* result_data, int start,
   }
 }
 
-void exp_impl(const Matrix& matrix, Matrix& result, bool blocking) {
+void exp_impl(const Matrix& matrix, Matrix& result) {
   auto dtype = matrix.data_type().type();
   auto result_dtype = result.data_type().type();
   STARML_DISPATCH_TYPES(dtype, "EXP_CPU", [&]() {
@@ -30,7 +30,7 @@ void exp_impl(const Matrix& matrix, Matrix& result, bool blocking) {
   });
 }
 
-void log_impl(const Matrix& matrix, Matrix& result, bool blocking) {
+void log_impl(const Matrix& matrix, Matrix& result) {
   auto dtype = matrix.data_type().type();
   auto result_dtype = result.data_type().type();
   STARML_DISPATCH_TYPES(dtype, "LOG_CPU", [&]() {
@@ -46,7 +46,7 @@ void log_impl(const Matrix& matrix, Matrix& result, bool blocking) {
   });
 }
 
-void negtive_impl(const Matrix& matrix, Matrix& result, bool blocking) {
+void negtive_impl(const Matrix& matrix, Matrix& result) {
   auto dtype = matrix.data_type().type();
   auto result_dtype = result.data_type().type();
   STARML_DISPATCH_TYPES(dtype, "NEG_CPU", [&]() {
@@ -64,8 +64,8 @@ void negtive_impl(const Matrix& matrix, Matrix& result, bool blocking) {
 
 }  // namespace
 
-STARML_REGISTER_KERNEL(exp_dispatcher, kCPU, &exp_impl);
-STARML_REGISTER_KERNEL(log_dispatcher, kCPU, &log_impl);
-STARML_REGISTER_KERNEL(negtive_dispatcher, kCPU, &negtive_impl);
+STARML_REGISTER_KERNEL(exp_dispatcher, &exp_impl, kCPU, kCPU);
+STARML_REGISTER_KERNEL(log_dispatcher, &log_impl, kCPU, kCPU);
+STARML_REGISTER_KERNEL(negtive_dispatcher, &negtive_impl, kCPU, kCPU);
 
 }  // namespace starml

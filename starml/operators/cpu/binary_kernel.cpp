@@ -25,8 +25,7 @@ void eval_binary(const TScalarType1* data1, const TScalarType2* data2,
   }
 }
 
-void add_impl(const Matrix& matrix1, const Matrix& matrix2, Matrix& result,
-              bool blocking) {
+void add_impl(const Matrix& matrix1, const Matrix& matrix2, Matrix& result) {
   auto dtype1 = matrix1.data_type().type();
   auto dtype2 = matrix2.data_type().type();
   auto result_dtype = result.data_type().type();
@@ -49,8 +48,7 @@ void add_impl(const Matrix& matrix1, const Matrix& matrix2, Matrix& result,
   });
 }
 
-void sub_impl(const Matrix& matrix1, const Matrix& matrix2, Matrix& result,
-              bool blocking) {
+void sub_impl(const Matrix& matrix1, const Matrix& matrix2, Matrix& result) {
   auto dtype1 = matrix1.data_type().type();
   auto dtype2 = matrix2.data_type().type();
   auto result_dtype = result.data_type().type();
@@ -73,8 +71,7 @@ void sub_impl(const Matrix& matrix1, const Matrix& matrix2, Matrix& result,
   });
 }
 
-void mul_impl(const Matrix& matrix1, const Matrix& matrix2, Matrix& result,
-              bool blocking) {
+void mul_impl(const Matrix& matrix1, const Matrix& matrix2, Matrix& result) {
   auto dtype1 = matrix1.data_type().type();
   auto dtype2 = matrix2.data_type().type();
   auto result_dtype = result.data_type().type();
@@ -97,8 +94,7 @@ void mul_impl(const Matrix& matrix1, const Matrix& matrix2, Matrix& result,
   });
 }
 
-void div_impl(const Matrix& matrix1, const Matrix& matrix2, Matrix& result,
-              bool blocking) {
+void div_impl(const Matrix& matrix1, const Matrix& matrix2, Matrix& result) {
   auto dtype1 = matrix1.data_type().type();
   auto dtype2 = matrix2.data_type().type();
   auto result_dtype = result.data_type().type();
@@ -123,9 +119,9 @@ void div_impl(const Matrix& matrix1, const Matrix& matrix2, Matrix& result,
 
 }  // namespace
 
-STARML_REGISTER_KERNEL(add_dispatcher, kCPU, &add_impl);
-STARML_REGISTER_KERNEL(sub_dispatcher, kCPU, &sub_impl);
-STARML_REGISTER_KERNEL(mul_dispatcher, kCPU, &mul_impl);
-STARML_REGISTER_KERNEL(div_dispatcher, kCPU, &div_impl);
+STARML_REGISTER_KERNEL(add_dispatcher, &add_impl, kCPU, kCPU, kCPU);
+STARML_REGISTER_KERNEL(sub_dispatcher, &sub_impl, kCPU, kCPU, kCPU);
+STARML_REGISTER_KERNEL(mul_dispatcher, &mul_impl, kCPU, kCPU, kCPU);
+STARML_REGISTER_KERNEL(div_dispatcher, &div_impl, kCPU, kCPU, kCPU);
 
 }  // namespace starml

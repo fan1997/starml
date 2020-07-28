@@ -4,8 +4,10 @@
 namespace starml {
 namespace modelevaluator {
 namespace metrics{
-// mse
+
 namespace {
+
+// mse
 template <typename T>
 void mse_impl_kernel(const T* data1_ptr, const T* data2_ptr, int size, float& sum, float& score){
 #pragma omp parallel for reduction(+:sum)
@@ -27,11 +29,8 @@ float mse_impl(const Matrix& y, const Matrix& y_pred) {
   });
   return score;
 }
-}  // namespace
-STARML_REGISTER_KERNEL(mse_dispatcher, kCPU, &mse_impl);
 
 // acc
-namespace {
 template <typename T>
 void acc_impl_kernel(const T* data1_ptr, const T* data2_ptr, int size, float& sum){
 #pragma omp parallel for reduction(+:sum)
@@ -51,8 +50,9 @@ float acc_impl(const Matrix& y, const Matrix& y_pred) {
   return sum;
 }
 }  // namespace
-STARML_REGISTER_KERNEL(acc_dispatcher, kCPU, &acc_impl);
 
+STARML_REGISTER_KERNEL(acc_dispatcher, &acc_impl, kCPU, kCPU);
+STARML_REGISTER_KERNEL(mse_dispatcher, &mse_impl, kCPU, kCPU);
 
 }
 }

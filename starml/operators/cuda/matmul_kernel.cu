@@ -56,5 +56,5 @@ void matmul_impl(const Matrix& matrix1, const Matrix& matrix2,  Matrix& result) 
 
 }
 }  // namespace
-STARML_REGISTER_KERNEL(matmul_dispatcher, kCUDA, &matmul_impl);
+STARML_REGISTER_KERNEL(matmul_dispatcher, &matmul_impl, kCUDA, kCUDA);
 }  // namespace starml

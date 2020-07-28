@@ -43,6 +43,6 @@ void concat_impl(const Matrix& matrix1, const Matrix& matrix2, Matrix& result, i
   });
 }
 }  // namespace
-STARML_REGISTER_KERNEL(concat_dispatcher, kCUDA, &concat_impl);
+STARML_REGISTER_KERNEL(concat_dispatcher, &concat_impl, kCUDA, kCUDA);
 
 }  // namespace starml

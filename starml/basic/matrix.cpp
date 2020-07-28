@@ -1,8 +1,8 @@
-#include <string.h>
 #include "starml/basic/matrix.h"
 #include "starml/basic/dispatch.h"
 #include "starml/basic/matrix_printer.h"
 #include "starml/operators/factories.h"
+#include "starml/operators/copy.h"
 
 namespace starml {
 
@@ -37,15 +37,10 @@ const DataType& Matrix::data_type() const { return this->dtype_; }
 const void* Matrix::raw_data() const { return this->data_ptr_.get(); }
 void* Matrix::raw_mutable_data() const { return this->data_ptr_.get(); }
 
-Matrix Matrix::to(Device new_device) const {
-  if (new_device == device_) {
-    return *this;
-  }
-  else {
-    Matrix res = empty(dims(), new_device, dtype_);
-    memcpy(res.raw_mutable_data(), raw_data(), size() * dtype_.size());
-    return res;
-  }
+bool Matrix::is_cuda() const { return device_.type() == kCUDA; }
+
+Matrix Matrix::to(Device new_device, void *stream) const {
+  return deep_copy(*this, new_device, stream);
 }
 
 void Matrix::print(std::string file_name) const {

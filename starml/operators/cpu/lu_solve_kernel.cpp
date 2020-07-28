@@ -27,6 +27,6 @@ void lu_solve_impl(const Matrix& matrix1, const Matrix& matrix2, Matrix& result)
 }
 }  // namespace
 
-STARML_REGISTER_KERNEL(lu_solve_dispatcher, kCPU, &lu_solve_impl);
+STARML_REGISTER_KERNEL(lu_solve_dispatcher, &lu_solve_impl, kCPU, kCPU);
 
 }  // namespace starml

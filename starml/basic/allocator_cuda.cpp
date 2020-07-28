@@ -4,7 +4,7 @@
 namespace starml {
 void *CUDAAllocator::allocate_raw(size_t num_bytes) const {
   void *d_ptr = 0;
-  STARML_CUDA_CHECK(cudaMallocManaged(&d_ptr, num_bytes));
+  STARML_CUDA_CHECK(cudaMalloc(&d_ptr, num_bytes));
   return d_ptr;
 }
 

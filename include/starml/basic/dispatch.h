@@ -2,8 +2,9 @@
 #include <mutex>
 #include <typeinfo>
 #include <unordered_map>
-
+#include <initializer_list>
 #include "starml/basic/matrix.h"
+#include "starml/utils/macros.h"
 
 namespace starml {
 
@@ -20,24 +21,25 @@ class Dispatcher<TReturn (*)(TArgs...)> {
     FnPtr kernel = kernel_table_[key];
     return (*kernel)(std::forward<TArgTypes>(args)...);
   }
-  void set_dispatcher(DeviceType device_type, FnPtr kernel) {
+  void set_dispatcher(std::vector<DeviceType> device_types, FnPtr kernel) {
     std::lock_guard<std::mutex> guard(mu_);
-    kernel_table_[static_cast<int>(device_type)] = kernel;
+    int key = 0;
+    for (int i = device_types.size() - 1; i >= 0; i--) {
+      key = kNumDeviceTypes * key + static_cast<int>(device_types[i]);
+    }
+    kernel_table_[key] = kernel;
   }
 
  protected:
   template <typename T>
   int dispatch_key(const T& arg) {
-    int key = matrix_type_id(arg);
-    STARML_CHECK_NE(key, -1)
-        << "Register kernel should have at least one matrix";
-    return key;
+    return matrix_type_id(arg);
   }
 
   template <typename THead, typename... TTail>
   int dispatch_key(const THead& head, const TTail&... tail) {
     if (typeid(head) == typeid(Matrix)) {
-      return matrix_type_id(head);
+      return matrix_type_id(head) + kNumDeviceTypes * dispatch_key(tail...);
     }
     return dispatch_key(tail...);
   }
@@ -48,7 +50,7 @@ class Dispatcher<TReturn (*)(TArgs...)> {
 
   template <typename T>
   int matrix_type_id(const T& non_matrix) {
-    return -1;
+    return 0;
   }
 
   std::mutex mu_;
@@ -58,8 +60,8 @@ class Dispatcher<TReturn (*)(TArgs...)> {
 template <typename Obj, typename FnPtr>
 class DispatcherRegister {
  public:
-  DispatcherRegister(DeviceType device_type, FnPtr kernel) {
-    Obj::singleton().set_dispatcher(device_type, kernel);
+  DispatcherRegister(std::vector<DeviceType> device_types, FnPtr kernel) {
+    Obj::singleton().set_dispatcher(device_types, kernel);
   }
 };
 
@@ -81,10 +83,10 @@ class DispatcherRegister {
 #define STARML_DEFINE_DISPATCHER(dispatcher) \
   dispatcher##_t& dispatcher = dispatcher##_t::singleton()
 
-#define STARML_REGISTER_KERNEL(dispatcher, device_type, fn)                 \
-  static DispatcherRegister<dispatcher##_t,                                 \
-                            decltype(fn)> register##dispatcher(device_type, \
-                                                               fn)
+#define STARML_REGISTER_KERNEL(dispatcher, fn, ...)       \
+  static DispatcherRegister<dispatcher##_t, decltype(fn)> \
+      STARML_ANONYMOUS_VARIABLE(register##dispatcher)(    \
+          std::initializer_list<DeviceType>{__VA_ARGS__}, fn)
 
 #define STARML_PRIVATE_CASE_TYPE(enum_type, type, ...) \
   case enum_type: {                                    \

@@ -9,6 +9,7 @@ namespace metrics{
 
 // mse
 namespace {
+
 template <typename T>
 __global__ void mse_kernel(const T* y, const T* y_pred, int sizes, float* m_diff_ptr) {
   int i = blockDim.x * blockIdx.x + threadIdx.x;
@@ -34,11 +35,8 @@ float mse_impl(const Matrix& y, const Matrix& y_pred) {
   });
   return score / sizes;
 }
-}  // namespace
-STARML_REGISTER_KERNEL(mse_dispatcher, kCUDA, &mse_impl);
 
 // acc
-namespace {
 template <typename T>
 __global__ void acc_impl_kernel(const T* data1_ptr, const T* data2_ptr, int size, int* sum){
      int i = blockDim.x * blockIdx.x + threadIdx.x;
@@ -64,8 +62,9 @@ float acc_impl(const Matrix& y, const Matrix& y_pred) {
   return sum;
 }
 }  // namespace
-STARML_REGISTER_KERNEL(acc_dispatcher, kCUDA, &acc_impl);
 
+STARML_REGISTER_KERNEL(acc_dispatcher, &acc_impl, kCUDA, kCUDA);
+STARML_REGISTER_KERNEL(mse_dispatcher, &mse_impl, kCUDA, kCUDA);
 }
 }
 }  // namespace starml

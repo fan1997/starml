@@ -22,9 +22,6 @@ void concat_impl_kernel_v2(const T* data_1, const T* data_2, T* res_data, int& s
   }
 }
 void concat_impl(const Matrix& matrix1, const Matrix& matrix2, Matrix& result, int axis) {
-// void concat_impl(const Matrix& matrix1, const Matrix& matrix2, Matrix& result) {
-  // int axis = 1;
-  // std::cout << "In concat_impl " << std::endl;
   auto m1_rows_num =  matrix1.dim(0);
   auto m1_cols_num =  matrix1.dim(1);
   auto m2_rows_num =  matrix2.dim(0);
@@ -43,5 +40,5 @@ void concat_impl(const Matrix& matrix1, const Matrix& matrix2, Matrix& result, i
 }
 }  // namespace
 
-STARML_REGISTER_KERNEL(concat_dispatcher, kCPU, &concat_impl);
+STARML_REGISTER_KERNEL(concat_dispatcher, &concat_impl, kCPU, kCPU);
 }  // namespace starml

@@ -32,12 +32,14 @@ class Matrix {
   // Get the data type message
   const DataType& data_type() const;
 
+  bool is_cuda() const;
+
   // Get the raw data pointer (void *)
   const void* raw_data() const;
   void* raw_mutable_data() const;
 
   // Transfer the matrix to specific device
-  Matrix to(Device new_device) const;
+  Matrix to(Device new_device, void* stream = NULL) const;
   // Print the matrix for debug usage
   void print(std::string file_name = "") const;
 

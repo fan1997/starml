@@ -42,5 +42,5 @@ void trans_impl(const Matrix& matrix1, Matrix& result) {
 
 }
 }  // namespace
-STARML_REGISTER_KERNEL(transpose_dispatcher, kCUDA, &trans_impl);
+STARML_REGISTER_KERNEL(transpose_dispatcher, &trans_impl, kCUDA, kCUDA);
 }  // namespace starml
