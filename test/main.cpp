@@ -4,14 +4,17 @@
 #include "starml/operators/factories.h"
 #include "starml/operators/binary_ops.h"
 #include "starml/operators/unary_ops.h"
+#include "starml/basic/handle_cuda.h"
 using namespace starml;
 
 int main(int argc, char **argv) {
   ::testing::InitGoogleTest(&argc, argv);
   Matrix a = full({3, 1}, Device(kCPU), DataType(kInt32), 3);
   Matrix b = full({3}, Device(kCPU), DataType(kInt32), 2);
-  Matrix c = add(a.to(kCUDA), b.to(kCUDA));
-  c.print();
+  // CUDAHandle handle;
+  Matrix c = full({3, 8}, Device(kCPU), DataType(kFloat), 3.8);
+  Matrix d = cast(c, kInt32);
+  d.print();
   // Matrix b = full({3}, Device(kCPU), DataType(kFloat), 8.3);
   // Matrix result = empty({3, 1}, Device(kCUDA), DataType(kInt32));
   // exp(a.to(kCUDA), result);

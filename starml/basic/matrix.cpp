@@ -39,8 +39,8 @@ void* Matrix::raw_mutable_data() const { return this->data_ptr_.get(); }
 
 bool Matrix::is_cuda() const { return device_.type() == kCUDA; }
 
-Matrix Matrix::to(Device new_device, void *stream) const {
-  return deep_copy(*this, new_device, stream);
+Matrix Matrix::to(Device new_device, Handle* handle) const {
+  return deep_copy(*this, new_device, handle);
 }
 
 void Matrix::print(std::string file_name) const {
