@@ -2,6 +2,8 @@
 
 namespace starml {
 STARML_DEFINE_DISPATCHER(exp_dispatcher);
+STARML_DEFINE_DISPATCHER(log_dispatcher);
+STARML_DEFINE_DISPATCHER(negtive_dispatcher);
 
 Matrix exp(const Matrix& matrix) {
   // If the input matrix is int, then the result data type should be float
@@ -12,13 +14,10 @@ Matrix exp(const Matrix& matrix) {
   exp_dispatcher(matrix, result);
   return result;
 }
-
 Matrix exp(const Matrix& matrix, Matrix& result) {
   exp_dispatcher(matrix, result);
   return result;
 }
-
-STARML_DEFINE_DISPATCHER(log_dispatcher);
 
 Matrix log(const Matrix& matrix, bool blocking) {
   // If the input matrix is int, then the result data type should be float
@@ -29,13 +28,12 @@ Matrix log(const Matrix& matrix, bool blocking) {
   log_dispatcher(matrix, result, blocking);
   return result;
 }
-
 Matrix log(const Matrix& matrix, Matrix& result, bool blocking) {
   log_dispatcher(matrix, result, blocking);
   return result;
 }
 
-STARML_DEFINE_DISPATCHER(negtive_dispatcher);
+
 Matrix negtive(const Matrix& matrix, bool blocking) {
   Matrix result = Matrix(matrix.dims(), matrix.device(),  matrix.data_type());
   negtive_dispatcher(matrix, result, blocking);

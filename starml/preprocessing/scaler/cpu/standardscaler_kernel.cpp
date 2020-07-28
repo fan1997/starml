@@ -7,6 +7,7 @@ namespace preprocessing {
 namespace scaler {
 
 namespace {
+//fit
 template <typename T>
 void fit_impl_kernel(const T* data_ptr, T* mean_ptr, T* std_ptr, int rows_num, int cols_num){
 #pragma omp parallel for
@@ -43,10 +44,8 @@ void fit_impl(const Matrix& origin_data, Matrix& mean_data,
     fit_impl_kernel(data_ptr, mean_ptr, std_ptr, rows_num, cols_num);
   });
 }
-}  // namespace
-STARML_REGISTER_KERNEL(stsfit_dispatcher, kCPU, &fit_impl);
 
-namespace {
+//trans
 template <typename T>
 void trans_impl_kernel(const T* data_ptr, const T* mean_ptr, const T* std_ptr, T* res_ptr, int rows_num, int cols_num){
 #pragma omp parallel for
@@ -70,11 +69,8 @@ void trans_impl(const Matrix& origin_data, Matrix& result,
     trans_impl_kernel(data_ptr,  mean_ptr, std_ptr,  res_ptr, rows_num, cols_num);
   });
 }
-}  // namespace
-STARML_REGISTER_KERNEL(ststrans_dispatcher, kCPU, &trans_impl);
 
 // inv trans
-namespace {
 template <typename T>
 void invtrans_impl_kernel(const T* data_ptr, const T* mean_ptr, const T* std_ptr, T* res_ptr, int rows_num, int cols_num){
 #pragma omp parallel for
@@ -99,7 +95,10 @@ void invtrans_impl(const Matrix& transformed_data, Matrix& result,
   });
 }
 }  // namespace
-STARML_REGISTER_KERNEL(stsinvtrans_dispatcher, kCPU, &invtrans_impl);
+
+STARML_REGISTER_KERNEL(stsfit_dispatcher, &fit_impl, kCPU, kCPU);
+STARML_REGISTER_KERNEL(ststrans_dispatcher, &trans_impl, kCPU, kCPU);
+STARML_REGISTER_KERNEL(stsinvtrans_dispatcher, &invtrans_impl, kCPU, kCPU);
 
 }
 }

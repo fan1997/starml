@@ -6,8 +6,9 @@
 namespace starml {
 namespace preprocessing {
 namespace scaler {
-// FIT
+
 namespace {
+// fit
 template <typename T>
 __global__ void fit_kernel(const T* data_ptr, T* mean_ptr, T* std_ptr, int rows_num, int cols_num) {
   int i = blockDim.x * blockIdx.x + threadIdx.x;
@@ -46,11 +47,7 @@ void fit_impl(const Matrix& origin_data, Matrix& mean_data,
   });
 }
 
-}  // namespace
-STARML_REGISTER_KERNEL(stsfit_dispatcher, kCUDA, &fit_impl);
-
 // trans
-namespace {
 template <typename T>
 __global__ void trans_kernel(const T* data_ptr, const T* mean_ptr, const T* std_ptr, T* res_ptr, int rows_num, int cols_num) {
   int i = blockDim.x * blockIdx.x + threadIdx.x;
@@ -80,10 +77,7 @@ void trans_impl(const Matrix& origin_data, Matrix& result,
   });
 }
 
-}  // namespace
-STARML_REGISTER_KERNEL(ststrans_dispatcher, kCUDA, &trans_impl);
-
-namespace {
+// inv trans
 template <typename T>
 __global__ void invtrans_kernel(const T* data_ptr, const T* mean_ptr, const T* std_ptr, T* res_ptr, int rows_num, int cols_num) {
   int i = blockDim.x * blockIdx.x + threadIdx.x;
@@ -112,10 +106,11 @@ void invtrans_impl(const Matrix& transformed_data, Matrix& result,
     cudaDeviceSynchronize();
   });
 }
-
 }  // namespace
-STARML_REGISTER_KERNEL(stsinvtrans_dispatcher, kCUDA, &invtrans_impl);
 
+STARML_REGISTER_KERNEL(stsfit_dispatcher, &fit_impl, kCUDA, kCUDA);
+STARML_REGISTER_KERNEL(ststrans_dispatcher, &trans_impl, kCUDA, kCUDA);
+STARML_REGISTER_KERNEL(stsinvtrans_dispatcher, &invtrans_impl, kCUDA, kCUDA);
 
 }
 }

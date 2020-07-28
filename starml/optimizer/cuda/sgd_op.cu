@@ -25,6 +25,6 @@ void sgd_op_impl(Matrix& parameters,  Matrix& grad, float* lr) {
 
 }  // namespace
 
-STARML_REGISTER_KERNEL(sgd_dispatcher, kCUDA, &sgd_op_impl);
+STARML_REGISTER_KERNEL(sgd_dispatcher, &sgd_op_impl, kCUDA, kCUDA);
 }  // namespace optimizer
 }  // namespace starml
