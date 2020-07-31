@@ -66,6 +66,7 @@ float classification::LogisticRegression::train(const starml::Matrix& train_data
   Matrix label_t = transpose(label);
   Matrix inverse_label_t = transpose(sub(1, label));
   Matrix loss_mat({1, 1}, train_data.device(), train_data.data_type());
+  Matrix xt_yhat_sub_y({n, 1}, train_data.device(), train_data.data_type());
 
   double diff = std::numeric_limits<double>::max();
   double current_loss = 0.0;
@@ -84,7 +85,7 @@ float classification::LogisticRegression::train(const starml::Matrix& train_data
       diff = current_loss - previous_loss;
       previous_loss = current_loss;
   // grad = xt * (y^ - y) (n*m m*1)
-      div(matmul(train_data_t, sub(y_hat, label)), m, grad);
+      div(matmul(train_data_t, sub(y_hat, label), xt_yhat_sub_y), m, grad);
       this -> optimizer -> step();
       iter += 1;
   }
@@ -103,13 +104,15 @@ float classification::LogisticRegression::train(const starml::Matrix& train_data
 Matrix& classification::LogisticRegression::predict(const starml::Matrix& predict_data,
                                            starml::Matrix& predict_result) const {
   std::cout << "Predict LogisticRegression Model" << "\n";
-  STARML_CHECK_EQ(predict_data.dim(1), this->parameters.dim(0)) << "The predict_data's features num should be the same as model weights ";
+  STARML_CHECK_EQ(predict_data.dim(1), this->parameters.dim(0))
+  << "The predict_data's features num should be the same as model weights ";
 
 }
 
 Matrix classification::LogisticRegression::predict(const starml::Matrix& predict_data) const {
   std::cout << "Predict LogisticRegression Model" << "\n";
-  STARML_CHECK_EQ(predict_data.dim(1), this->parameters.dim(0)) << "The predict_data's features num should be the same as model weights ";
+  STARML_CHECK_EQ(predict_data.dim(1), this->parameters.dim(0))
+  << "The predict_data's features num should be the same as model weights ";
   Matrix y_hat = matmul(predict_data, this->parameters);
   Matrix predict_result = y_hat;
   return predict_result;
