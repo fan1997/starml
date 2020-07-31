@@ -67,13 +67,12 @@ float classification::LogisticRegression::train(const starml::Matrix& train_data
   Matrix inverse_label_t = transpose(sub(1, label));
   Matrix loss_mat({1, 1}, train_data.device(), train_data.data_type());
   Matrix xt_yhat_sub_y({n, 1}, train_data.device(), train_data.data_type());
-
   double diff = std::numeric_limits<double>::max();
   double current_loss = 0.0;
   double previous_loss = 0.0;
   int iter = 0;
   this -> optimizer -> set_param(weight, grad, param.learning_rate);
-  //forward
+//forward
   while ((iter < this -> param.max_iter) && (fabs(diff) > param.tolerance)) {
   //forward
   //backward -> grad
@@ -81,7 +80,8 @@ float classification::LogisticRegression::train(const starml::Matrix& train_data
       div(float(1.0), add(float(1.0), exp(negtive(matmul(train_data, weight)))), y_hat);
   // loss = y * ln(y_hat) +  (1 - y) * ln(1 - y_hat)
       add(matmul(label_t, log(y_hat)), matmul(inverse_label_t, log(sub(1, y_hat))), loss_mat);
-      current_loss = - loss_mat.data<float>()[0];
+      Matrix loss_mat_cpu = loss_mat.to(kCPU);
+      current_loss = - loss_mat_cpu.data<float>()[0];
       diff = current_loss - previous_loss;
       previous_loss = current_loss;
   // grad = xt * (y^ - y) (n*m m*1)

@@ -17,22 +17,24 @@ TEST(BINARY, test){
     origin_data.print();
     Matrix res = add(origin_data, origin_data);
     res.print();
-    // Matrix origin_data_cuda = origin_data.to(kCUDA);
-    // Matrix res_cuda = add(origin_data_cuda, origin_data_cuda);
-    // res_cuda.print();
+
     Matrix res_sub = sub(origin_data, origin_data);
     res_sub.print();
 
     res_sub = sub(origin_data, res);
     res_sub.print();
 
-    res_sub = sub(1.0, origin_data);
+    res_sub = sub(1, origin_data);
     res_sub.print();
 
     res_sub = div(1.0, origin_data);
     res_sub.print();
     res_sub = div(origin_data, 5);
     res_sub.print();
-    // Matrix res_sub_cuda = sub(origin_data_cuda, origin_data_cuda);
+
+
+    Matrix origin_data_cuda = origin_data.to(kCUDA);
+    Matrix res_sub_cuda = sub(origin_data_cuda, origin_data_cuda);
+    // res_sub_cuda = sub(1.0, origin_data_cuda);
     // res_sub_cuda.print();
 }

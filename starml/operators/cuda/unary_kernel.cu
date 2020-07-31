@@ -72,9 +72,7 @@ void negtive_impl(const Matrix& matrix, Matrix& result) {
       using scalar_type = scalar_t;
       STARML_DISPATCH_FLOATING_TYPES(cast_dtype, "CUDA_NEG", [&]() {
         eval_unary(data, result_data, 0, result.size(),
-                   [=] __device__(scalar_type a) -> result_scalar_type {
-                     return ::-(scalar_t(a));
-                   });
+                   [=] __device__(scalar_type a) -> result_scalar_type { return - a;});
       });
     });
   });

@@ -63,10 +63,73 @@ void add_impl(const Matrix& matrix1, const Matrix& matrix2, Matrix& result) {
     });
   });
 }
+void sub_impl(const Matrix& matrix1, const Matrix& matrix2, Matrix& result) {
+  auto dtype1 = matrix1.data_type().type();
+  auto dtype2 = matrix2.data_type().type();
+  auto result_dtype = result.data_type().type();
+  Expression expr = Expression(matrix1, matrix2, result);
+  STARML_DISPATCH_TYPES(dtype1, "SUB_CUDA", [&]() {
+    auto data1 = matrix1.data<scalar_t>();
+    using scalar_type1 = scalar_t;
+    STARML_DISPATCH_TYPES(dtype2, "SUB_CUDA", [&]() {
+      auto data2 = matrix2.data<scalar_t>();
+      using scalar_type2 = scalar_t;
+      STARML_DISPATCH_TYPES(result_dtype, "SUB_CUDA", [&]() {
+        auto result_data = result.mutable_data<scalar_t>();
+        using result_scalar_type = scalar_t;
+        eval_binary(data1, data2, result_data, expr, 0, result.size(),
+                    [=] __device__(scalar_type1 a, scalar_type2 b)
+                        -> result_scalar_type { return a - b; });
+      });
+    });
+  });
+}
+void mul_impl(const Matrix& matrix1, const Matrix& matrix2, Matrix& result) {
+  auto dtype1 = matrix1.data_type().type();
+  auto dtype2 = matrix2.data_type().type();
+  auto result_dtype = result.data_type().type();
+  Expression expr = Expression(matrix1, matrix2, result);
+  STARML_DISPATCH_TYPES(dtype1, "MUL_CUDA", [&]() {
+    auto data1 = matrix1.data<scalar_t>();
+    using scalar_type1 = scalar_t;
+    STARML_DISPATCH_TYPES(dtype2, "MUL_CUDA", [&]() {
+      auto data2 = matrix2.data<scalar_t>();
+      using scalar_type2 = scalar_t;
+      STARML_DISPATCH_TYPES(result_dtype, "MUL_CUDA", [&]() {
+        auto result_data = result.mutable_data<scalar_t>();
+        using result_scalar_type = scalar_t;
+        eval_binary(data1, data2, result_data, expr, 0, result.size(),
+                    [=] __device__(scalar_type1 a, scalar_type2 b)
+                        -> result_scalar_type { return a * b; });
+      });
+    });
+  });
+}
+void div_impl(const Matrix& matrix1, const Matrix& matrix2, Matrix& result) {
+  auto dtype1 = matrix1.data_type().type();
+  auto dtype2 = matrix2.data_type().type();
+  auto result_dtype = result.data_type().type();
+  Expression expr = Expression(matrix1, matrix2, result);
+  STARML_DISPATCH_TYPES(dtype1, "DIV_CUDA", [&]() {
+    auto data1 = matrix1.data<scalar_t>();
+    using scalar_type1 = scalar_t;
+    STARML_DISPATCH_TYPES(dtype2, "DIV_CUDA", [&]() {
+      auto data2 = matrix2.data<scalar_t>();
+      using scalar_type2 = scalar_t;
+      STARML_DISPATCH_TYPES(result_dtype, "DIV_CUDA", [&]() {
+        auto result_data = result.mutable_data<scalar_t>();
+        using result_scalar_type = scalar_t;
+        eval_binary(data1, data2, result_data, expr, 0, result.size(),
+                    [=] __device__(scalar_type1 a, scalar_type2 b)
+                        -> result_scalar_type { return a / b; });
+      });
+    });
+  });
+}
 
 }  // namespace
 STARML_REGISTER_KERNEL(add_dispatcher, &add_impl, kCUDA, kCUDA, kCUDA);
-// STARML_REGISTER_KERNEL(sub_dispatcher, kCUDA, &sub_impl);
-// STARML_REGISTER_KERNEL(mul_dispatcher, kCUDA, &mul_impl);
-// STARML_REGISTER_KERNEL(div_dispatcher, kCUDA, &div_impl);
+STARML_REGISTER_KERNEL(sub_dispatcher, &sub_impl, kCUDA, kCUDA, kCUDA);
+STARML_REGISTER_KERNEL(mul_dispatcher, &mul_impl, kCUDA, kCUDA, kCUDA);
+STARML_REGISTER_KERNEL(div_dispatcher, &div_impl, kCUDA, kCUDA, kCUDA);
 }  // namespace starml

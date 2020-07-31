@@ -26,17 +26,14 @@ TEST(UNARY, test){
   origin_data1 = negtive(res);
   origin_data1.print();
 
-  // // Matrix origin_data_cuda = origin_data.to(kCUDA);
-  // // Matrix res_cuda = exp(origin_data_cuda);
-  // // res_cuda.print();
-  //
-  // Matrix res_sqrt = sqrt(origin_data);
-  // res_sqrt.print();
-  // // Matrix res_sqrt_cuda = sqrt(origin_data_cuda);
-  // // res_sqrt_cuda.print();
-  //
-  // Matrix res_square = square(origin_data);
-  // res_square.print();
-  // // Matrix res_square_cuda = square(origin_data_cuda);
-  // // res_square_cuda.print();
+  Matrix origin_data_cuda = origin_data.to(kCUDA);
+  Matrix res_cuda = exp(origin_data_cuda);
+  res_cuda.print();
+
+  Matrix origin_data1_cuda = log(res_cuda);
+  origin_data1_cuda.print();
+
+  origin_data1_cuda = negtive(res_cuda);
+  origin_data1_cuda.print();
+
 }

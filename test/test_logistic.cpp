@@ -126,6 +126,7 @@ TEST(LOGISTIC, test){
    train_data = concat(train_data, train_data_cat, 1);
    label.print();
    train_data.print();
+
    LogisticRegressionParam lrparam;
    lrparam.learning_rate = 1.0;
    lrparam.solver_type = starml::optimizer::kSGD;
@@ -133,40 +134,45 @@ TEST(LOGISTIC, test){
    lrparam.tolerance = 0.0001;
    LogisticRegression model(lrparam);
 
- // cpu
- //train
-   CpuTimer timer;
-   timer.Start();
-   model.train(train_data, label);
- //predict
-   Matrix pred_label = model.predict(train_data);
-   timer.Stop();
-   std::cout << "TIME: " << timer.Elapsed() << '\n';
- //print
-   std::cout << "    ..... pred_label ...." << '\n';
-   pred_label.print();
-   std::cout << '\n';
-   Matrix weights = model.get_parameters();
-   std::cout << "    .....lr model weights ...." << '\n';
-   weights.print(); //[2,0]
-   std::cout << '\n';
-
-   Matrix pred_label_cpu = pred_label.to(kCPU);
-   for (size_t i = 0; i < pred_label_cpu.size(); i++) {
-       pred_label_cpu.mutable_data<float>()[i] = pred_label_cpu.mutable_data<float>()[i] >= 0 ? 1.0 : 0.0;
-   }
-   Matrix label_cpu = label.to(kCPU);
- //evaluate
-   metrics metric1;
-   float acc_score = metric1.accuracy_score(label_cpu, pred_label_cpu);
-   std::cout << "lr acc_score: " << acc_score << '\n';
+ // // cpu
+ // //train
+ //   CpuTimer timer;
+ //   timer.Start();
+ //   model.train(train_data, label);
+ // //predict
+ //   Matrix pred_label = model.predict(train_data);
+ //   timer.Stop();
+ //   std::cout << "TIME: " << timer.Elapsed() << '\n';
+ // //print
+ //   std::cout << "    ..... pred_label ...." << '\n';
+ //   pred_label.print();
+ //   std::cout << '\n';
+ //   Matrix weights = model.get_parameters();
+ //   std::cout << "    .....lr model weights ...." << '\n';
+ //   weights.print(); //[2,0]
+ //   std::cout << '\n';
+ //
+ //   Matrix pred_label_cpu = pred_label.to(kCPU);
+ //   for (size_t i = 0; i < pred_label_cpu.size(); i++) {
+ //       pred_label_cpu.mutable_data<float>()[i] = pred_label_cpu.mutable_data<float>()[i] >= 0 ? 1.0 : 0.0;
+ //   }
+ //   Matrix label_cpu = label.to(kCPU);
+ // //evaluate
+ //   metrics metric1;
+ //   float acc_score = metric1.accuracy_score(label_cpu, pred_label_cpu);
+ //   std::cout << "lr acc_score: " << acc_score << '\n';
 
  //*******************************************************//
- // // GPU
- //   Matrix train_data_cuda = train_data.to(kCUDA);
- //   Matrix label_cuda = label.to(kCUDA);
- // // train
- //   model.train(train_data_cuda, label_cuda);
+#if 1
+ // GPU
+   
+   LogisticRegression model1(lrparam);
+   CUDAhandle h1;
+   CUDAhandle h2;
+   Matrix train_data_cuda = train_data.to(kCUDA);
+   Matrix label_cuda = label.to(kCUDA);
+ // train
+   model1.train(train_data_cuda, label_cuda);
  // // predict
  //   Matrix pred_label_cuda = model.predict(train_data_cuda);
  // // print
@@ -178,9 +184,12 @@ TEST(LOGISTIC, test){
  //   weights.print(); //[2,0]
  //   std::cout << '\n';
  // // evaluate
- //   err = metric1.mean_squared_error(label_cuda, pred_label_cuda);
- //   std::cout << "cuda lr error: " << err << '\n';
- //   r2score = metric1.r2_score(label_cuda, pred_label_cuda);
- //   std::cout << "cuda lr r2 score: " << r2score << '\n';
+ //   Matrix pred_label_cpu1 = pred_label_cuda.to(kCPU);
+ //   for (size_t i = 0; i < pred_label_cpu1.size(); i++) {
+ //     pred_label_cpu1.mutable_data<float>()[i] = pred_label_cpu1.mutable_data<float>()[i] >= 0 ? 1.0 : 0.0;
+ //   }
+ //   acc_score = metric1.accuracy_score(label_cpu, pred_label_cpu1);
+ //   std::cout << "cuda lr acc_score: " << acc_score << '\n';
  #endif
+#endif
 }

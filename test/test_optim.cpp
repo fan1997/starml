@@ -55,9 +55,16 @@ TEST(OPTIM, test){
   // origin_data.print();
 
 
-
-  // SGD optimizer1(origin_data.to(kCUDA), grad.to(kCUDA), lr);
-  // optimizer1.step();
-  // optimizer1.get_parameters().print();
-  // optimizer1.get_grad().print();
+  Matrix origin_data_cuda = origin_data.to(kCUDA);
+  Matrix grad_cuda = grad.to(kCUDA);
+  origin_data_cuda.print();
+  // SGD optimizer1(origin_data_cuda, grad_cuda, lr);
+  SGD optimizer1;
+  optimizer1.set_param(origin_data_cuda, grad_cuda);
+  optimizer1.set_learning_rate(0.001);
+  optimizer1.step();
+  optimizer1.step();
+  optimizer1.step();
+  optimizer1.get_parameters().print();
+  optimizer1.get_grad().print();
 }

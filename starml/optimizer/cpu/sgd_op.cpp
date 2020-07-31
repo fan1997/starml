@@ -5,13 +5,13 @@ namespace optimizer{
 
 namespace {
 template <typename T>
-void sgd_op_impl_kernel(T* param, const T* grad, const float* lr, int size){
+void sgd_op_impl_kernel(T* param, const T* grad, const float lr, int size){
 #pragma omp parallel for
   for (int i = 0; i < size; i++) {
-      param[i] -= lr[0] * grad[i];
+      param[i] -= lr * grad[i];
   }
 }
-void sgd_op_impl(Matrix& parameters,  Matrix& grad, float* lr) {
+void sgd_op_impl(Matrix& parameters,  Matrix& grad, const float lr) {
   auto data_type = parameters.data_type().type();
   int size = parameters.size();
   STARML_DISPATCH_TYPES(data_type, "SGD", [&]() {
