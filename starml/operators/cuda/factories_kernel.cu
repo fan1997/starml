@@ -8,7 +8,6 @@ namespace {
 void full_impl(const Scalar& init_val, Matrix& result) {
   int size = result.size();
   auto dtype = result.data_type().type();
-  std::cout << "In full cuda" << std::endl;
   STARML_DISPATCH_TYPES(dtype, "FULL_CUDA", [&]() {
     auto data = result.mutable_data<scalar_t>();
     scalar_t value = init_val.value<scalar_t>();

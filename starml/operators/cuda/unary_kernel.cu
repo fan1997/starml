@@ -19,7 +19,7 @@ void eval_unary(const TScalarType* data, TResultType* result_data, int start,
   dim3 dimBlock(256, 1, 1);
   cudaStream_t stream = NULL;
   if (handle != NULL) {
-    cudaStream_t stream = reinterpret_cast<cudaStream_t>(handle->stream());
+    stream = reinterpret_cast<cudaStream_t>(handle->stream());
   }
   unary_kernel<<<dimGrid, dimBlock, 0, stream>>>(data, start, end, op,
                                                  result_data);

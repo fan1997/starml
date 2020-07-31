@@ -39,7 +39,7 @@ void eval_binary(const TScalarType1* data1, const TScalarType2* data2,
   dim3 dimBlock(256, 1, 1);
   cudaStream_t stream = NULL;
   if (handle != NULL) {
-    cudaStream_t stream = reinterpret_cast<cudaStream_t>(handle->stream());
+    stream = reinterpret_cast<cudaStream_t>(handle->stream());
   }
   binary_kernel<<<dimGrid, dimBlock, 0, stream>>>(
       data1, data2, start, end, op, data1_index_helper, data2_index_helper,

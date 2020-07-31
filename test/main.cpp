@@ -12,8 +12,8 @@ int main(int argc, char **argv) {
   Matrix a = full({3, 1}, Device(kCPU), DataType(kInt32), 3);
   Matrix b = full({3}, Device(kCPU), DataType(kInt32), 2);
   // CUDAHandle handle;
-  Matrix c = full({3, 8}, Device(kCPU), DataType(kFloat), 3.8);
-  Matrix d = cast(c, kInt32);
+  Matrix c = full({3, 8}, Device(kCUDA), DataType(kFloat), 3.8);
+  Matrix d = sub(c, 5);
   d.print();
   // Matrix b = full({3}, Device(kCPU), DataType(kFloat), 8.3);
   // Matrix result = empty({3, 1}, Device(kCUDA), DataType(kInt32));
