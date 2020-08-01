@@ -1,23 +1,21 @@
 #pragma once
-#include "starml/basic/common_cuda.h"
 #include "starml/basic/handle.h"
 #include "starml/basic/device.h"
 
 namespace starml {
-class CUDAHandle : public Handle {
+class CPUHandle : public Handle {
  public:
-  CUDAHandle(DeviceIndex index_ = 0);
-  ~CUDAHandle();
+  CPUHandle(DeviceIndex index_ = 0);
+  ~CPUHandle() = default;
   void synchronized() const override;
   void* stream() const override;
   void switch_device() const override;
 
  private:
-  cudaStream_t stream_;
   DeviceIndex index_;
 };
 
-class CUDAHandleEntry : public HandleEntry {
+class CPUHandleEntry : public HandleEntry {
  public:
   Handle* create_handle(DeviceIndex index = 0) override;
 };

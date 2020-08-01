@@ -139,8 +139,8 @@ Matrix less_equal(const Matrix& matrix1, const Matrix& matrix2,
   return result;
 }
 
-Matrix add(const Matrix& matrix1, const Matrix& matrix2, Matrix& result,
-           Handle* handle) {
+Matrix& add(const Matrix& matrix1, const Matrix& matrix2, Matrix& result,
+            Handle* handle) {
   auto shape = broadcast(matrix1, matrix2);
   STARML_CHECK(shape == result.dims())
       << "Dimension of result for inplace operator should be well "
@@ -154,8 +154,8 @@ Matrix add(const Matrix& matrix1, const Matrix& matrix2, Matrix& result,
   return result;
 }
 
-Matrix sub(const Matrix& matrix1, const Matrix& matrix2, Matrix& result,
-           Handle* handle) {
+Matrix& sub(const Matrix& matrix1, const Matrix& matrix2, Matrix& result,
+            Handle* handle) {
   auto shape = broadcast(matrix1, matrix2);
   STARML_CHECK(shape == result.dims())
       << "Dimension of result for inplace operator should be well "
@@ -169,8 +169,8 @@ Matrix sub(const Matrix& matrix1, const Matrix& matrix2, Matrix& result,
   return result;
 }
 
-Matrix mul(const Matrix& matrix1, const Matrix& matrix2, Matrix& result,
-           Handle* handle) {
+Matrix& mul(const Matrix& matrix1, const Matrix& matrix2, Matrix& result,
+            Handle* handle) {
   auto shape = broadcast(matrix1, matrix2);
   STARML_CHECK(shape == result.dims())
       << "Dimension of result for inplace operator should be well "
@@ -184,8 +184,8 @@ Matrix mul(const Matrix& matrix1, const Matrix& matrix2, Matrix& result,
   return result;
 }
 
-Matrix div(const Matrix& matrix1, const Matrix& matrix2, Matrix& result,
-           Handle* handle) {
+Matrix& div(const Matrix& matrix1, const Matrix& matrix2, Matrix& result,
+            Handle* handle) {
   auto shape = broadcast(matrix1, matrix2);
   STARML_CHECK(shape == result.dims())
       << "Dimension of result for inplace operator should be well "
@@ -199,8 +199,8 @@ Matrix div(const Matrix& matrix1, const Matrix& matrix2, Matrix& result,
   return result;
 }
 
-Matrix equal(const Matrix& matrix1, const Matrix& matrix2, Matrix& result,
-             Handle* handle) {
+Matrix& equal(const Matrix& matrix1, const Matrix& matrix2, Matrix& result,
+              Handle* handle) {
   auto shape = broadcast(matrix1, matrix2);
   STARML_CHECK(shape == result.dims())
       << "Dimension of result for inplace operator should be well "
@@ -214,8 +214,8 @@ Matrix equal(const Matrix& matrix1, const Matrix& matrix2, Matrix& result,
   return result;
 }
 
-Matrix greater(const Matrix& matrix1, const Matrix& matrix2, Matrix& result,
-               Handle* handle) {
+Matrix& greater(const Matrix& matrix1, const Matrix& matrix2, Matrix& result,
+                Handle* handle) {
   auto shape = broadcast(matrix1, matrix2);
   STARML_CHECK(shape == result.dims())
       << "Dimension of result for inplace operator should be well "
@@ -229,8 +229,8 @@ Matrix greater(const Matrix& matrix1, const Matrix& matrix2, Matrix& result,
   return result;
 }
 
-Matrix greater_equal(const Matrix& matrix1, const Matrix& matrix2,
-                     Matrix& result, Handle* handle) {
+Matrix& greater_equal(const Matrix& matrix1, const Matrix& matrix2,
+                      Matrix& result, Handle* handle) {
   auto shape = broadcast(matrix1, matrix2);
   STARML_CHECK(shape == result.dims())
       << "Dimension of result for inplace operator should be well "
@@ -244,8 +244,8 @@ Matrix greater_equal(const Matrix& matrix1, const Matrix& matrix2,
   return result;
 }
 
-Matrix less(const Matrix& matrix1, const Matrix& matrix2, Matrix& result,
-            Handle* handle) {
+Matrix& less(const Matrix& matrix1, const Matrix& matrix2, Matrix& result,
+             Handle* handle) {
   auto shape = broadcast(matrix1, matrix2);
   STARML_CHECK(shape == result.dims())
       << "Dimension of result for inplace operator should be well "
@@ -259,8 +259,8 @@ Matrix less(const Matrix& matrix1, const Matrix& matrix2, Matrix& result,
   return result;
 }
 
-Matrix less_equal(const Matrix& matrix1, const Matrix& matrix2, Matrix& result,
-                  Handle* handle) {
+Matrix& less_equal(const Matrix& matrix1, const Matrix& matrix2, Matrix& result,
+                   Handle* handle) {
   auto shape = broadcast(matrix1, matrix2);
   STARML_CHECK(shape == result.dims())
       << "Dimension of result for inplace operator should be well "
@@ -408,8 +408,8 @@ Matrix less_equal(const Matrix& matrix, const Scalar& scalar, Handle* handle) {
                     handle);
 }
 
-Matrix add(const Scalar& scalar, const Matrix& matrix, Matrix& result,
-           Handle* handle) {
+Matrix& add(const Scalar& scalar, const Matrix& matrix, Matrix& result,
+            Handle* handle) {
   auto result_dtype = (scalar.type() < matrix.data_type().type())
                           ? matrix.data_type().type()
                           : scalar.type();
@@ -417,8 +417,8 @@ Matrix add(const Scalar& scalar, const Matrix& matrix, Matrix& result,
              handle);
 }
 
-Matrix sub(const Scalar& scalar, const Matrix& matrix, Matrix& result,
-           Handle* handle) {
+Matrix& sub(const Scalar& scalar, const Matrix& matrix, Matrix& result,
+            Handle* handle) {
   auto result_dtype = (scalar.type() < matrix.data_type().type())
                           ? matrix.data_type().type()
                           : scalar.type();
@@ -426,8 +426,8 @@ Matrix sub(const Scalar& scalar, const Matrix& matrix, Matrix& result,
              handle);
 }
 
-Matrix mul(const Scalar& scalar, const Matrix& matrix, Matrix& result,
-           Handle* handle) {
+Matrix& mul(const Scalar& scalar, const Matrix& matrix, Matrix& result,
+            Handle* handle) {
   auto result_dtype = (scalar.type() < matrix.data_type().type())
                           ? matrix.data_type().type()
                           : scalar.type();
@@ -435,8 +435,8 @@ Matrix mul(const Scalar& scalar, const Matrix& matrix, Matrix& result,
              handle);
 }
 
-Matrix div(const Scalar& scalar, const Matrix& matrix, Matrix& result,
-           Handle* handle) {
+Matrix& div(const Scalar& scalar, const Matrix& matrix, Matrix& result,
+            Handle* handle) {
   auto result_dtype = (scalar.type() < matrix.data_type().type())
                           ? matrix.data_type().type()
                           : scalar.type();
@@ -444,8 +444,8 @@ Matrix div(const Scalar& scalar, const Matrix& matrix, Matrix& result,
              handle);
 }
 
-Matrix equal(const Scalar& scalar, const Matrix& matrix, Matrix& result,
-             Handle* handle) {
+Matrix& equal(const Scalar& scalar, const Matrix& matrix, Matrix& result,
+              Handle* handle) {
   auto result_dtype = (scalar.type() < matrix.data_type().type())
                           ? matrix.data_type().type()
                           : scalar.type();
@@ -453,8 +453,8 @@ Matrix equal(const Scalar& scalar, const Matrix& matrix, Matrix& result,
                handle);
 }
 
-Matrix greater(const Scalar& scalar, const Matrix& matrix, Matrix& result,
-               Handle* handle) {
+Matrix& greater(const Scalar& scalar, const Matrix& matrix, Matrix& result,
+                Handle* handle) {
   auto result_dtype = (scalar.type() < matrix.data_type().type())
                           ? matrix.data_type().type()
                           : scalar.type();
@@ -462,8 +462,8 @@ Matrix greater(const Scalar& scalar, const Matrix& matrix, Matrix& result,
                  result, handle);
 }
 
-Matrix greater_equal(const Scalar& scalar, const Matrix& matrix, Matrix& result,
-                     Handle* handle) {
+Matrix& greater_equal(const Scalar& scalar, const Matrix& matrix,
+                      Matrix& result, Handle* handle) {
   auto result_dtype = (scalar.type() < matrix.data_type().type())
                           ? matrix.data_type().type()
                           : scalar.type();
@@ -471,8 +471,8 @@ Matrix greater_equal(const Scalar& scalar, const Matrix& matrix, Matrix& result,
                        result, handle);
 }
 
-Matrix less(const Scalar& scalar, const Matrix& matrix, Matrix& result,
-            Handle* handle) {
+Matrix& less(const Scalar& scalar, const Matrix& matrix, Matrix& result,
+             Handle* handle) {
   auto result_dtype = (scalar.type() < matrix.data_type().type())
                           ? matrix.data_type().type()
                           : scalar.type();
@@ -480,8 +480,8 @@ Matrix less(const Scalar& scalar, const Matrix& matrix, Matrix& result,
               handle);
 }
 
-Matrix less_equal(const Scalar& scalar, const Matrix& matrix, Matrix& result,
-                  Handle* handle) {
+Matrix& less_equal(const Scalar& scalar, const Matrix& matrix, Matrix& result,
+                   Handle* handle) {
   auto result_dtype = (scalar.type() < matrix.data_type().type())
                           ? matrix.data_type().type()
                           : scalar.type();
@@ -489,8 +489,8 @@ Matrix less_equal(const Scalar& scalar, const Matrix& matrix, Matrix& result,
                     result, handle);
 }
 
-Matrix add(const Matrix& matrix, const Scalar& scalar, Matrix& result,
-           Handle* handle) {
+Matrix& add(const Matrix& matrix, const Scalar& scalar, Matrix& result,
+            Handle* handle) {
   auto result_dtype = (scalar.type() < matrix.data_type().type())
                           ? matrix.data_type().type()
                           : scalar.type();
@@ -498,8 +498,8 @@ Matrix add(const Matrix& matrix, const Scalar& scalar, Matrix& result,
              handle);
 }
 
-Matrix sub(const Matrix& matrix, const Scalar& scalar, Matrix& result,
-           Handle* handle) {
+Matrix& sub(const Matrix& matrix, const Scalar& scalar, Matrix& result,
+            Handle* handle) {
   auto result_dtype = (scalar.type() < matrix.data_type().type())
                           ? matrix.data_type().type()
                           : scalar.type();
@@ -507,8 +507,8 @@ Matrix sub(const Matrix& matrix, const Scalar& scalar, Matrix& result,
              handle);
 }
 
-Matrix mul(const Matrix& matrix, const Scalar& scalar, Matrix& result,
-           Handle* handle) {
+Matrix& mul(const Matrix& matrix, const Scalar& scalar, Matrix& result,
+            Handle* handle) {
   auto result_dtype = (scalar.type() < matrix.data_type().type())
                           ? matrix.data_type().type()
                           : scalar.type();
@@ -516,8 +516,8 @@ Matrix mul(const Matrix& matrix, const Scalar& scalar, Matrix& result,
              handle);
 }
 
-Matrix div(const Matrix& matrix, const Scalar& scalar, Matrix& result,
-           Handle* handle) {
+Matrix& div(const Matrix& matrix, const Scalar& scalar, Matrix& result,
+            Handle* handle) {
   auto result_dtype = (scalar.type() < matrix.data_type().type())
                           ? matrix.data_type().type()
                           : scalar.type();
@@ -525,8 +525,8 @@ Matrix div(const Matrix& matrix, const Scalar& scalar, Matrix& result,
              handle);
 }
 
-Matrix equal(const Matrix& matrix, const Scalar& scalar, Matrix& result,
-             Handle* handle) {
+Matrix& equal(const Matrix& matrix, const Scalar& scalar, Matrix& result,
+              Handle* handle) {
   auto result_dtype = (scalar.type() < matrix.data_type().type())
                           ? matrix.data_type().type()
                           : scalar.type();
@@ -534,8 +534,8 @@ Matrix equal(const Matrix& matrix, const Scalar& scalar, Matrix& result,
                handle);
 }
 
-Matrix greater(const Matrix& matrix, const Scalar& scalar, Matrix& result,
-               Handle* handle) {
+Matrix& greater(const Matrix& matrix, const Scalar& scalar, Matrix& result,
+                Handle* handle) {
   auto result_dtype = (scalar.type() < matrix.data_type().type())
                           ? matrix.data_type().type()
                           : scalar.type();
@@ -543,8 +543,8 @@ Matrix greater(const Matrix& matrix, const Scalar& scalar, Matrix& result,
                  result, handle);
 }
 
-Matrix greater_equal(const Matrix& matrix, const Scalar& scalar, Matrix& result,
-                     Handle* handle) {
+Matrix& greater_equal(const Matrix& matrix, const Scalar& scalar,
+                      Matrix& result, Handle* handle) {
   auto result_dtype = (scalar.type() < matrix.data_type().type())
                           ? matrix.data_type().type()
                           : scalar.type();
@@ -552,8 +552,8 @@ Matrix greater_equal(const Matrix& matrix, const Scalar& scalar, Matrix& result,
                        result, handle);
 }
 
-Matrix less(const Matrix& matrix, const Scalar& scalar, Matrix& result,
-            Handle* handle) {
+Matrix& less(const Matrix& matrix, const Scalar& scalar, Matrix& result,
+             Handle* handle) {
   auto result_dtype = (scalar.type() < matrix.data_type().type())
                           ? matrix.data_type().type()
                           : scalar.type();
@@ -561,8 +561,8 @@ Matrix less(const Matrix& matrix, const Scalar& scalar, Matrix& result,
               handle);
 }
 
-Matrix less_equal(const Matrix& matrix, const Scalar& scalar, Matrix& result,
-                  Handle* handle) {
+Matrix& less_equal(const Matrix& matrix, const Scalar& scalar, Matrix& result,
+                   Handle* handle) {
   auto result_dtype = (scalar.type() < matrix.data_type().type())
                           ? matrix.data_type().type()
                           : scalar.type();

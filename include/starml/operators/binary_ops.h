@@ -31,24 +31,24 @@ Matrix less(const Matrix& matrix1, const Matrix& matrix2,
 Matrix less_equal(const Matrix& matrix1, const Matrix& matrix2,
                   Handle* handle = NULL);
 
-Matrix add(const Matrix& matrix1, const Matrix& matrix2, Matrix& result,
-           Handle* handle = NULL);
-Matrix sub(const Matrix& matrix1, const Matrix& matrix2, Matrix& result,
-           Handle* handle = NULL);
-Matrix mul(const Matrix& matrix1, const Matrix& matrix2, Matrix& result,
-           Handle* handle = NULL);
-Matrix div(const Matrix& matrix1, const Matrix& matrix2, Matrix& result,
-           Handle* handle = NULL);
-Matrix equal(const Matrix& matrix1, const Matrix& matrix2, Matrix& result,
-             Handle* handle = NULL);
-Matrix greater(const Matrix& matrix1, const Matrix& matrix2, Matrix& result,
-               Handle* handle = NULL);
-Matrix greater_equal(const Matrix& matrix1, const Matrix& matrix2,
-                     Matrix& result, Handle* handle = NULL);
-Matrix less(const Matrix& matrix1, const Matrix& matrix2, Matrix& result,
+Matrix& add(const Matrix& matrix1, const Matrix& matrix2, Matrix& result,
             Handle* handle = NULL);
-Matrix less_equal(const Matrix& matrix1, const Matrix& matrix2, Matrix& result,
-                  Handle* handle = NULL);
+Matrix& sub(const Matrix& matrix1, const Matrix& matrix2, Matrix& result,
+            Handle* handle = NULL);
+Matrix& mul(const Matrix& matrix1, const Matrix& matrix2, Matrix& result,
+            Handle* handle = NULL);
+Matrix& div(const Matrix& matrix1, const Matrix& matrix2, Matrix& result,
+            Handle* handle = NULL);
+Matrix& equal(const Matrix& matrix1, const Matrix& matrix2, Matrix& result,
+              Handle* handle = NULL);
+Matrix& greater(const Matrix& matrix1, const Matrix& matrix2, Matrix& result,
+                Handle* handle = NULL);
+Matrix& greater_equal(const Matrix& matrix1, const Matrix& matrix2,
+                      Matrix& result, Handle* handle = NULL);
+Matrix& less(const Matrix& matrix1, const Matrix& matrix2, Matrix& result,
+             Handle* handle = NULL);
+Matrix& less_equal(const Matrix& matrix1, const Matrix& matrix2, Matrix& result,
+                   Handle* handle = NULL);
 
 Matrix add(const Scalar& scalar, const Matrix& matrix, Handle* handle = NULL);
 Matrix sub(const Scalar& scalar, const Matrix& matrix, Handle* handle = NULL);
@@ -63,24 +63,24 @@ Matrix less(const Scalar& scalar, const Matrix& matrix, Handle* handle = NULL);
 Matrix less_equal(const Scalar& scalar, const Matrix& matrix,
                   Handle* handle = NULL);
 
-Matrix add(const Scalar& scalar, const Matrix& matrix, Matrix& result,
-           Handle* handle = NULL);
-Matrix sub(const Scalar& scalar, const Matrix& matrix, Matrix& result,
-           Handle* handle = NULL);
-Matrix mul(const Scalar& scalar, const Matrix& matrix, Matrix& result,
-           Handle* handle = NULL);
-Matrix div(const Scalar& scalar, const Matrix& matrix, Matrix& result,
-           Handle* handle = NULL);
-Matrix equal(const Scalar& scalar, const Matrix& matrix, Matrix& result,
-             Handle* handle = NULL);
-Matrix greater(const Scalar& scalar, const Matrix& matrix, Matrix& result,
-               Handle* handle = NULL);
-Matrix greater_equal(const Scalar& scalar, const Matrix& matrix, Matrix& result,
-                     Handle* handle = NULL);
-Matrix less(const Scalar& scalar, const Matrix& matrix, Matrix& result,
+Matrix& add(const Scalar& scalar, const Matrix& matrix, Matrix& result,
             Handle* handle = NULL);
-Matrix less_equal(const Scalar& scalar, const Matrix& matrix, Matrix& result,
-                  Handle* handle = NULL);
+Matrix& sub(const Scalar& scalar, const Matrix& matrix, Matrix& result,
+            Handle* handle = NULL);
+Matrix& mul(const Scalar& scalar, const Matrix& matrix, Matrix& result,
+            Handle* handle = NULL);
+Matrix& div(const Scalar& scalar, const Matrix& matrix, Matrix& result,
+            Handle* handle = NULL);
+Matrix& equal(const Scalar& scalar, const Matrix& matrix, Matrix& result,
+              Handle* handle = NULL);
+Matrix& greater(const Scalar& scalar, const Matrix& matrix, Matrix& result,
+                Handle* handle = NULL);
+Matrix& greater_equal(const Scalar& scalar, const Matrix& matrix,
+                      Matrix& result, Handle* handle = NULL);
+Matrix& less(const Scalar& scalar, const Matrix& matrix, Matrix& result,
+             Handle* handle = NULL);
+Matrix& less_equal(const Scalar& scalar, const Matrix& matrix, Matrix& result,
+                   Handle* handle = NULL);
 
 Matrix add(const Matrix& matrix, const Scalar& scalar, Handle* handle = NULL);
 Matrix sub(const Matrix& matrix, const Scalar& scalar, Handle* handle = NULL);
@@ -95,22 +95,22 @@ Matrix less(const Matrix& matrix, const Scalar& scalar, Handle* handle = NULL);
 Matrix less_equal(const Matrix& matrix, const Scalar& scalar,
                   Handle* handle = NULL);
 
-Matrix add(const Matrix& matrix, const Scalar& scalar, Matrix& result,
-           Handle* handle = NULL);
-Matrix sub(const Matrix& matrix, const Scalar& scalar, Matrix& result,
-           Handle* handle = NULL);
-Matrix mul(const Matrix& matrix, const Scalar& scalar, Matrix& result,
-           Handle* handle = NULL);
-Matrix div(const Matrix& matrix, const Scalar& scalar, Matrix& result,
-           Handle* handle = NULL);
-Matrix equal(const Matrix& matrix, const Scalar& scalar, Matrix& result,
-             Handle* handle = NULL);
-Matrix greater(const Matrix& matrix, const Scalar& scalar, Matrix& result,
-               Handle* handle = NULL);
-Matrix greater_equal(const Matrix& matrix, const Scalar& scalar, Matrix& result,
-                     Handle* handle = NULL);
-Matrix less(const Matrix& matrix, const Scalar& scalar, Matrix& result,
+Matrix& add(const Matrix& matrix, const Scalar& scalar, Matrix& result,
             Handle* handle = NULL);
-Matrix less_equal(const Matrix& matrix, const Scalar& scalar, Matrix& result,
-                  Handle* handle = NULL);
+Matrix& sub(const Matrix& matrix, const Scalar& scalar, Matrix& result,
+            Handle* handle = NULL);
+Matrix& mul(const Matrix& matrix, const Scalar& scalar, Matrix& result,
+            Handle* handle = NULL);
+Matrix& div(const Matrix& matrix, const Scalar& scalar, Matrix& result,
+            Handle* handle = NULL);
+Matrix& equal(const Matrix& matrix, const Scalar& scalar, Matrix& result,
+              Handle* handle = NULL);
+Matrix& greater(const Matrix& matrix, const Scalar& scalar, Matrix& result,
+                Handle* handle = NULL);
+Matrix& greater_equal(const Matrix& matrix, const Scalar& scalar,
+                      Matrix& result, Handle* handle = NULL);
+Matrix& less(const Matrix& matrix, const Scalar& scalar, Matrix& result,
+             Handle* handle = NULL);
+Matrix& less_equal(const Matrix& matrix, const Scalar& scalar, Matrix& result,
+                   Handle* handle = NULL);
 }  // namespace starml

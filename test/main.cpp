@@ -11,10 +11,13 @@ int main(int argc, char **argv) {
   ::testing::InitGoogleTest(&argc, argv);
   Matrix a = full({3, 1}, Device(kCPU), DataType(kInt32), 3);
   Matrix b = full({3}, Device(kCPU), DataType(kInt32), 2);
-  // CUDAHandle handle;
-  Matrix c = full({3, 8}, Device(kCUDA), DataType(kFloat), 3.8);
-  Matrix d = sub(c, 5);
-  d.print();
+  HandleEntry *handle_entry = get_handle_entry(kCPU);
+  Handle* handle = handle_entry->create_handle();
+  a.print();
+  // handle->stream();
+  // Matrix c = full({3, 8}, Device(kCUDA), DataType(kFloat), 3.8);
+  // Matrix d = sub(c, 5);
+  // d.print();
   // Matrix b = full({3}, Device(kCPU), DataType(kFloat), 8.3);
   // Matrix result = empty({3, 1}, Device(kCUDA), DataType(kInt32));
   // exp(a.to(kCUDA), result);

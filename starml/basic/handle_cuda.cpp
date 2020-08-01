@@ -13,4 +13,13 @@ void* CUDAHandle::stream() const { return stream_; }
 void CUDAHandle::switch_device() const {
   STARML_CUDA_CHECK(cudaSetDevice(index_));
 }
+
+Handle* CUDAHandleEntry::create_handle(DeviceIndex index) {
+  CUDAHandle* handle = new CUDAHandle(index);
+  return handle;
+}
+
+static CUDAHandleEntry g_cuda_handle_entry;
+static HandleEntryRegister g_cuda_handle_entry_register(kCUDA, &g_cuda_handle_entry);
+
 }  // namespace starml
