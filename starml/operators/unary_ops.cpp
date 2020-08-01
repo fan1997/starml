@@ -20,12 +20,12 @@ Matrix cast(const Matrix& matrix, const DataType& data_type, Handle* handle) {
   return result;
 }
 
-Matrix exp(const Matrix& matrix, Matrix& result, Handle* handle) {
+Matrix& exp(const Matrix& matrix, Matrix& result, Handle* handle) {
   exp_dispatcher(matrix, result, handle);
   return result;
 }
 
-Matrix cast(const Matrix& matrix, Matrix& result, Handle* handle) {
+Matrix& cast(const Matrix& matrix, Matrix& result, Handle* handle) {
   cast_dispatcher(matrix, result, handle);
   return result;
 }
