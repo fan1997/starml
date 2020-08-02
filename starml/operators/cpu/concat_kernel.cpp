@@ -40,5 +40,5 @@ void concat_impl(const Matrix& matrix1, const Matrix& matrix2, Matrix& result, i
 }
 }  // namespace
 
-STARML_REGISTER_KERNEL(concat_dispatcher, &concat_impl, kCPU, kCPU);
+STARML_REGISTER_KERNEL(concat_dispatcher, &concat_impl, kCPU, kCPU, kCPU);
 }  // namespace starml

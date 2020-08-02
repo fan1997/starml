@@ -60,13 +60,21 @@ float classification::LogisticRegression::train(const starml::Matrix& train_data
   auto m = train_data.dim(0);
   auto n = train_data.dim(1);
   Matrix weight = full({n, 1}, train_data.device(), train_data.data_type(), 0.0);
+  // weight.print();
   Matrix grad({n, 1}, train_data.device(), train_data.data_type());
   Matrix y_hat({m, 1}, label.device(), label.data_type());
   Matrix train_data_t = transpose(train_data);
   Matrix label_t = transpose(label);
   Matrix inverse_label_t = transpose(sub(1, label));
   Matrix loss_mat({1, 1}, train_data.device(), train_data.data_type());
+  Matrix one = full({m, 1}, train_data.device(), train_data.data_type(), 1.0);
+  Matrix m_one = full({n, 1}, train_data.device(), train_data.data_type(), m);
   Matrix xt_yhat_sub_y({n, 1}, train_data.device(), train_data.data_type());
+  Matrix x_mul_w({m, 1}, train_data.device(), train_data.data_type());
+  Matrix neg_x_mul_w({m, 1}, train_data.device(), train_data.data_type());
+  Matrix exp_neg_x_mul_w({m, 1}, train_data.device(), train_data.data_type());
+  Matrix one_add_exp_neg_x_mul_w({m, 1}, train_data.device(), train_data.data_type());
+  Matrix y_hat_sub_y({m, 1}, train_data.device(), train_data.data_type());
   double diff = std::numeric_limits<double>::max();
   double current_loss = 0.0;
   double previous_loss = 0.0;
@@ -77,15 +85,21 @@ float classification::LogisticRegression::train(const starml::Matrix& train_data
   //forward
   //backward -> grad
   // y^ = 1 / 1 + exp(x, w)
-      div(float(1.0), add(float(1.0), exp(negtive(matmul(train_data, weight)))), y_hat);
+      x_mul_w = matmul(train_data, weight, x_mul_w);
+      neg_x_mul_w = negtive(x_mul_w, neg_x_mul_w);
+      exp_neg_x_mul_w = exp(neg_x_mul_w, exp_neg_x_mul_w);
+      one_add_exp_neg_x_mul_w = add(one, exp_neg_x_mul_w, one_add_exp_neg_x_mul_w);
+      y_hat = div(one, one_add_exp_neg_x_mul_w, y_hat);
   // loss = y * ln(y_hat) +  (1 - y) * ln(1 - y_hat)
-      add(matmul(label_t, log(y_hat)), matmul(inverse_label_t, log(sub(1, y_hat))), loss_mat);
-      Matrix loss_mat_cpu = loss_mat.to(kCPU);
-      current_loss = - loss_mat_cpu.data<float>()[0];
-      diff = current_loss - previous_loss;
-      previous_loss = current_loss;
+      // add(matmul(label_t, log(y_hat)), matmul(inverse_label_t, log(sub(one, y_hat))), loss_mat);
+      // Matrix loss_mat_cpu = loss_mat.to(kCPU);
+      // current_loss = - loss_mat_cpu.data<float>()[0];
+      // diff = current_loss - previous_loss;
+      // previous_loss = current_loss;
   // grad = xt * (y^ - y) (n*m m*1)
-      div(matmul(train_data_t, sub(y_hat, label), xt_yhat_sub_y), m, grad);
+      y_hat_sub_y = sub(y_hat, label, y_hat_sub_y);
+      xt_yhat_sub_y = matmul(train_data_t, y_hat_sub_y, xt_yhat_sub_y);
+      grad = div(xt_yhat_sub_y, m_one, grad);
       this -> optimizer -> step();
       iter += 1;
   }

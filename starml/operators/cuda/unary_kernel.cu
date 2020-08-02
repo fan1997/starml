@@ -14,24 +14,29 @@ __global__ void unary_kernel(const TScalarType* data, int start, int end,
 
 template <typename TScalarType, typename TResultType, typename TOp>
 void eval_unary(const TScalarType* data, TResultType* result_data, int start,
-                int end, TOp op) {
+                int end, Handle* handle, TOp op) {
   dim3 dimGrid(ceil((end - start) / 256.0), 1, 1);
   dim3 dimBlock(256, 1, 1);
-  unary_kernel<<<dimGrid, dimBlock>>>(data, start, end, op, result_data);
+  cudaStream_t stream = NULL;
+  if (handle != NULL) {
+    stream = reinterpret_cast<cudaStream_t>(handle->stream());
+  }
+  unary_kernel<<<dimGrid, dimBlock, 0, stream>>>(data, start, end, op,
+                                                 result_data);
 }
 
-void exp_impl(const Matrix& matrix, Matrix& result) {
+void exp_impl(const Matrix& matrix, Matrix& result, Handle* handle) {
   auto dtype = matrix.data_type().type();
   auto result_dtype = result.data_type().type();
   auto cast_dtype = (dtype < result_dtype) ? result_dtype : dtype;
-  STARML_DISPATCH_TYPES(result_dtype, "CUDA_EXP", [&]() {
+  STARML_DISPATCH_TYPES(result_dtype, "EXP_CUDA", [&]() {
     auto result_data = result.mutable_data<scalar_t>();
     using result_scalar_type = scalar_t;
-    STARML_DISPATCH_TYPES(dtype, "CUDA_EXP", [&]() {
+    STARML_DISPATCH_TYPES(dtype, "EXP_CUDA", [&]() {
       auto data = matrix.data<scalar_t>();
       using scalar_type = scalar_t;
-      STARML_DISPATCH_FLOATING_TYPES(cast_dtype, "CUDA_EXP", [&]() {
-        eval_unary(data, result_data, 0, result.size(),
+      STARML_DISPATCH_FLOATING_TYPES(cast_dtype, "EXP_CUDA", [&]() {
+        eval_unary(data, result_data, 0, result.size(), handle,
                    [=] __device__(scalar_type a) -> result_scalar_type {
                      return ::exp(scalar_t(a));
                    });
@@ -40,7 +45,7 @@ void exp_impl(const Matrix& matrix, Matrix& result) {
   });
 }
 
-void log_impl(const Matrix& matrix, Matrix& result) {
+void log_impl(const Matrix& matrix, Matrix& result, Handle* handle) {
   auto dtype = matrix.data_type().type();
   auto result_dtype = result.data_type().type();
   auto cast_dtype = (dtype < result_dtype) ? result_dtype : dtype;
@@ -51,7 +56,7 @@ void log_impl(const Matrix& matrix, Matrix& result) {
       auto data = matrix.data<scalar_t>();
       using scalar_type = scalar_t;
       STARML_DISPATCH_FLOATING_TYPES(cast_dtype, "CUDA_LOG", [&]() {
-        eval_unary(data, result_data, 0, result.size(),
+        eval_unary(data, result_data, 0, result.size(), handle,
                    [=] __device__(scalar_type a) -> result_scalar_type {
                      return ::log(scalar_t(a));
                    });
@@ -60,7 +65,7 @@ void log_impl(const Matrix& matrix, Matrix& result) {
   });
 }
 
-void negtive_impl(const Matrix& matrix, Matrix& result) {
+void negtive_impl(const Matrix& matrix, Matrix& result, Handle* handle) {
   auto dtype = matrix.data_type().type();
   auto result_dtype = result.data_type().type();
   auto cast_dtype = (dtype < result_dtype) ? result_dtype : dtype;
@@ -71,9 +76,24 @@ void negtive_impl(const Matrix& matrix, Matrix& result) {
       auto data = matrix.data<scalar_t>();
       using scalar_type = scalar_t;
       STARML_DISPATCH_FLOATING_TYPES(cast_dtype, "CUDA_NEG", [&]() {
-        eval_unary(data, result_data, 0, result.size(),
+        eval_unary(data, result_data, 0, result.size(), handle,
                    [=] __device__(scalar_type a) -> result_scalar_type { return - a;});
       });
+    });
+  });
+}
+void cast_impl(const Matrix& matrix, Matrix& result, Handle* handle) {
+  auto dtype = matrix.data_type().type();
+  auto result_dtype = result.data_type().type();
+  STARML_DISPATCH_TYPES(result_dtype, "CUDA_CAST", [&]() {
+    auto result_data = result.mutable_data<scalar_t>();
+    using result_scalar_type = scalar_t;
+    STARML_DISPATCH_TYPES(dtype, "CUDA_CAST", [&]() {
+      auto data = matrix.data<scalar_t>();
+      using scalar_type = scalar_t;
+      eval_unary(
+          data, result_data, 0, result.size(), handle,
+          [=] __device__(scalar_type a) -> result_scalar_type { return a; });
     });
   });
 }
@@ -82,4 +102,5 @@ void negtive_impl(const Matrix& matrix, Matrix& result) {
 STARML_REGISTER_KERNEL(exp_dispatcher, &exp_impl, kCUDA, kCUDA);
 STARML_REGISTER_KERNEL(log_dispatcher, &log_impl, kCUDA, kCUDA);
 STARML_REGISTER_KERNEL(negtive_dispatcher, &negtive_impl, kCUDA, kCUDA);
+STARML_REGISTER_KERNEL(cast_dispatcher, &cast_impl, kCUDA, kCUDA);
 }  // namespace starml

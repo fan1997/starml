@@ -1,5 +1,5 @@
 #pragma once
-#include <cuda.h>
+#include "starml/basic/common_cuda.h"
 
 #define WARMUP_NUM_CUDA 5
 #define EXE_NUM_CUDA 10

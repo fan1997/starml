@@ -3,7 +3,7 @@
 
 namespace starml {
 namespace {
-void copy_impl(const Matrix& src, Matrix& dst, void* stream) {
+void copy_impl(const Matrix& src, Matrix& dst, Handle* handle) {
   memcpy(dst.raw_mutable_data(), src.raw_data(),
          src.size() * src.data_type().size());
 }

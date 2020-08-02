@@ -5,6 +5,11 @@ STARML_DEFINE_DISPATCHER(add_dispatcher);
 STARML_DEFINE_DISPATCHER(sub_dispatcher);
 STARML_DEFINE_DISPATCHER(mul_dispatcher);
 STARML_DEFINE_DISPATCHER(div_dispatcher);
+STARML_DEFINE_DISPATCHER(equal_dispatcher);
+STARML_DEFINE_DISPATCHER(greater_dispatcher);
+STARML_DEFINE_DISPATCHER(greater_equal_dispatcher);
+STARML_DEFINE_DISPATCHER(less_dispatcher);
+STARML_DEFINE_DISPATCHER(less_equal_dispatcher);
 
 Shape broadcast(const Matrix& matrix1, const Matrix& matrix2) {
   auto shape1 = matrix1.dims();
@@ -42,47 +47,100 @@ Shape broadcast(const Matrix& matrix1, const Matrix& matrix2) {
   return result;
 }
 
-Matrix add(const Matrix& matrix1, const Matrix& matrix2) {
+Matrix add(const Matrix& matrix1, const Matrix& matrix2, Handle* handle) {
   auto shape = broadcast(matrix1, matrix2);
   auto result_dtype = (matrix1.data_type().type() < matrix2.data_type().type())
                           ? matrix2.data_type().type()
                           : matrix1.data_type().type();
   Matrix result = Matrix(shape, matrix1.device(), result_dtype);
-  add_dispatcher(matrix1, matrix2, result);
+  add_dispatcher(matrix1, matrix2, result, handle);
   return result;
 }
 
-Matrix sub(const Matrix& matrix1, const Matrix& matrix2) {
+Matrix sub(const Matrix& matrix1, const Matrix& matrix2, Handle* handle) {
   auto shape = broadcast(matrix1, matrix2);
   auto result_dtype = (matrix1.data_type().type() < matrix2.data_type().type())
                           ? matrix2.data_type().type()
                           : matrix1.data_type().type();
   Matrix result = Matrix(shape, matrix1.device(), result_dtype);
-  sub_dispatcher(matrix1, matrix2, result);
+  sub_dispatcher(matrix1, matrix2, result, handle);
   return result;
 }
 
-Matrix mul(const Matrix& matrix1, const Matrix& matrix2) {
+Matrix mul(const Matrix& matrix1, const Matrix& matrix2, Handle* handle) {
   auto shape = broadcast(matrix1, matrix2);
   auto result_dtype = (matrix1.data_type().type() < matrix2.data_type().type())
                           ? matrix2.data_type().type()
                           : matrix1.data_type().type();
   Matrix result = Matrix(shape, matrix1.device(), result_dtype);
-  mul_dispatcher(matrix1, matrix2, result);
+  mul_dispatcher(matrix1, matrix2, result, handle);
   return result;
 }
 
-Matrix div(const Matrix& matrix1, const Matrix& matrix2) {
+Matrix div(const Matrix& matrix1, const Matrix& matrix2, Handle* handle) {
   auto shape = broadcast(matrix1, matrix2);
   auto result_dtype = (matrix1.data_type().type() < matrix2.data_type().type())
                           ? matrix2.data_type().type()
                           : matrix1.data_type().type();
   Matrix result = Matrix(shape, matrix1.device(), result_dtype);
-  div_dispatcher(matrix1, matrix2, result);
+  div_dispatcher(matrix1, matrix2, result, handle);
   return result;
 }
 
-Matrix add(const Matrix& matrix1, const Matrix& matrix2, Matrix& result) {
+Matrix equal(const Matrix& matrix1, const Matrix& matrix2, Handle* handle) {
+  auto shape = broadcast(matrix1, matrix2);
+  auto result_dtype = (matrix1.data_type().type() < matrix2.data_type().type())
+                          ? matrix2.data_type().type()
+                          : matrix1.data_type().type();
+  Matrix result = Matrix(shape, matrix1.device(), result_dtype);
+  equal_dispatcher(matrix1, matrix2, result, handle);
+  return result;
+}
+
+Matrix greater(const Matrix& matrix1, const Matrix& matrix2, Handle* handle) {
+  auto shape = broadcast(matrix1, matrix2);
+  auto result_dtype = (matrix1.data_type().type() < matrix2.data_type().type())
+                          ? matrix2.data_type().type()
+                          : matrix1.data_type().type();
+  Matrix result = Matrix(shape, matrix1.device(), result_dtype);
+  greater_dispatcher(matrix1, matrix2, result, handle);
+  return result;
+}
+
+Matrix greater_equal(const Matrix& matrix1, const Matrix& matrix2,
+                     Handle* handle) {
+  auto shape = broadcast(matrix1, matrix2);
+  auto result_dtype = (matrix1.data_type().type() < matrix2.data_type().type())
+                          ? matrix2.data_type().type()
+                          : matrix1.data_type().type();
+  Matrix result = Matrix(shape, matrix1.device(), result_dtype);
+  greater_equal_dispatcher(matrix1, matrix2, result, handle);
+  return result;
+}
+
+Matrix less(const Matrix& matrix1, const Matrix& matrix2, Handle* handle) {
+  auto shape = broadcast(matrix1, matrix2);
+  auto result_dtype = (matrix1.data_type().type() < matrix2.data_type().type())
+                          ? matrix2.data_type().type()
+                          : matrix1.data_type().type();
+  Matrix result = Matrix(shape, matrix1.device(), result_dtype);
+  less_dispatcher(matrix1, matrix2, result, handle);
+  return result;
+}
+
+Matrix less_equal(const Matrix& matrix1, const Matrix& matrix2,
+                  Handle* handle) {
+  auto shape = broadcast(matrix1, matrix2);
+  auto result_dtype = (matrix1.data_type().type() < matrix2.data_type().type())
+                          ? matrix2.data_type().type()
+                          : matrix1.data_type().type();
+  Matrix result = Matrix(shape, matrix1.device(), result_dtype);
+  less_equal_dispatcher(matrix1, matrix2, result, handle);
+  return result;
+}
+
+Matrix add(const Matrix& matrix1, const Matrix& matrix2, Matrix& result,
+           Handle* handle) {
   auto shape = broadcast(matrix1, matrix2);
   STARML_CHECK(shape == result.dims())
       << "Dimension of result for inplace operator should be well "
@@ -92,11 +150,12 @@ Matrix add(const Matrix& matrix1, const Matrix& matrix2, Matrix& result) {
                           : matrix1.data_type().type();
   STARML_CHECK(result_dtype <= result.data_type().type())
       << "Unexpected result data type";
-  add_dispatcher(matrix1, matrix2, result);
+  add_dispatcher(matrix1, matrix2, result, handle);
   return result;
 }
 
-Matrix sub(const Matrix& matrix1, const Matrix& matrix2, Matrix& result) {
+Matrix sub(const Matrix& matrix1, const Matrix& matrix2, Matrix& result,
+           Handle* handle) {
   auto shape = broadcast(matrix1, matrix2);
   STARML_CHECK(shape == result.dims())
       << "Dimension of result for inplace operator should be well "
@@ -106,11 +165,12 @@ Matrix sub(const Matrix& matrix1, const Matrix& matrix2, Matrix& result) {
                           : matrix1.data_type().type();
   STARML_CHECK(result_dtype <= result.data_type().type())
       << "Unexpected result data type";
-  sub_dispatcher(matrix1, matrix2, result);
+  sub_dispatcher(matrix1, matrix2, result, handle);
   return result;
 }
 
-Matrix mul(const Matrix& matrix1, const Matrix& matrix2, Matrix& result) {
+Matrix mul(const Matrix& matrix1, const Matrix& matrix2, Matrix& result,
+           Handle* handle) {
   auto shape = broadcast(matrix1, matrix2);
   STARML_CHECK(shape == result.dims())
       << "Dimension of result for inplace operator should be well "
@@ -120,11 +180,12 @@ Matrix mul(const Matrix& matrix1, const Matrix& matrix2, Matrix& result) {
                           : matrix1.data_type().type();
   STARML_CHECK(result_dtype <= result.data_type().type())
       << "Unexpected result data type";
-  mul_dispatcher(matrix1, matrix2, result);
+  mul_dispatcher(matrix1, matrix2, result, handle);
   return result;
 }
 
-Matrix div(const Matrix& matrix1, const Matrix& matrix2, Matrix& result) {
+Matrix div(const Matrix& matrix1, const Matrix& matrix2, Matrix& result,
+           Handle* handle) {
   auto shape = broadcast(matrix1, matrix2);
   STARML_CHECK(shape == result.dims())
       << "Dimension of result for inplace operator should be well "
@@ -134,120 +195,379 @@ Matrix div(const Matrix& matrix1, const Matrix& matrix2, Matrix& result) {
                           : matrix1.data_type().type();
   STARML_CHECK(result_dtype <= result.data_type().type())
       << "Unexpected result data type";
-  div_dispatcher(matrix1, matrix2, result);
+  div_dispatcher(matrix1, matrix2, result, handle);
   return result;
 }
 
-Matrix add(const Scalar& scalar, const Matrix& matrix) {
-  auto result_dtype = (scalar.type() < matrix.data_type().type())
-                          ? matrix.data_type().type()
-                          : scalar.type();
-  return add(scalar.to_matrix(matrix.device(), result_dtype), matrix);
+Matrix equal(const Matrix& matrix1, const Matrix& matrix2, Matrix& result,
+             Handle* handle) {
+  auto shape = broadcast(matrix1, matrix2);
+  STARML_CHECK(shape == result.dims())
+      << "Dimension of result for inplace operator should be well "
+         "preallocated.";
+  auto result_dtype = (matrix1.data_type().type() < matrix2.data_type().type())
+                          ? matrix2.data_type().type()
+                          : matrix1.data_type().type();
+  STARML_CHECK(result_dtype <= result.data_type().type())
+      << "Unexpected result data type";
+  equal_dispatcher(matrix1, matrix2, result, handle);
+  return result;
 }
 
-Matrix sub(const Scalar& scalar, const Matrix& matrix) {
-  auto result_dtype = (scalar.type() < matrix.data_type().type())
-                          ? matrix.data_type().type()
-                          : scalar.type();
-  return sub(scalar.to_matrix(matrix.device(), result_dtype), matrix);
+Matrix greater(const Matrix& matrix1, const Matrix& matrix2, Matrix& result,
+               Handle* handle) {
+  auto shape = broadcast(matrix1, matrix2);
+  STARML_CHECK(shape == result.dims())
+      << "Dimension of result for inplace operator should be well "
+         "preallocated.";
+  auto result_dtype = (matrix1.data_type().type() < matrix2.data_type().type())
+                          ? matrix2.data_type().type()
+                          : matrix1.data_type().type();
+  STARML_CHECK(result_dtype <= result.data_type().type())
+      << "Unexpected result data type";
+  greater_dispatcher(matrix1, matrix2, result, handle);
+  return result;
 }
 
-Matrix mul(const Scalar& scalar, const Matrix& matrix) {
-  auto result_dtype = (scalar.type() < matrix.data_type().type())
-                          ? matrix.data_type().type()
-                          : scalar.type();
-  return mul(scalar.to_matrix(matrix.device(), result_dtype), matrix);
+Matrix greater_equal(const Matrix& matrix1, const Matrix& matrix2,
+                     Matrix& result, Handle* handle) {
+  auto shape = broadcast(matrix1, matrix2);
+  STARML_CHECK(shape == result.dims())
+      << "Dimension of result for inplace operator should be well "
+         "preallocated.";
+  auto result_dtype = (matrix1.data_type().type() < matrix2.data_type().type())
+                          ? matrix2.data_type().type()
+                          : matrix1.data_type().type();
+  STARML_CHECK(result_dtype <= result.data_type().type())
+      << "Unexpected result data type";
+  greater_equal_dispatcher(matrix1, matrix2, result, handle);
+  return result;
 }
 
-Matrix div(const Scalar& scalar, const Matrix& matrix) {
-  auto result_dtype = (scalar.type() < matrix.data_type().type())
-                          ? matrix.data_type().type()
-                          : scalar.type();
-  return div(scalar.to_matrix(matrix.device(), result_dtype), matrix);
+Matrix less(const Matrix& matrix1, const Matrix& matrix2, Matrix& result,
+            Handle* handle) {
+  auto shape = broadcast(matrix1, matrix2);
+  STARML_CHECK(shape == result.dims())
+      << "Dimension of result for inplace operator should be well "
+         "preallocated.";
+  auto result_dtype = (matrix1.data_type().type() < matrix2.data_type().type())
+                          ? matrix2.data_type().type()
+                          : matrix1.data_type().type();
+  STARML_CHECK(result_dtype <= result.data_type().type())
+      << "Unexpected result data type";
+  less_dispatcher(matrix1, matrix2, result, handle);
+  return result;
 }
 
-Matrix add(const Matrix& matrix, const Scalar& scalar) {
-  auto result_dtype = (scalar.type() < matrix.data_type().type())
-                          ? matrix.data_type().type()
-                          : scalar.type();
-  return add(matrix, scalar.to_matrix(matrix.device(), result_dtype));
+Matrix less_equal(const Matrix& matrix1, const Matrix& matrix2, Matrix& result,
+                  Handle* handle) {
+  auto shape = broadcast(matrix1, matrix2);
+  STARML_CHECK(shape == result.dims())
+      << "Dimension of result for inplace operator should be well "
+         "preallocated.";
+  auto result_dtype = (matrix1.data_type().type() < matrix2.data_type().type())
+                          ? matrix2.data_type().type()
+                          : matrix1.data_type().type();
+  STARML_CHECK(result_dtype <= result.data_type().type())
+      << "Unexpected result data type";
+  less_equal_dispatcher(matrix1, matrix2, result, handle);
+  return result;
 }
 
-Matrix sub(const Matrix& matrix, const Scalar& scalar) {
+Matrix add(const Scalar& scalar, const Matrix& matrix, Handle* handle) {
   auto result_dtype = (scalar.type() < matrix.data_type().type())
                           ? matrix.data_type().type()
                           : scalar.type();
-  return sub(matrix, scalar.to_matrix(matrix.device(), result_dtype));
+  return add(scalar.to_matrix(matrix.device(), result_dtype), matrix, handle);
 }
 
-Matrix mul(const Matrix& matrix, const Scalar& scalar) {
+Matrix sub(const Scalar& scalar, const Matrix& matrix, Handle* handle) {
   auto result_dtype = (scalar.type() < matrix.data_type().type())
                           ? matrix.data_type().type()
                           : scalar.type();
-  return mul(matrix, scalar.to_matrix(matrix.device(), result_dtype));
+  return sub(scalar.to_matrix(matrix.device(), result_dtype), matrix, handle);
 }
 
-Matrix div(const Matrix& matrix, const Scalar& scalar) {
+Matrix mul(const Scalar& scalar, const Matrix& matrix, Handle* handle) {
   auto result_dtype = (scalar.type() < matrix.data_type().type())
                           ? matrix.data_type().type()
                           : scalar.type();
-  return div(matrix, scalar.to_matrix(matrix.device(), result_dtype));
+  return mul(scalar.to_matrix(matrix.device(), result_dtype), matrix, handle);
 }
 
-Matrix add(const Scalar& scalar, const Matrix& matrix, Matrix& result) {
+Matrix div(const Scalar& scalar, const Matrix& matrix, Handle* handle) {
   auto result_dtype = (scalar.type() < matrix.data_type().type())
                           ? matrix.data_type().type()
                           : scalar.type();
-  return add(scalar.to_matrix(matrix.device(), result_dtype), matrix, result);
+  return div(scalar.to_matrix(matrix.device(), result_dtype), matrix, handle);
 }
 
-Matrix sub(const Scalar& scalar, const Matrix& matrix, Matrix& result) {
+Matrix equal(const Scalar& scalar, const Matrix& matrix, Handle* handle) {
   auto result_dtype = (scalar.type() < matrix.data_type().type())
                           ? matrix.data_type().type()
                           : scalar.type();
-  return sub(scalar.to_matrix(matrix.device(), result_dtype), matrix, result);
+  return equal(scalar.to_matrix(matrix.device(), result_dtype), matrix, handle);
 }
 
-Matrix mul(const Scalar& scalar, const Matrix& matrix, Matrix& result) {
+Matrix greater(const Scalar& scalar, const Matrix& matrix, Handle* handle) {
   auto result_dtype = (scalar.type() < matrix.data_type().type())
                           ? matrix.data_type().type()
                           : scalar.type();
-  return mul(scalar.to_matrix(matrix.device(), result_dtype), matrix, result);
+  return greater(scalar.to_matrix(matrix.device(), result_dtype), matrix,
+                 handle);
 }
 
-Matrix div(const Scalar& scalar, const Matrix& matrix, Matrix& result) {
+Matrix greater_equal(const Scalar& scalar, const Matrix& matrix,
+                     Handle* handle) {
   auto result_dtype = (scalar.type() < matrix.data_type().type())
                           ? matrix.data_type().type()
                           : scalar.type();
-  return div(scalar.to_matrix(matrix.device(), result_dtype), matrix, result);
+  return greater_equal(scalar.to_matrix(matrix.device(), result_dtype), matrix,
+                       handle);
 }
 
-Matrix add(const Matrix& matrix, const Scalar& scalar, Matrix& result) {
+Matrix less(const Scalar& scalar, const Matrix& matrix, Handle* handle) {
   auto result_dtype = (scalar.type() < matrix.data_type().type())
                           ? matrix.data_type().type()
                           : scalar.type();
-  return add(matrix, scalar.to_matrix(matrix.device(), result_dtype), result);
+  return less(scalar.to_matrix(matrix.device(), result_dtype), matrix, handle);
 }
 
-Matrix sub(const Matrix& matrix, const Scalar& scalar, Matrix& result) {
+Matrix less_equal(const Scalar& scalar, const Matrix& matrix, Handle* handle) {
   auto result_dtype = (scalar.type() < matrix.data_type().type())
                           ? matrix.data_type().type()
                           : scalar.type();
-  return sub(matrix, scalar.to_matrix(matrix.device(), result_dtype), result);
+  return less_equal(scalar.to_matrix(matrix.device(), result_dtype), matrix,
+                    handle);
 }
 
-Matrix mul(const Matrix& matrix, const Scalar& scalar, Matrix& result) {
+Matrix add(const Matrix& matrix, const Scalar& scalar, Handle* handle) {
   auto result_dtype = (scalar.type() < matrix.data_type().type())
                           ? matrix.data_type().type()
                           : scalar.type();
-  return mul(matrix, scalar.to_matrix(matrix.device(), result_dtype), result);
+  return add(matrix, scalar.to_matrix(matrix.device(), result_dtype), handle);
 }
 
-Matrix div(const Matrix& matrix, const Scalar& scalar, Matrix& result) {
+Matrix sub(const Matrix& matrix, const Scalar& scalar, Handle* handle) {
   auto result_dtype = (scalar.type() < matrix.data_type().type())
                           ? matrix.data_type().type()
                           : scalar.type();
-  return div(matrix, scalar.to_matrix(matrix.device(), result_dtype), result);
+  return sub(matrix, scalar.to_matrix(matrix.device(), result_dtype), handle);
+}
+
+Matrix mul(const Matrix& matrix, const Scalar& scalar, Handle* handle) {
+  auto result_dtype = (scalar.type() < matrix.data_type().type())
+                          ? matrix.data_type().type()
+                          : scalar.type();
+  return mul(matrix, scalar.to_matrix(matrix.device(), result_dtype), handle);
+}
+
+Matrix div(const Matrix& matrix, const Scalar& scalar, Handle* handle) {
+  auto result_dtype = (scalar.type() < matrix.data_type().type())
+                          ? matrix.data_type().type()
+                          : scalar.type();
+  return div(matrix, scalar.to_matrix(matrix.device(), result_dtype), handle);
+}
+
+Matrix equal(const Matrix& matrix, const Scalar& scalar, Handle* handle) {
+  auto result_dtype = (scalar.type() < matrix.data_type().type())
+                          ? matrix.data_type().type()
+                          : scalar.type();
+  return equal(matrix, scalar.to_matrix(matrix.device(), result_dtype), handle);
+}
+
+Matrix greater(const Matrix& matrix, const Scalar& scalar, Handle* handle) {
+  auto result_dtype = (scalar.type() < matrix.data_type().type())
+                          ? matrix.data_type().type()
+                          : scalar.type();
+  return greater(matrix, scalar.to_matrix(matrix.device(), result_dtype),
+                 handle);
+}
+
+Matrix greater_equal(const Matrix& matrix, const Scalar& scalar,
+                     Handle* handle) {
+  auto result_dtype = (scalar.type() < matrix.data_type().type())
+                          ? matrix.data_type().type()
+                          : scalar.type();
+  return greater_equal(matrix, scalar.to_matrix(matrix.device(), result_dtype),
+                       handle);
+}
+
+Matrix less(const Matrix& matrix, const Scalar& scalar, Handle* handle) {
+  auto result_dtype = (scalar.type() < matrix.data_type().type())
+                          ? matrix.data_type().type()
+                          : scalar.type();
+  return less(matrix, scalar.to_matrix(matrix.device(), result_dtype), handle);
+}
+
+Matrix less_equal(const Matrix& matrix, const Scalar& scalar, Handle* handle) {
+  auto result_dtype = (scalar.type() < matrix.data_type().type())
+                          ? matrix.data_type().type()
+                          : scalar.type();
+  return less_equal(matrix, scalar.to_matrix(matrix.device(), result_dtype),
+                    handle);
+}
+
+Matrix add(const Scalar& scalar, const Matrix& matrix, Matrix& result,
+           Handle* handle) {
+  auto result_dtype = (scalar.type() < matrix.data_type().type())
+                          ? matrix.data_type().type()
+                          : scalar.type();
+  return add(scalar.to_matrix(matrix.device(), result_dtype), matrix, result,
+             handle);
+}
+
+Matrix sub(const Scalar& scalar, const Matrix& matrix, Matrix& result,
+           Handle* handle) {
+  auto result_dtype = (scalar.type() < matrix.data_type().type())
+                          ? matrix.data_type().type()
+                          : scalar.type();
+  return sub(scalar.to_matrix(matrix.device(), result_dtype), matrix, result,
+             handle);
+}
+
+Matrix mul(const Scalar& scalar, const Matrix& matrix, Matrix& result,
+           Handle* handle) {
+  auto result_dtype = (scalar.type() < matrix.data_type().type())
+                          ? matrix.data_type().type()
+                          : scalar.type();
+  return mul(scalar.to_matrix(matrix.device(), result_dtype), matrix, result,
+             handle);
+}
+
+Matrix div(const Scalar& scalar, const Matrix& matrix, Matrix& result,
+           Handle* handle) {
+  auto result_dtype = (scalar.type() < matrix.data_type().type())
+                          ? matrix.data_type().type()
+                          : scalar.type();
+  return div(scalar.to_matrix(matrix.device(), result_dtype), matrix, result,
+             handle);
+}
+
+Matrix equal(const Scalar& scalar, const Matrix& matrix, Matrix& result,
+             Handle* handle) {
+  auto result_dtype = (scalar.type() < matrix.data_type().type())
+                          ? matrix.data_type().type()
+                          : scalar.type();
+  return equal(scalar.to_matrix(matrix.device(), result_dtype), matrix, result,
+               handle);
+}
+
+Matrix greater(const Scalar& scalar, const Matrix& matrix, Matrix& result,
+               Handle* handle) {
+  auto result_dtype = (scalar.type() < matrix.data_type().type())
+                          ? matrix.data_type().type()
+                          : scalar.type();
+  return greater(scalar.to_matrix(matrix.device(), result_dtype), matrix,
+                 result, handle);
+}
+
+Matrix greater_equal(const Scalar& scalar, const Matrix& matrix, Matrix& result,
+                     Handle* handle) {
+  auto result_dtype = (scalar.type() < matrix.data_type().type())
+                          ? matrix.data_type().type()
+                          : scalar.type();
+  return greater_equal(scalar.to_matrix(matrix.device(), result_dtype), matrix,
+                       result, handle);
+}
+
+Matrix less(const Scalar& scalar, const Matrix& matrix, Matrix& result,
+            Handle* handle) {
+  auto result_dtype = (scalar.type() < matrix.data_type().type())
+                          ? matrix.data_type().type()
+                          : scalar.type();
+  return less(scalar.to_matrix(matrix.device(), result_dtype), matrix, result,
+              handle);
+}
+
+Matrix less_equal(const Scalar& scalar, const Matrix& matrix, Matrix& result,
+                  Handle* handle) {
+  auto result_dtype = (scalar.type() < matrix.data_type().type())
+                          ? matrix.data_type().type()
+                          : scalar.type();
+  return less_equal(scalar.to_matrix(matrix.device(), result_dtype), matrix,
+                    result, handle);
+}
+
+Matrix add(const Matrix& matrix, const Scalar& scalar, Matrix& result,
+           Handle* handle) {
+  auto result_dtype = (scalar.type() < matrix.data_type().type())
+                          ? matrix.data_type().type()
+                          : scalar.type();
+  return add(matrix, scalar.to_matrix(matrix.device(), result_dtype), result,
+             handle);
+}
+
+Matrix sub(const Matrix& matrix, const Scalar& scalar, Matrix& result,
+           Handle* handle) {
+  auto result_dtype = (scalar.type() < matrix.data_type().type())
+                          ? matrix.data_type().type()
+                          : scalar.type();
+  return sub(matrix, scalar.to_matrix(matrix.device(), result_dtype), result,
+             handle);
+}
+
+Matrix mul(const Matrix& matrix, const Scalar& scalar, Matrix& result,
+           Handle* handle) {
+  auto result_dtype = (scalar.type() < matrix.data_type().type())
+                          ? matrix.data_type().type()
+                          : scalar.type();
+  return mul(matrix, scalar.to_matrix(matrix.device(), result_dtype), result,
+             handle);
+}
+
+Matrix div(const Matrix& matrix, const Scalar& scalar, Matrix& result,
+           Handle* handle) {
+  auto result_dtype = (scalar.type() < matrix.data_type().type())
+                          ? matrix.data_type().type()
+                          : scalar.type();
+  return div(matrix, scalar.to_matrix(matrix.device(), result_dtype), result,
+             handle);
+}
+
+Matrix equal(const Matrix& matrix, const Scalar& scalar, Matrix& result,
+             Handle* handle) {
+  auto result_dtype = (scalar.type() < matrix.data_type().type())
+                          ? matrix.data_type().type()
+                          : scalar.type();
+  return equal(matrix, scalar.to_matrix(matrix.device(), result_dtype), result,
+               handle);
+}
+
+Matrix greater(const Matrix& matrix, const Scalar& scalar, Matrix& result,
+               Handle* handle) {
+  auto result_dtype = (scalar.type() < matrix.data_type().type())
+                          ? matrix.data_type().type()
+                          : scalar.type();
+  return greater(matrix, scalar.to_matrix(matrix.device(), result_dtype),
+                 result, handle);
+}
+
+Matrix greater_equal(const Matrix& matrix, const Scalar& scalar, Matrix& result,
+                     Handle* handle) {
+  auto result_dtype = (scalar.type() < matrix.data_type().type())
+                          ? matrix.data_type().type()
+                          : scalar.type();
+  return greater_equal(matrix, scalar.to_matrix(matrix.device(), result_dtype),
+                       result, handle);
+}
+
+Matrix less(const Matrix& matrix, const Scalar& scalar, Matrix& result,
+            Handle* handle) {
+  auto result_dtype = (scalar.type() < matrix.data_type().type())
+                          ? matrix.data_type().type()
+                          : scalar.type();
+  return less(matrix, scalar.to_matrix(matrix.device(), result_dtype), result,
+              handle);
+}
+
+Matrix less_equal(const Matrix& matrix, const Scalar& scalar, Matrix& result,
+                  Handle* handle) {
+  auto result_dtype = (scalar.type() < matrix.data_type().type())
+                          ? matrix.data_type().type()
+                          : scalar.type();
+  return less_equal(matrix, scalar.to_matrix(matrix.device(), result_dtype),
+                    result, handle);
 }
 
 }  // namespace starml

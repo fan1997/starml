@@ -5,6 +5,7 @@
 #include "starml/operators/factories.h"
 #include "starml/operators/binary_ops.h"
 #include "starml/operators/unary_ops.h"
+#include "starml/basic/handle_cuda.h"
 using namespace starml;
 
 int main(int argc, char **argv) {

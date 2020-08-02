@@ -35,6 +35,6 @@ TEST(BINARY, test){
 
     Matrix origin_data_cuda = origin_data.to(kCUDA);
     Matrix res_sub_cuda = sub(origin_data_cuda, origin_data_cuda);
-    // res_sub_cuda = sub(1.0, origin_data_cuda);
-    // res_sub_cuda.print();
+    res_sub_cuda = sub(1.0, origin_data_cuda);
+    res_sub_cuda.print();
 }

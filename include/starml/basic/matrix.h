@@ -6,6 +6,7 @@
 #include "starml/basic/type.h"
 #include "starml/basic/scalar.h"
 #include "starml/utils/loguru.h"
+#include "starml/basic/handle.h"
 
 namespace starml {
 using Shape = std::vector<int>;
@@ -39,7 +40,7 @@ class Matrix {
   void* raw_mutable_data() const;
 
   // Transfer the matrix to specific device
-  Matrix to(Device new_device, void* stream = NULL) const;
+  Matrix to(Device new_device, Handle* handle = NULL) const;
   // Print the matrix for debug usage
   void print(std::string file_name = "") const;
 
