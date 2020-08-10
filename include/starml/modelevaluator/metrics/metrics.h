@@ -7,7 +7,6 @@ namespace modelevaluator {
 namespace metrics{
 
 class metrics {
-
 public:
     metrics() = default;
     float mean_squared_error(const starml::Matrix& y, const starml::Matrix& y_pred);

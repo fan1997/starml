@@ -96,9 +96,9 @@ void invtrans_impl(const Matrix& transformed_data, Matrix& result,
 }
 }  // namespace
 
-STARML_REGISTER_KERNEL(stsfit_dispatcher, &fit_impl, kCPU, kCPU);
-STARML_REGISTER_KERNEL(ststrans_dispatcher, &trans_impl, kCPU, kCPU);
-STARML_REGISTER_KERNEL(stsinvtrans_dispatcher, &invtrans_impl, kCPU, kCPU);
+STARML_REGISTER_KERNEL(stsfit_dispatcher, &fit_impl, kCPU, kCPU, kCPU);
+STARML_REGISTER_KERNEL(ststrans_dispatcher, &trans_impl, kCPU, kCPU, kCPU, kCPU);
+STARML_REGISTER_KERNEL(stsinvtrans_dispatcher, &invtrans_impl, kCPU, kCPU, kCPU, kCPU);
 
 }
 }

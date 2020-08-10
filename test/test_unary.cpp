@@ -27,6 +27,7 @@ TEST(UNARY, test){
   origin_data1.print();
 
   Matrix origin_data_cuda = origin_data.to(kCUDA);
+  origin_data_cuda.print();
   Matrix res_cuda = exp(origin_data_cuda);
   res_cuda.print();
 

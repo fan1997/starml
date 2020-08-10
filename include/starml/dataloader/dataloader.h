@@ -18,19 +18,18 @@ class DataLoader {
      int index;
      float value;
    };
-   typedef std::vector<DataLoader::node> sample;   //样本
-   typedef std::vector<sample> sample_set;  //稀疏 省内存
+   typedef std::vector<DataLoader::node> sample;   
+   typedef std::vector<sample> sample_set;
 
    DataLoader(): num_instances_(0), num_features_(0), total_size_(0), num_classes_(0) {};
-   DataLoader(std::string file_path, DatasetType ds_type);  //load dataset when construct DataLoader
+   DataLoader(std::string file_path, DatasetType ds_type);
    void load_from_file(std::string file_path, DatasetType ds_type);
    void group_class();
    int get_num_instances() const {return this->num_instances_;}
    int get_num_features() const {return this->num_features_;}
    long int get_total_size() const {return this->total_size_;}
-   Matrix get_data() const;  // 返回引用(可能需要智能指针)
-   Matrix get_label() const; //
-   // const Matrix get_csr_data() const; // 稀疏
+   Matrix get_data() const;
+   Matrix get_label() const;
 
  protected:
    void load_from_libsvm(std::string file_path);

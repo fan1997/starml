@@ -108,9 +108,9 @@ void invtrans_impl(const Matrix& transformed_data, Matrix& result,
 }
 }  // namespace
 
-STARML_REGISTER_KERNEL(stsfit_dispatcher, &fit_impl, kCUDA, kCUDA);
-STARML_REGISTER_KERNEL(ststrans_dispatcher, &trans_impl, kCUDA, kCUDA);
-STARML_REGISTER_KERNEL(stsinvtrans_dispatcher, &invtrans_impl, kCUDA, kCUDA);
+STARML_REGISTER_KERNEL(stsfit_dispatcher, &fit_impl, kCUDA, kCUDA, kCUDA);
+STARML_REGISTER_KERNEL(ststrans_dispatcher, &trans_impl, kCUDA, kCUDA, kCUDA, kCUDA);
+STARML_REGISTER_KERNEL(stsinvtrans_dispatcher, &invtrans_impl, kCUDA, kCUDA, kCUDA, kCUDA);
 
 }
 }

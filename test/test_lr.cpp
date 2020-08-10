@@ -85,7 +85,9 @@ TEST(LINEARREG, test){
 
 //*******************************************************//
 // real data
-   DataLoader data_loader("/gpfs/share/home/1901213502/dataset/regression/housing_scale", kLIBSVM);
+   // DataLoader data_loader("/gpfs/share/home/1901213502/dataset/regression/housing_scale", kLIBSVM);
+   DataLoader data_loader("/home/amax101/hice/fanrb/star/dataset/regression/housing_scale", kLIBSVM);
+
    // DataLoader data_loader;
    // data_loader.load_from_file("./example", kLIBSVM);
    long int total_size = data_loader.get_total_size();

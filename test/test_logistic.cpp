@@ -107,7 +107,8 @@ TEST(LOGISTIC, test){
 //*******************************************************//
 #if 1
 // real data
-   DataLoader data_loader("/gpfs/share/home/1901213502/dataset/dataset-all/a9a", kLIBSVM);
+   // DataLoader data_loader("/gpfs/share/home/1901213502/dataset/dataset-all/a9a", kLIBSVM);
+   DataLoader data_loader("/home/amax101/hice/fanrb/star/dataset/classification/a9a", kLIBSVM);
    // DataLoader data_loader("/gpfs/share/home/1901213502/dataset/dataset-all/w8a", kLIBSVM);
    // DataLoader data_loader("/gpfs/share/home/1901213502/dataset/dataset-all/covtype.libsvm.binary.scale", kLIBSVM);
    // DataLoader data_loader("/gpfs/share/home/1901213502/dataset/dataset-all/epsilon_normalized", kLIBSVM);
@@ -148,7 +149,7 @@ TEST(LOGISTIC, test){
  //predict
    Matrix pred_label = model.predict(train_data);
    timer.Stop();
-   std::cout << "TIME: " << timer.Elapsed() << '\n';
+   std::cout << "CPU time: " << timer.Elapsed() << '\n';
  //print
    std::cout << "    ..... pred_label ...." << '\n';
    pred_label.print();
@@ -184,7 +185,7 @@ TEST(LOGISTIC, test){
    Matrix pred_label_cuda = model1.predict(train_data_cuda);
  // print
    gtimer.Stop();
-   std::cout << "TIME: " << gtimer.Elapsed() << '\n';
+   std::cout << "CUDA time: " << gtimer.Elapsed() << '\n';
    std::cout << '\n';
  // evaluate
    metrics metric2;
@@ -193,7 +194,8 @@ TEST(LOGISTIC, test){
      pred_label_cpu1.mutable_data<float>()[i] = pred_label_cpu1.mutable_data<float>()[i] >= 0 ? 1.0 : 0.0;
    }
    float cu_acc_score = metric2.accuracy_score(label, pred_label_cpu1);
-   std::cout << "cuda lr acc_score: " << cu_acc_score << '\n';
+   // std::cout << "CUDA lr acc_score: " << cu_acc_score << '\n';
+   STARML_LOG() <<  "CUDA lr acc_score: " << cu_acc_score;
  #endif
 #endif
 }
