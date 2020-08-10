@@ -18,91 +18,6 @@ using namespace starml;
 using std::default_random_engine;
 
 TEST(LOGISTIC, test){
-#if 0
-   LogisticRegressionParam lrparam;
-   lrparam.learning_rate = 0.01;
-   lrparam.solver_type = starml::optimizer::kSGD;
-   lrparam.max_iter = 100;
-   LogisticRegression model(lrparam);
-   // LogisticRegression model;
-   LogisticRegressionParam lrparam1 = model.get_param();
-   std::cout << "model learning_rate: " << lrparam1.learning_rate << '\n';
-   int m = 6;
-   int n = 3;
-   starml::Matrix train_data({m, n}, kCPU, kFloat);
-   starml::Matrix train_data_cat({m, 1}, kCPU, kFloat);
-   starml::Matrix label({m, 1}, kCPU, kFloat);
-   default_random_engine e;
-   std::uniform_real_distribution<float> u(0, 1);
-   std::uniform_real_distribution<float> u1(-1, 0);
-   for (size_t i = 0; i < m; i++) {
-       label.mutable_data<float>()[i] = 0.0;
-       train_data_cat.mutable_data<float>()[i] = 1.0;
-       if(i < m/2){
-           for (size_t j = 0; j < n; j++) {
-               train_data.mutable_data<float>()[i * n + j] = u(e);
-           }
-       }else{
-           for (size_t j = 0; j < n; j++) {
-               train_data.mutable_data<float>()[i * n + j] = u1(e);
-           }
-       }
-
-       for (size_t j = 0; j < n; j++) {
-           label.mutable_data<float>()[i] += (j + 1) * train_data.data<float>()[i * n + j]; // y = 1 * x1 + 2 * x2 + 3 * x3 ....
-       }
-       label.mutable_data<float>()[i] = label.mutable_data<float>()[i] > 0.0 ? 1.0 : 0.0;
-   }
-
-   train_data = concat(train_data, train_data_cat, 1);
-   std::cout << "    ............. Training LR ............" << '\n' << '\n';
-   std::cout << "    ..... Train_data ...." << '\n';
-   train_data.print();
-   std::cout << '\n';
-   std::cout << "    ..... label ...." << '\n';
-   label.print();
-   std::cout << '\n';
-
-// cpu
-
-//train
-   model.train(train_data, label);
-//predict
-   Matrix pred_label = model.predict(train_data);
-//print
-   std::cout << "    ..... pred_label ...." << '\n';
-   pred_label.print();
-   std::cout << '\n';
-   Matrix weights = model.get_parameters();
-   std::cout << "    .....lr model weights ...." << '\n';
-   weights.print(); //[2,0]
-   std::cout << '\n';
-
-//evaluate
-   // metrics metric1;
-   // float err = metric1.(label, pred_label);
-   // std::cout << "lr error: " << err << '\n';
-
-//*******************************************************//
-// // GPU
-//    Matrix train_data_cuda = train_data.to(kCUDA);
-//    Matrix label_cuda = label.to(kCUDA);
-// // train
-//    model.train(train_data_cuda, label_cuda);
-// // predict
-//    Matrix pred_label_cuda = model.predict(train_data_cuda);
-// // print
-//    std::cout << "    ..... cuda pred_label ...." << '\n';
-//    pred_label_cuda.print();
-//    std::cout << '\n';
-//    weights = model.get_parameters();
-//    std::cout << "    .....cuda lr model weights ...." << '\n';
-//    weights.print(); //[2,0]
-//    std::cout << '\n';
-// // evaluate
-//    err = metric1.mean_squared_error(label_cuda, pred_label_cuda);
-//    std::cout << "cuda lr error: " << err << '\n';
-#endif
 
 //*******************************************************//
 #if 1
@@ -195,7 +110,7 @@ TEST(LOGISTIC, test){
    }
    float cu_acc_score = metric2.accuracy_score(label, pred_label_cpu1);
    // std::cout << "CUDA lr acc_score: " << cu_acc_score << '\n';
-   STARML_LOG() <<  "CUDA lr acc_score: " << cu_acc_score;
+   STARML_LOG(INFO) <<  "CUDA lr acc_score: " << cu_acc_score;
  #endif
 #endif
 }
