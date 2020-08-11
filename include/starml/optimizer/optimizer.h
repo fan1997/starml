@@ -18,7 +18,6 @@ constexpr SolverType kAdam = SolverType::Adam;
 
 class Optimizer {
 public:
-    // Optimizer(){};
     Optimizer( float learning_rate = 0.001) : lr(learning_rate) {};
     Optimizer(Matrix model_param, Matrix model_grad, float learning_rate = 0.001):
               parameters(model_param), grad(model_grad), lr(learning_rate){
