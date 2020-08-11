@@ -1,6 +1,7 @@
 #pragma once
 #include "starml/basic/matrix.h"
 #include "starml/preprocessing/scaler/standardscaler_op.h"
+#include <iostream>
 
 namespace starml {
 namespace optimizer {
@@ -18,16 +19,18 @@ constexpr SolverType kAdam = SolverType::Adam;
 
 class Optimizer {
 public:
+    // Optimizer(){};
     Optimizer( float learning_rate = 0.001) : lr(learning_rate) {};
     Optimizer(Matrix model_param, Matrix model_grad, float learning_rate = 0.001):
               parameters(model_param), grad(model_grad), lr(learning_rate){
                   STARML_CHECK_DIMS_MATCH((model_param.dims() == model_grad.dims()));
               };
 
-    void set_param(Matrix& model_param, Matrix& model_grad, float learning_rate = 0.001){
+    virtual void set_param(Matrix& model_param, Matrix& model_grad){
+        std::cout << "base optimizer set param" << '\n';
+        STARML_CHECK((model_param.dims() == model_grad.dims()));
         parameters = model_param;
         grad = model_grad;
-        lr = learning_rate;
     };
     void set_learning_rate(float learning_rate = 0.001){this -> lr = learning_rate;};
     Matrix& get_parameters()  {return parameters;};
