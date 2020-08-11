@@ -10,12 +10,14 @@ struct LogisticRegressionParam {
     LogisticRegressionParam() {
         solver_type = starml::optimizer::kSGD;
         learning_rate = 0.001;
+        momentum = 0.9;
         lambda = 0;
         max_iter = 100;
         tolerance = 0.00001;
     }
     float lambda;
     float learning_rate;
+    float momentum;
     float tolerance;
     int max_iter;
     starml::optimizer::SolverType solver_type;

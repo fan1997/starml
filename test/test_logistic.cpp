@@ -51,7 +51,8 @@ TEST(LOGISTIC, test){
 
    LogisticRegressionParam lrparam;
    lrparam.learning_rate = 1.0;
-   lrparam.solver_type = starml::optimizer::kSGD;
+   // lrparam.solver_type = starml::optimizer::kSGD;
+   lrparam.solver_type = starml::optimizer::kMomentum;
    lrparam.max_iter = 500;
    lrparam.tolerance = 0.0001;
    LogisticRegression model(lrparam);
