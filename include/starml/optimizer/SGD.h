@@ -14,9 +14,9 @@ public:
     void step();
 };
 
-using sgd_op_kernel_fn = void (*)(Matrix& parameters, Matrix& grad, const float lr);
+using sgd_op_kernel_fn = void (*)(Matrix& parameters, const Matrix& grad, const float lr);
 STARML_DECLARE_DISPATCHER(sgd_dispatcher, sgd_op_kernel_fn);
-void sgd_op(Matrix& parameters, Matrix& grad, const float lr);
+void sgd_op(Matrix& parameters, const Matrix& grad, const float lr);
 
 } // namespace optimizer
 } // namespace starml
