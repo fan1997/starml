@@ -3,6 +3,7 @@
 #include "starml/operators/unary_ops.h"
 #include "starml/optimizer/optimizer.h"
 #include "starml/optimizer/SGD.h"
+#include "starml/optimizer/momentum.h"
 #include "starml/operators/transpose.h"
 #include "starml/operators/solve.h"
 #include "starml/operators/matmul.h"
@@ -11,6 +12,7 @@
 #include <limits>
 #include <cmath>
 #include <cstdint>
+
 
 namespace starml {
 namespace models{
@@ -21,7 +23,7 @@ classification::LogisticRegression::LogisticRegression(const starml::Matrix& tra
                                         const float lambda) {
   std::cout << "LogisticRegression Model has been created with train_data" << "\n";
   this->param.lambda = lambda;
-  this->optimizer.reset(new starml::optimizer::SGD());
+  this->optimizer.reset(new starml::optimizer::SGD(this->param.learning_rate));
   this->train(train_data, label);
 }
 
@@ -37,8 +39,11 @@ classification::LogisticRegression::LogisticRegression(LogisticRegressionParam& 
     case starml::optimizer::kSGD:
       this->optimizer.reset(new starml::optimizer::SGD(param.learning_rate));
       break;
+    case starml::optimizer::kMomentum:
+      this->optimizer.reset(new starml::optimizer::Momentum(param.learning_rate, param.momentum));
+      break;
     default:
-      STARML_LOG(ERROR) << "Only support SGD optimizer now";
+      STARML_LOG(ERROR) << "Only support SGD and Momentum optimizer now";
   }
   std::cout << "LogisticRegression Model has been created with param " << "\n";
 }
@@ -53,14 +58,13 @@ classification::LogisticRegression::LogisticRegression(const starml::Matrix& tra
 
 float classification::LogisticRegression::train(const starml::Matrix& train_data,
                                            const starml::Matrix& label) {
-  std::cout << "Training LogisticRegression Model" << "\n";
+  std::cout << "Training LogisticRegression Model..." << "\n";
   STARML_CHECK_EQ(train_data.dim(0), label.dim(0)) << "train_data and label should have same rows";
   // init parameters
   // need random module
   auto m = train_data.dim(0);
   auto n = train_data.dim(1);
   Matrix weight = full({n, 1}, train_data.device(), train_data.data_type(), 0.0);
-  // weight.print();
   Matrix grad({n, 1}, train_data.device(), train_data.data_type());
   Matrix y_hat({m, 1}, label.device(), label.data_type());
   Matrix train_data_t = transpose(train_data);
@@ -79,7 +83,7 @@ float classification::LogisticRegression::train(const starml::Matrix& train_data
   double current_loss = 0.0;
   double previous_loss = 0.0;
   int iter = 0;
-  this -> optimizer -> set_param(weight, grad, param.learning_rate);
+  this -> optimizer -> set_param(weight, grad);
 //forward
   while ((iter < this -> param.max_iter) && (fabs(diff) > param.tolerance)) {
   //forward
@@ -117,18 +121,19 @@ float classification::LogisticRegression::train(const starml::Matrix& train_data
 
 Matrix& classification::LogisticRegression::predict(const starml::Matrix& predict_data,
                                            starml::Matrix& predict_result) const {
-  std::cout << "Predict LogisticRegression Model" << "\n";
+  STARML_LOG(INFO)  << "Predict LogisticRegression Model";
   STARML_CHECK_EQ(predict_data.dim(1), this->parameters.dim(0))
   << "The predict_data's features num should be the same as model weights ";
-
 }
 
 Matrix classification::LogisticRegression::predict(const starml::Matrix& predict_data) const {
-  std::cout << "Predict LogisticRegression Model" << "\n";
+  STARML_LOG(INFO) << "Predict LogisticRegression Model";
   STARML_CHECK_EQ(predict_data.dim(1), this->parameters.dim(0))
   << "The predict_data's features num should be the same as model weights ";
+  auto m = predict_data.dim(0);
   Matrix y_hat = matmul(predict_data, this->parameters);
-  Matrix predict_result = y_hat;
+  Matrix zeros = full({m , 1},  predict_data.device(), predict_data.data_type(), 0.0);
+  Matrix predict_result = greater_equal(y_hat, zeros);
   return predict_result;
 }
 
