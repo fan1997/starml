@@ -20,3 +20,4 @@ endforeach()
 
 add_library(starml_internal SHARED ${of_all_obj_cc})
 target_include_directories(starml_internal PUBLIC ${PROJECT_SOURCE_DIR})
+target_link_libraries(starml_internal ${starml_third_party_libs})

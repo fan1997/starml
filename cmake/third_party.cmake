@@ -1,4 +1,5 @@
 include (eigen)
+
 if (USE_CUDA)
   set(CUDA_SEPARABLE_COMPILATION ON)
   find_package(CUDA REQUIRED)
@@ -37,6 +38,7 @@ if (USE_CUDA)
   else()
     message(FATAL_ERROR "cuda lib not found: ${cublas_lib_dir}/libcublas_static.a or ${cuda_lib_dir}/libcublas_static.a")
   endif()
+  list(APPEND starml_third_party_libs ${CUDA_LIBRARIES})
 endif()
 
 set(BLA_STATIC ON)
@@ -47,3 +49,6 @@ if (NOT BLAS_FOUND)
   find_package(BLAS)
 endif()
 message(STATUS "Found Blas Lib: " ${BLAS_LIBRARIES})
+
+list(APPEND STARML_INCLUDE_SRC_DIRS ${EIGEN_INCLUDE_DIR})
+include_directories(${STARML_INCLUDE_SRC_DIRS})

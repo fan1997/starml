@@ -10,6 +10,7 @@ FetchContent_Populate(googletest
   SOURCE_DIR ${THIRD_PARTY_DIR}/googletest/googletest-src
   BINARY_DIR ${THIRD_PARTY_DIR}/googletest/googletest-build
 )
+
 add_subdirectory(
   ${googletest_SOURCE_DIR}
   ${googletest_BINARY_DIR}

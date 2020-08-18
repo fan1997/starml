@@ -1,12 +1,13 @@
 cmake_minimum_required(VERSION 3.14 FATAL_ERROR)
 project(starml CXX)
 
-option(USE_CUDA "Build with CUDA" OFF)
+option(USE_CUDA "Build with CUDA" ON)
 option(USE_TEST "Build with test" ON)
 
 set(CMAKE_CXX_STANDARD 11)
 set(CMAKE_POSITION_INDEPENDENT_CODE ON)
 set(starml_cmake_dir ${PROJECT_SOURCE_DIR}/cmake)
+set(EXECUTABLE_OUTPUT_PATH ${PROJECT_BINARY_DIR}/bin)
 set(THIRD_PARTY_DIR "${PROJECT_SOURCE_DIR}/third_party" 
   CACHE PATH "Where the third party are")
 
