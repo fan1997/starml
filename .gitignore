@@ -35,4 +35,5 @@
 *.DS_Store
 *.vscode/
 build/
+third_party/*
 run.slurm

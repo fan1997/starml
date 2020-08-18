@@ -1,68 +1,56 @@
-cmake_minimum_required(VERSION 3.11 FATAL_ERROR)
-project(starml VERSION 0.0.1 LANGUAGES CXX)
+cmake_minimum_required(VERSION 3.14 FATAL_ERROR)
+project(starml CXX)
 
-option(STARML_BUILD_SHARED_LIBS "Compiled as a shared library" ON)
-option(STARML_ENABLE_TESTING "Build with testing enabled" ON)
-option(STARML_USE_CUDA "Build with CUDA supported" ON)
+option(USE_CUDA "Build with CUDA" OFF)
+option(USE_TEST "Build with test" ON)
 
-# Show the detail of compile messages
-set(CMAKE_VERBOSE_MAKEFILE OFF)
-set(CMAKE_COLOR_MAKEFILE   ON)
-include(cmake/public/Utils.cmake)
+set(CMAKE_CXX_STANDARD 11)
+set(CMAKE_POSITION_INDEPENDENT_CODE ON)
+set(starml_cmake_dir ${PROJECT_SOURCE_DIR}/cmake)
+set(THIRD_PARTY_DIR "${PROJECT_SOURCE_DIR}/third_party" 
+  CACHE PATH "Where the third party are")
 
-if(NOT DEFINED CMAKE_CXX_STANDARD)
-  set(CMAKE_CXX_STANDARD 11)
-  set(CMAKE_CXX_EXTENSIONS OFF)
-  set(CMAKE_CXX_STANDARD_REQUIRED ON)
+list(APPEND CMAKE_MODULE_PATH ${starml_cmake_dir}/third_party)
+list(APPEND CMAKE_MODULE_PATH ${starml_cmake_dir})
+include(util)
+include(third_party)
+
+if (USE_CUDA)
+  set(CUDA_SEPARABLE_COMPILATION ON)
+  list(APPEND CUDA_NVCC_FLAGS -w -Wno-deprecated-gpu-targets)
+  if(CMAKE_BUILD_TYPE MATCHES Debug)
+    if(CUDA_VERSION VERSION_GREATER_EQUAL "10.0")
+      set(CUDA_NVCC_GENCODES "arch=compute_61,code=sm_61" "arch=compute_61,code=compute_61" "arch=compute_75,code=sm_75" "arch=compute_75,code=compute_75")
+    else()
+      set(CUDA_NVCC_GENCODES "arch=compute_61,code=sm_61" "arch=compute_61,code=compute_61")
+    endif()
+  else()
+    list(APPEND __cuda_nvcc_gencodes "arch=compute_60,code=sm_60")
+    list(APPEND __cuda_nvcc_gencodes "arch=compute_60,code=compute_60")
+    list(APPEND __cuda_nvcc_gencodes "arch=compute_61,code=sm_61")
+    list(APPEND __cuda_nvcc_gencodes "arch=compute_61,code=compute_61")
+    if(CUDA_VERSION VERSION_GREATER_EQUAL "10.0")
+      list(APPEND __cuda_nvcc_gencodes "arch=compute_70,code=sm_70")
+      list(APPEND __cuda_nvcc_gencodes "arch=compute_70,code=compute_70")
+      list(APPEND __cuda_nvcc_gencodes "arch=compute_75,code=sm_75")
+      list(APPEND __cuda_nvcc_gencodes "arch=compute_75,code=compute_75")
+    endif()
+    set(CUDA_NVCC_GENCODES ${__cuda_nvcc_gencodes})
+  endif()
+  foreach(CUDA_NVCC_GENCODE ${CUDA_NVCC_GENCODES})
+    list(APPEND CUDA_NVCC_FLAGS -gencode ${CUDA_NVCC_GENCODE})
+  endforeach()
+  message("-- CUDA_NVCC_FLAGS: " ${CUDA_NVCC_FLAGS})
 endif()
 
-set(STARML_ROOT_DIR ${CMAKE_CURRENT_SOURCE_DIR})
-set(STARML_CMAKE_DIR ${CMAKE_CURRENT_SOURCE_DIR}/cmake)
-set(STARML_EXTERNAL_DIR ${AITISA_API_ROOT_DIR}/third_party)
-set(EXECUTABLE_OUTPUT_PATH ${PROJECT_BINARY_DIR}/bin)
+message("-- CMAKE_CXX_COMPILER_VERSION: " ${CMAKE_CXX_COMPILER_VERSION})
 
-# set(CMAKE_ARCHIVE_OUTPUT_DIRECTORY ${PROJECT_BINARY_DIR}/${CMAKE_INSTALL_LIBDIR})
-# set(CMAKE_LIBRARY_OUTPUT_DIRECTORY ${PROJECT_BINARY_DIR}/${CMAKE_INSTALL_LIBDIR})
-# set(CMAKE_RUNTIME_OUTPUT_DIRECTORY ${PROJECT_BINARY_DIR}/${CMAKE_INSTALL_BINDIR})
+set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} -std=c++11 -Wall -Wno-sign-compare -Wno-unused-function -fPIC")
 
-# Find all the files under `starml/`
-file(GLOB_RECURSE starml_srcs "starml/*.cpp" "starml/*.cu")
-if(NOT STARML_USE_CUDA)
-  file(GLOB_RECURSE cuda_srcs "starml/*_cuda.cpp" "starml/*.cu")
-  exclude(starml_srcs "${starml_srcs}" ${cuda_srcs})
-endif()
+include(starml)
 
-# Create library target with all the source codes.
-if(STARML_BUILD_SHARED_LIBS)
-  add_library(starml SHARED ${starml_srcs})
-else()
-  add_library(starml STATIC ${starml_srcs})
-endif()
-
-target_include_directories(starml
-  PUBLIC
-    ${PROJECT_SOURCE_DIR}/include
-)
-
-if(STARML_USE_CUDA)
-  set_target_properties(starml PROPERTIES 
-    CUDA_SEPERABLE_COMPILATION ON 
-    INTERFACE_POSITION_INDEPENDENT_CODE ON 
-  )
-endif()
-
-# Add dependency library link
-set(starml_link_libraries)
-if(STARML_USE_CUDA)
-  include(cmake/public/CUDA.cmake)
-  list(APPEND starml_link_libraries starml::cudart starml::cublas starml::thrust)
-endif()
-
-target_link_libraries(starml PUBLIC ${starml_link_libraries})
-
-# Add testing
-if(STARML_ENABLE_TESTING)
+if (USE_TEST)
   enable_testing()
-  add_subdirectory(third_party/googletest)
+  include(gtest)
   add_subdirectory(test)
 endif()

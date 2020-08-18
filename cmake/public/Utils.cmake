@@ -1,7 +1,0 @@
-function(exclude output input)
-  set(excludes ${ARGN})
-  foreach(exclude ${excludes})
-    list(REMOVE_ITEM input "${exclude}")
-  endforeach()
-  set(${output} ${input} PARENT_SCOPE)
-endfunction(exclude)
